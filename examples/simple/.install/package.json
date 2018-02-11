@@ -1,0 +1,7 @@
+{
+  "name": "install",
+  "version": "0.0.0",
+  "devDependencies": {
+    "graphql-boilerplate-install": "0.1.8"
+  }
+}

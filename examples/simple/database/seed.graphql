@@ -1,0 +1,24 @@
+mutation {
+  createUser(data: {
+    email: "developer@example.com"
+    password: "$2a$10$hACwQ5/HQI6FhbIISOUVeusy3sKyUDhSq36fF5d/54aAdiygJPFzm" # plaintext password: "nooneknows"
+    name: "Sarah"
+    posts: {
+      create: [{
+        title: "Hello World"
+        text: "This is my first blog post ever!"
+        isPublished: true
+      }, {
+        title: "My Second Post"
+        text: "My first post was good, but this one is better!"
+        isPublished: true
+      }, {
+        title: "Solving World Hunger"
+        text: "This is a draft..."
+        isPublished: false
+      }]
+    }
+  }) {
+    id
+  }
+}

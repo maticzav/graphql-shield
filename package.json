@@ -1,0 +1,40 @@
+{
+  "name": "shield",
+  "version": "0.0.1",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "autor": "Matic Zavadlal <matic.zavadlal@gmail.com>",
+  "dependencies": {
+    "graphql": "^0.13.0"
+  },
+  "devDependencies": {
+    "tslint": "^5.9.1",
+    "tslint-config-prettier": "^1.7.0",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.7.1"
+  },
+  "scripts": {
+    "prepublish": "npm run build",
+    "build": "rm -rf dist && tsc -d",
+    "lint": "tslint --project tsconfig.json {src,test}/**/*.ts",
+    "test": "npm run lint && npm run build"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/maticzav/shield",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maticzav/shield.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maticzav/shield/issues"
+  },
+  "keywords": [
+    "graphql",
+    "permissions",
+    "shield",
+    "server"
+  ],
+  "license": "MIT"
+}
