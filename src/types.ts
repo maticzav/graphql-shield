@@ -1,31 +1,33 @@
-import { GraphQLFieldResolver, GraphQLScalarType, GraphQLIsTypeOfFn, GraphQLTypeResolver, TSource, TArgs, TContext, GraphQLResolveInfo } from 'graphql'
+import { GraphQLFieldResolver, GraphQLScalarType, GraphQLIsTypeOfFn, GraphQLTypeResolver, GraphQLResolveInfo } from 'graphql'
 
 export interface IPermissions {
-   [key: string]: IPermissionObject
+   [key: string]: IPermissionsObject | IPermissionResolver
 }
 
-export interface IPermissionObject {
-   [key: string]: (() => boolean) | IPermissionResolver
+export interface IPermissionsObject {
+   [key: string]: IPermissions,
 }
 
 export type IPermissionResolver = (
-   source: TSource, 
-   args: TArgs, 
-   context: TContext, 
-   info: GraphQLResolveInfo, 
-) => boolean
+   parent: any, 
+   args: any, 
+   ctx: any,
+   info: any, 
+) => boolean | Promise<boolean>
 
 export interface IResolvers {
    [key: string]: (() => any) | IResolverObject | GraphQLScalarType
 }
 
 export type IResolverObject = {
-   [key: string]: GraphQLFieldResolver<any, any> | IResolverOptions,
+   [key: string]: IResolver | IResolverOptions,
 }
 
+export type IResolver = GraphQLFieldResolver<any, any>
+
 export interface IResolverOptions {
-   resolve?: GraphQLFieldResolver<any, any>
-   subscribe?: GraphQLFieldResolver<any, any>
+   resolve?: IResolver
+   subscribe?: IResolver
    __resolveType?: GraphQLTypeResolver<any, any>
    __isTypeOf?: GraphQLIsTypeOfFn<any, any>
 }
@@ -40,11 +42,11 @@ export interface IResolverOptions {
 // }
 
 // export type GraphQLFieldResolver<
-//    TSource,
+//    any,
 //    TContext,
 //    TArgs = { [argument: string]: any },
 //    > = (
-//       source: TSource,
+//       source: any,
 //       args: TArgs,
 //       context: TContext,
 //       info: GraphQLResolveInfo,
