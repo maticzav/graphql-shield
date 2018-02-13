@@ -1,8 +1,8 @@
 {
   "name": "graphql-shield",
-  "version": "0.0.1",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "version": "0.0.2",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "dependencies": {
     "graphql": "^0.13.0"

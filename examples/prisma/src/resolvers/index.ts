@@ -1,4 +1,4 @@
-import shield from '../../../../src/index'
+import { shield } from 'graphql-shield'
 import { Query } from './Query'
 import { auth } from './Mutation/auth'
 import { post } from './Mutation/post'

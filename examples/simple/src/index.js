@@ -1,5 +1,5 @@
 const { GraphQLServer } = require('graphql-yoga')
-const shield = require('graphql-shield')
+const { shield } = require('graphql-shield')
 
 const typeDefs = `
   type Query {
