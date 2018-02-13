@@ -1,6 +1,6 @@
 {
   "name": "graphql-shield",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
