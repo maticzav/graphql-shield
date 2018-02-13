@@ -398,9 +398,9 @@ graphql-request@^1.4.0:
   dependencies:
     cross-fetch "1.1.1"
 
-graphql-shield@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/graphql-shield/-/graphql-shield-0.0.2.tgz#85488d5063e5d37bba94d9b821f4454324db8190"
+graphql-shield@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/graphql-shield/-/graphql-shield-0.0.3.tgz#c38e455b2338d2a61a5f3051d4f088190d01b7b0"
   dependencies:
     graphql "^0.13.0"
 

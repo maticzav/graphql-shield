@@ -11,7 +11,7 @@ const typeDefs = `
 const resolvers = {
    Query: {
       hello: (_, { name }) => `Hello ${name || 'World'}`,
-      secret: (_, { agent }) => `Hello agent ${name}`,
+      secret: (_, { agent }) => `Hello agent ${agent}`,
    },
 }
 
