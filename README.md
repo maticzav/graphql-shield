@@ -1,8 +1,7 @@
 <p align="center"><img src="https://imgur.com/DX1VKtn.png" width="100" /></p>
 
 # graphql-shield
-
-[![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
+[![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
 
 A GraphQL protector tool to keep your queries and mutations safe from intruders.
 
