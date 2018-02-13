@@ -1,6 +1,6 @@
 {
   "name": "graphql-shield",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
@@ -22,13 +22,13 @@
   "files": [
     "dist"
   ],
-  "homepage": "https://github.com/maticzav/shield",
+  "homepage": "https://github.com/maticzav/graphql-shield",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maticzav/shield.git"
+    "url": "git+https://github.com/maticzav/graphql-shield.git"
   },
   "bugs": {
-    "url": "https://github.com/maticzav/shield/issues"
+    "url": "https://github.com/maticzav/graphql-shield/issues"
   },
   "keywords": [
     "graphql",
