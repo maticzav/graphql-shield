@@ -1,10 +1,10 @@
 import { IResolvers, IResolver, IPermissions, IPermissionResolver, IPermissionsObject } from './types'
 
-export default (resolvers: IResolvers, permissions: IPermissionsObject): IResolvers => {
+export default (resolvers: IResolvers, permissions: IPermissions): IResolvers => {
    return mergeResolversAndPermissions(resolvers, permissions)
 }
 
-function mergeResolversAndPermissions(resolvers: IResolvers, permissions: IPermissions | IPermissionsObject): IResolvers {
+function mergeResolversAndPermissions(resolvers: IResolvers, permissions: IPermissions): IResolvers {
    let destination = {}
 
    if (permissions === undefined) {
@@ -13,9 +13,9 @@ function mergeResolversAndPermissions(resolvers: IResolvers, permissions: IPermi
 
    Object.keys(resolvers).forEach(key => {
       if(isMergableObject(resolvers[key])) {
-         destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key] as IPermissionsObject)
+         destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key])
       } else {         
-         destination[key] = resolvePermission(resolvers[key], permissions[key] as IPermissionResolver)
+         destination[key] = resolvePermission(resolvers[key], permissions[key])
       }
    })
 
@@ -23,20 +23,15 @@ function mergeResolversAndPermissions(resolvers: IResolvers, permissions: IPermi
 }
 
 function resolvePermission(resolver: IResolver, permission: IPermissionResolver): IResolver {
-   if (isPromise(permission)) {
-      return resolvePromisePermission(resolver, permission)
-   } 
    if (isFunction(permission)) {
-      return resolveRegularPermission(resolver, permission)
+      return resolvePromisePermission(resolver, permission)
    } 
    return resolver
 }
 
 function resolvePromisePermission(resolver: IResolver, permission: IPermissionResolver): IResolver {
    return async (parent, args, ctx, info): IResolver => {
-      const authorised = await permission(parent, args, ctx, info)
-      console.log('promise auth', authorised);
-      
+      const authorised = await permission(parent, args, ctx, info)      
       if (authorised) {
          return resolver(parent, args, ctx, info)   
       }
@@ -55,13 +50,6 @@ function resolveRegularPermission(resolver: IResolver, permission: IPermissionRe
       }
       throw new PermissionError()
    }
-}
-
-function isPromise(obj: any): boolean {
-   console.log(!!obj, (typeof obj === 'object' || typeof obj === 'function'), obj.prototype.then);
-   
-   
-   return !!obj && (typeof obj === 'object' || typeof obj === 'function') && typeof obj.then === 'function';
 }
 
 function isFunction(obj: any): boolean {
