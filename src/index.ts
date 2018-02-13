@@ -1,4 +1,4 @@
-import { IResolvers, IResolver, IPermissions, IPermissionResolver, IPermissionsObject } from './types'
+import { IResolvers, IResolver, IPermissions, IPermissionResolver } from './types'
 
 export const shield = (resolvers: IResolvers, permissions: IPermissions): IResolvers => {
    return mergeResolversAndPermissions(resolvers, permissions)

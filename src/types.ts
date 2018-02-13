@@ -1,4 +1,4 @@
-import { GraphQLFieldResolver, GraphQLScalarType, GraphQLIsTypeOfFn, GraphQLTypeResolver, GraphQLResolveInfo } from 'graphql'
+import { GraphQLFieldResolver, GraphQLScalarType, GraphQLIsTypeOfFn, GraphQLTypeResolver } from 'graphql'
 
 export type IPermissions = IPermissionsObject | IPermissionResolver
 
