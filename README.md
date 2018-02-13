@@ -1,6 +1,10 @@
+<p align="center"><img src="https://imgur.com/DX1VKtn.png" width="100" /></p>
+
 # graphql-shield
 
-A GraphQL protector tool to keep your queries and mutations from intruders.
+[![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
+
+A GraphQL protector tool to keep your queries and mutations safe from intruders.
 
 ## Overview
 
@@ -45,5 +49,57 @@ const server = new GraphQLServer({
    typeDefs,
    resolvers: shield(resolvers, permissions)
 })
-server.start(() => console.log('Server is running on localhost:4000'))
+server.start(() => console.log('Server is running on http://localhost:4000'))
 ```
+
+## API
+
+#### `shield(resolvers, permissions)`
+
+##### `resolvers`
+GraphQL resolvers.
+
+#### `permissions`
+A permission function. 
+
+- same parameters as for any GraphQL resolver.
+- can be promise or synchronous function
+
+```js
+const auth = (parent, args, ctx, info) => {
+  const userId = getUserId(ctx)
+  if (userId) {
+    return true
+  }
+  return false
+}
+
+const owner = async (parent, {id}, ctx: Context, info) => {
+  const userId = getUserId(ctx)
+  const exists = await ctx.db.exists.Post({
+    id,
+    author: {
+      id: userId
+    }
+  })
+  return exists
+}
+
+const permissions = {
+  Query: {
+    feed: auth,
+    me: auth
+  },
+  Mutation: {
+    createDraft: auth,
+    publish: owner,
+    deletePost: owner,
+  },
+}
+
+export default shield(resolvers, permissions)
+```
+
+## License
+
+MIT
