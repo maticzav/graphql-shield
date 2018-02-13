@@ -30,23 +30,10 @@ function resolvePermission(resolver: IResolver, permission: IPermissionResolver)
 }
 
 function resolvePromisePermission(resolver: IResolver, permission: IPermissionResolver): IResolver {
-   return async (parent, args, ctx, info): IResolver => {
+   return async (parent, args, ctx, info) => {
       const authorised = await permission(parent, args, ctx, info)      
       if (authorised) {
          return resolver(parent, args, ctx, info)   
-      }
-      throw new PermissionError()
-      
-   }
-}
-
-function resolveRegularPermission(resolver: IResolver, permission: IPermissionResolver): IResolver {
-   return (parent, args, ctx, info): IResolver => {
-      const authorised = permission(parent, args, ctx, info)
-      console.log('promise auth', authorised);
-
-      if (authorised) {
-         return resolver(parent, args, ctx, info)
       }
       throw new PermissionError()
    }

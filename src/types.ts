@@ -29,23 +29,3 @@ export interface IResolverOptions {
    __resolveType?: GraphQLTypeResolver<any, any>
    __isTypeOf?: GraphQLIsTypeOfFn<any, any>
 }
-
-// resolvers = {
-//    Query: {
-//       field1: () => res
-//    },
-//    Type: {
-//       fi: () => res
-//    }
-// }
-
-// export type GraphQLFieldResolver<
-//    any,
-//    TContext,
-//    TArgs = { [argument: string]: any },
-//    > = (
-//       source: any,
-//       args: TArgs,
-//       context: TContext,
-//       info: GraphQLResolveInfo,
-//    ) => mixed;
