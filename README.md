@@ -1,4 +1,4 @@
-<p align="center"><img src="https://imgur.com/DX1VKtn.png" width="100" /></p>
+<p align="center"><img src="https://imgur.com/DX1VKtn.png" width="150" /></p>
 
 # graphql-shield
 [![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
@@ -59,9 +59,10 @@ server.start(() => console.log('Server is running on http://localhost:4000'))
 GraphQL resolvers.
 
 #### `permissions`
-A permission function. 
+A permission function must return a boolean.
+> `permission: (parent, args, ctx, info) => boolean`
 
-- same parameters as for any GraphQL resolver.
+- same arguments as for any GraphQL resolver.
 - can be promise or synchronous function
 
 ```js
