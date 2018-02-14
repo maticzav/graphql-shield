@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "chalk": "^2.3.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.7.0",
     "tslint-config-standard": "^7.0.0",
@@ -18,8 +19,9 @@
   "scripts": {
     "prepublish": "npm run build",
     "build": "rm -rf dist && tsc -d",
-    "lint": "tslint --project tsconfig.json {src,test}/**/*.ts",
-    "test": "npm run lint && npm run build && ava"
+    "lint": "tslint --project tsconfig.json {src}/**/*.ts",
+    "test-ava": "ava tests/*.js --verbose",
+    "test": "npm run lint && npm run build && npm run test-ava"
   },
   "files": [
     "dist"

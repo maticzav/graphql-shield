@@ -10,6 +10,7 @@ A GraphQL protector tool to keep your queries and mutations safe from intruders.
 - __Super Flexible:__ It supports everything GraphQL server does.
 - __Super easy to use:__ Just add a wrapper function around your `resolvers` and you are ready to go!
 - __Compatible:__ Works with all GraphQL Servers.
+- __Super efficient:__ Caches results of previous queries to make your database more responsive.
 
 ## Install
 
@@ -46,24 +47,33 @@ const permissions = {
 
 const server = new GraphQLServer({
    typeDefs,
-   resolvers: shield(resolvers, permissions)
+   resolvers: shield(resolvers, permissions, { debug: true })
 })
 server.start(() => console.log('Server is running on http://localhost:4000'))
 ```
 
 ## API
 
-#### `shield(resolvers, permissions)`
+#### `shield(resolvers, permissions, options?)`
 
 ##### `resolvers`
 GraphQL resolvers.
 
 #### `permissions`
 A permission function must return a boolean.
-> `permission: (parent, args, ctx, info) => boolean`
+
+```ts
+type IPermission = (
+  parent,
+  args,
+  ctx,
+  info,
+) => boolean | Promise<boolean>
+```
 
 - same arguments as for any GraphQL resolver.
 - can be promise or synchronous function
+- whitelist permissions (you have to explicility allow access)
 
 ```js
 const auth = (parent, args, ctx, info) => {
@@ -97,8 +107,25 @@ const permissions = {
   },
 }
 
-export default shield(resolvers, permissions)
+const options = {
+  debug: false,
+  cache: true
+}
+
+export default shield(resolvers, permissions, options)
 ```
+
+#### Options
+Optionaly disable caching or use debug mode to find your bugs faster.
+
+```ts
+interface Options {
+  debug: boolean
+  cache: boolean
+}
+```
+
+> `cache` is enabled by default.
 
 ## License
 

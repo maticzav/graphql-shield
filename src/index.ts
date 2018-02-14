@@ -1,4 +1,5 @@
 import { IResolvers, IResolver, IPermissions, IPermission, Options, IResolverOptions } from './types'
+import chalk from 'chalk'
 
 export const shield = (resolvers: IResolvers, permissions: IPermissions, options?: Options): IResolvers => {
    const _options = { 
@@ -28,6 +29,9 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
 }
 
 function resolvePermission(resolver: IResolver, permission: IPermission, options: Options): IResolver {
+   if (!permission) {
+      return resolveResolverPermission(resolver, () => false, options)
+   }
    if (isResolverWithFragment(resolver)) {
       return resolveResolverWithFragmentPermission(resolver, permission, options)
    }
@@ -58,16 +62,16 @@ function resolveResolverPermission(resolver: IResolver, permission: IPermission,
       try {
          let authorised: boolean
 
-         if (ctx.cache && ctx.cache[permission.name]) {
-            authorised = ctx.cache[permission.name]
+         if (options.cache && ctx._cache && ctx._cache[permission.name]) {
+            authorised = ctx._cache[permission.name]
          } else {
             authorised = await permission(parent, args, ctx, info)
          }
 
          const _ctx = { 
             ...ctx, 
-            cache: { 
-               ...ctx.cache, 
+            _cache: { 
+               ...ctx._cache, 
                [permission.name]: authorised 
             }
          }
@@ -78,8 +82,11 @@ function resolveResolverPermission(resolver: IResolver, permission: IPermission,
          throw new PermissionError()
       } catch (err) {
          if (options.debug) {
+            console.log(chalk.blue('DEBUG LOG:'))
             console.log(err)
+            console.log(chalk.blue('~~~~~~~~~~'))
          }
+         
          throw new PermissionError()
       }
    }
