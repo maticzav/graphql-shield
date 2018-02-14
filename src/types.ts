@@ -31,6 +31,6 @@ export interface IResolverOptions {
 }
 
 export interface Options {
-   debug: boolean
-   cache: boolean
+   debug?: boolean
+   cache?: boolean
 }

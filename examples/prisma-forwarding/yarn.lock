@@ -1856,9 +1856,9 @@ graphql-schema-linter@0.0.27:
     graphql-config "^1.0.0"
     lodash "^4.17.4"
 
-graphql-shield@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/graphql-shield/-/graphql-shield-0.0.5.tgz#be281a2e386b69826818cf2a8b68b2a1f70b2bcb"
+graphql-shield@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/graphql-shield/-/graphql-shield-0.0.8.tgz#ee4781d1a1483356923667376b9aea4065d5cf5a"
   dependencies:
     graphql "^0.13.0"
 

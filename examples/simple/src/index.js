@@ -24,7 +24,7 @@ const permissions = {
 
 const server = new GraphQLServer({
    typeDefs,
-   resolvers: shield(resolvers, permissions)
+   resolvers: shield(resolvers, permissions, { debug: true })
 })
 
 server.start(() => console.log('Server is running on http://localhost:4000'))

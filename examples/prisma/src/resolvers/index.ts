@@ -22,10 +22,12 @@ const permissions = {
     me: isAuthenticated
   },
   Mutation: {
+    login: () => true,
+    signup: () => true,
     createDraft: isAuthenticated,
     publish: isUserPost,
     deletePost: isUserPost,
   },
 }
 
-export default shield(resolvers, permissions)
+export default shield(resolvers, permissions, { debug: true })
