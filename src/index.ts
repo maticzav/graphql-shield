@@ -17,11 +17,21 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
       return resolvers
    }
 
-   Object.keys(resolvers).forEach(key => {
-      if (isMergableResolver(resolvers[key])) {
+   // Create permission tree
+   Object.keys(permissions).forEach(key => {
+      if (isMergableObject(permissions[key]) && isMergableObject(resolvers[key])) {
          destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key], options)
+      } else if (isMergableObject(permissions[key])) {
+         destination[key] = mergeResolversAndPermissions({}, permissions[key], options)
       } else {
-         destination[key] = resolvePermission(resolvers[key], permissions[key], options)
+         destination[key] = resolvePermission(resolvers[key] || identity(key), permissions[key], options)
+      }
+   }) 
+
+   // Copy unpermitted resolvers
+   Object.keys(resolvers).forEach(key => {
+      if (!destination[key]) {
+         destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key], options)
       }
    })
 
@@ -29,9 +39,6 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
 }
 
 function resolvePermission(resolver: IResolver, permission: IPermission, options: Options): IResolver {
-   if (!permission) {
-      return resolveResolverPermission(resolver, () => false, options)
-   }
    if (isResolverWithFragment(resolver)) {
       return resolveResolverWithFragmentPermission(resolver, permission, options)
    }
@@ -92,7 +99,13 @@ function resolveResolverPermission(resolver: IResolver, permission: IPermission,
    }
 }
 
-function isMergableResolver(obj: any): boolean {
+function identity(key) {
+   return (parent, args, ctx, info) => {
+      return parent[key]
+   }
+}
+
+function isMergableObject(obj: any): boolean {
    const nonNullObject = typeof obj === 'object' && obj !== {}
 
    return nonNullObject
