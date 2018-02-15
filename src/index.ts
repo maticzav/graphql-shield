@@ -24,7 +24,7 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
       } else if (isMergableObject(permissions[key])) {
          destination[key] = mergeResolversAndPermissions({}, permissions[key], options)
       } else {
-         destination[key] = resolvePermission(resolvers[key] || identity(key), permissions[key], options)
+         destination[key] = resolvePermission(key, resolvers[key], permissions[key], options)
       }
    }) 
 
@@ -38,7 +38,10 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
    return destination
 }
 
-function resolvePermission(resolver: IResolver, permission: IPermission, options: Options): IResolver {
+function resolvePermission(key: string, resolver: IResolver, permission: IPermission, options: Options): IResolver {
+   if (!resolver) {
+      return resolveResolverPermission(identity(key), permission, options)
+   }
    if (isResolverWithFragment(resolver)) {
       return resolveResolverWithFragmentPermission(resolver, permission, options)
    }
@@ -64,23 +67,28 @@ function resolveResolverWithOptionsPermission(resolver: IResolverOptions, permis
    }
 }
 
-function resolveResolverPermission(resolver: IResolver, permission: IPermission, options: Options) {
-   return async (parent, args, ctx, info) => {
+function resolveResolverPermission(resolver: IResolver, permission: IPermission, options: Options) {   
+   return async (parent, args, ctx, info) => {      
       try {
          let authorised: boolean
+         let _ctx: any
 
-         if (options.cache && ctx._cache && ctx._cache[permission.name]) {
+         if (options.cache && ctx && ctx._cache && ctx._cache[permission.name]) {
             authorised = ctx._cache[permission.name]
          } else {
             authorised = await permission(parent, args, ctx, info)
          }
 
-         const _ctx = { 
-            ...ctx, 
-            _cache: { 
-               ...ctx._cache, 
-               [permission.name]: authorised 
+         if (options.cache) {
+            _ctx = {
+               ...ctx,
+               _cache: {
+                  ...ctx ? ctx._cache : {},
+                  [permission.name]: authorised
+               }
             }
+         } else {
+            _ctx = ctx
          }
          
          if (authorised) {
@@ -123,7 +131,7 @@ function isResolverWithOptions(type: any): boolean {
    return typeof type === 'object' && ('resolve' in type || 'subscribe' in type || '__resolveType' in type || '__isTypeOf' in type)
 }
 
-class PermissionError extends Error {
+export class PermissionError extends Error {
    constructor() {
       super(`Insufficient Permissions.`)
    }
