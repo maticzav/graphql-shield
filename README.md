@@ -71,7 +71,8 @@ const resolvers = {
 
 const permissions = {
    Query: {
-     hello: () => true
+     hello: () => true,
+    //  users: () => true (no need for this - we are blacklisting)
    },
    User: {
       secret: (_, args, ctx) => verify(ctx)
