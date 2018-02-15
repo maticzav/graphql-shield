@@ -12,6 +12,7 @@ A GraphQL protector tool to keep your queries and mutations safe from intruders.
 - __Compatible:__ Works with all GraphQL Servers.
 - __Super efficient:__ Caches results of previous queries to make your database more responsive.
 - __Per-Type:__ Write permissions for your type specificly (check the example below).
+- __Tested:__ Well [tested](https://github.com/maticzav/graphql-shield/tree/master/tests) functionalities!
 
 ## Install
 
