@@ -13,11 +13,12 @@ export const shield = (resolvers: IResolvers, permissions: IPermissions, options
 function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermissions, options: Options): IResolvers {
    let destination = {}
 
+	// Copy resolvers if no permission is defined.
    if (permissions === undefined) {
       return resolvers
    }
 
-   // Create permission tree
+   // Create permission tree.
    Object.keys(permissions).forEach(key => {
       if (isMergableObject(permissions[key]) && isMergableObject(resolvers[key])) {
          destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key], options)
@@ -28,7 +29,7 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
       }
    }) 
 
-   // Copy unpermitted resolvers
+   // Copy unpermitted resolvers.
    Object.keys(resolvers).forEach(key => {
       if (!destination[key]) {
          destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key], options)
@@ -39,7 +40,7 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
 }
 
 function resolvePermission(key: string, resolver: IResolver, permission: IPermission, options: Options): IResolver {
-   if (!resolver) {
+   if (!isResolverValid(resolver)) {
       return resolveResolverPermission(key, identity(key), permission, options)
    }
    if (isResolverWithFragment(resolver)) {
@@ -131,7 +132,11 @@ function isResolverWithOptions(type: any): boolean {
    return typeof type === 'object' && ('resolve' in type || 'subscribe' in type || '__resolveType' in type || '__isTypeOf' in type)
 }
 
-function isPermissionCachable(key: string, func: any) {
+function isResolverValid(type: any): boolean {
+	return !!type
+}
+
+function isPermissionCachable(key: string, func: any): boolean {
 	return key !== func.name
 }
 

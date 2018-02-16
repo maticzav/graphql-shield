@@ -3,68 +3,140 @@ import { shield, PermissionError } from '../dist/src/index.js'
 
 // Setup
 
-const resolvers = {
+const _resolvers = {
    Query: {
       open: () => 'open',
       simple: () => `simple`,
-      complex: (_, { agent }) => agent,
+      logic: (_, { agent }) => agent,
       failing: () => 'failing'
    },
-}
-
-const permissions = {
-   Query: {
-      simple: () => true,
-      complex: (_, { code }) => code === 'code',
-      failing: () => false
+   Subscription: {
+      counter: {
+         subscribe: () => 'subscribed',
+      }
    },
-   NoResolver: {
-      other: () => true
+   Fragment: {
+      count: {
+         fragment: 'fragment',
+         resolve: () => 'count'
+      }
    }
 }
 
-const setup = () => shield(resolvers, permissions)
+const _permissions = {
+   Query: {
+      simple: () => true,
+      logic: (_, { code }) => code === 'code',
+      failing: () => false
+   },
+   Subscription: {
+      counter: (_, { code }) => code === 'code'
+   },
+   NoResolver: {
+      other: () => true
+   },
+   Fragment: {
+      count: (_, { code }) => code === 'code'
+   }
+}
 
-// Tests
+const setup = () => shield(_resolvers, _permissions)
 
-test('Allow simple permission', async t => {
+// Tests ---------------------------------------------------------------------
+
+test('Allow simple permission.', async t => {
    const resolvers = setup()
 
    const res = await resolvers.Query.simple()
    t.is(res , 'simple')
 })
 
-test('Allow complex permission', async t => {
+test('Allow permission with logic.', async t => {
    const resolvers = setup()
 
-   const res = await resolvers.Query.complex({}, { code: 'code', agent: 'agent' })
+   const res = await resolvers.Query.logic({}, { code: 'code', agent: 'agent' })
    t.is(res, 'agent')
 })
 
-test('Allow open permission', async t => {
+test('Allow open permission.', async t => {
    const resolvers = setup()
 
    const res = await resolvers.Query.open()
    t.is(res, 'open')
 })
 
-test('Permit simple permission', async t => {
+test('Permit simple permission.', async t => {
    const resolvers = setup()
 
    const error = await t.throws(resolvers.Query.failing())
    t.is(error.message, `Insufficient Permissions.`)
 })
 
-test('Permit complex permission', async t => {
+test('Permit permission with logic.', async t => {
    const resolvers = setup()
 
-   const error = await t.throws(resolvers.Query.complex({}, { code: 'wrong', agent: 'doesntmatter' }))
+   const error = await t.throws(resolvers.Query.logic({}, { code: 'wrong', agent: 'doesntmatter' }))
    t.is(error.message, `Insufficient Permissions.`)
 })
 
-test('Creates identity permission resolver', async t => {
+test('Create permission and resolver for permission with no resolver defined.', async t => {
    const resolvers = setup()
 
    const resolver = resolvers.NoResolver.other
    t.not(resolver, undefined)
 })
+
+test('Keep subscription format.', async t => {
+   const resolvers = setup()
+
+   const resolver = resolvers.Subscription.counter.subscribe
+   t.not(resolver, undefined)
+})
+
+test('Allow Subscription access.', async t => {
+   const resolvers = setup()
+
+   const res = await resolvers.Subscription.counter.subscribe({}, { code: 'code' })
+   t.is(res, 'subscribed')
+})
+
+test('Permit Subscription access.', async t => {
+   const resolvers = setup()
+
+   const error = await t.throws(resolvers.Subscription.counter.subscribe({}, { code: 'wrong' }))
+   t.is(error.message, `Insufficient Permissions.`)
+})
+
+test('Keep Fragment format.', async t => {
+   const resolvers = setup()
+
+   const resolver = resolvers.Fragment.count
+   t.true(exists(resolver.fragment) && exists(resolver.resolve))
+})
+
+test('Fragment copied correctly.', async t => {
+   const resolvers = setup()
+
+   const resolver = resolvers.Fragment.count
+   t.is(resolver.fragment, 'fragment')
+})
+
+test('Allow Fragment access.', async t => {
+   const resolvers = setup()
+
+   const res = await resolvers.Fragment.count.resolve({}, { code: 'code' })
+   t.is(res, 'count')
+})
+
+test('Permit Fragment access.', async t => {
+   const resolvers = setup()
+
+   const error = await t.throws(resolvers.Fragment.count.resolve({}, { code: 'wrong' }))
+   t.is(error.message, `Insufficient Permissions.`)
+})
+
+// Helpers -------------------------------------------------------------------
+
+function exists(val)  {
+   return val !== undefined && val !== null && val !== {}
+}
