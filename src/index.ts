@@ -40,34 +40,34 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
 
 function resolvePermission(key: string, resolver: IResolver, permission: IPermission, options: Options): IResolver {
    if (!resolver) {
-      return resolveResolverPermission(identity(key), permission, options)
+      return resolveResolverPermission(key, identity(key), permission, options)
    }
    if (isResolverWithFragment(resolver)) {
-      return resolveResolverWithFragmentPermission(resolver, permission, options)
+      return resolveResolverWithFragmentPermission(key, resolver, permission, options)
    }
    if (isResolverWithOptions(resolver)) {
-      return resolveResolverWithOptionsPermission(resolver, permission, options)
+      return resolveResolverWithOptionsPermission(key, resolver, permission, options)
    }
-   return resolveResolverPermission(resolver, permission, options)
+   return resolveResolverPermission(key, resolver, permission, options)
 }
 
-function resolveResolverWithFragmentPermission(resolver: IResolver, permission: IPermission, options: Options) {
+function resolveResolverWithFragmentPermission(key: string, resolver: IResolver, permission: IPermission, options: Options) {
    return {
       fragment: resolver.fragment,
-      resolve: resolveResolverPermission(resolver.resolve, permission, options)
+      resolve: resolveResolverPermission(key, resolver.resolve, permission, options)
    }
 }
 
-function resolveResolverWithOptionsPermission(resolver: IResolverOptions, permission: IPermission, options: Options) {
+function resolveResolverWithOptionsPermission(key: string, resolver: IResolverOptions, permission: IPermission, options: Options) {
    return {
-      resolve: resolver.resolve && resolveResolverPermission(resolver.resolve, permission, options),
-      subscribe: resolver.subscribe && resolveResolverPermission(resolver.subscribe, permission, options),
+      resolve: resolver.resolve && resolveResolverPermission(key, resolver.resolve, permission, options),
+      subscribe: resolver.subscribe && resolveResolverPermission(key, resolver.subscribe, permission, options),
       __isTypeOf: resolver.__isTypeOf,
       __resolveType: resolver.__resolveType
    }
 }
 
-function resolveResolverPermission(resolver: IResolver, permission: IPermission, options: Options) {   
+function resolveResolverPermission(key: string, resolver: IResolver, permission: IPermission, options: Options) {   
    return async (parent, args, ctx, info) => {      
       try {
          let authorised: boolean
@@ -79,7 +79,7 @@ function resolveResolverPermission(resolver: IResolver, permission: IPermission,
             authorised = await permission(parent, args, ctx, info)
          }
 
-         if (options.cache) {
+         if (options.cache && isPermissionCachable(key, permission)) {
             _ctx = {
                ...ctx,
                _cache: {
@@ -129,6 +129,10 @@ function isResolverWithFragment(type: any): boolean {
 
 function isResolverWithOptions(type: any): boolean {
    return typeof type === 'object' && ('resolve' in type || 'subscribe' in type || '__resolveType' in type || '__isTypeOf' in type)
+}
+
+function isPermissionCachable(key: string, func: any) {
+	return key !== func.name
 }
 
 export class PermissionError extends Error {
