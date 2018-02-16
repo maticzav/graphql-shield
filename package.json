@@ -1,7 +1,7 @@
 {
   "name": "graphql-shield",
   "description": "A GraphQL protector tool to keep your queries and mutations safe from intruders.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
@@ -18,7 +18,7 @@
     "typescript": "^2.7.1"
   },
   "scripts": {
-    "prepublish": "npm run build",
+    "prepublish": "npm run test",
     "build": "rm -rf dist && tsc -d",
     "lint": "tslint --project tsconfig.json {src}/**/*.ts",
     "test-ava": "ava tests/*.js --verbose",
