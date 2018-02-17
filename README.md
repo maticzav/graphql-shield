@@ -25,7 +25,7 @@ npm install graphql-shield
 
 ```js
 const { GraphQLServer } = require('graphql-yoga')
-const { shield } = require('../../../dist/src/index')
+const { shield } = require('graphql-shield')
 
 const verify = ctx => {
   const Authorization = ctx.request.get('Authorization')
