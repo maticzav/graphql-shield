@@ -1,6 +1,7 @@
 <p align="center"><img src="https://imgur.com/DX1VKtn.png" width="150" /></p>
 
 # graphql-shield
+
 [![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
 
 A GraphQL protector tool to keep your queries and mutations safe from intruders.
@@ -11,7 +12,7 @@ A GraphQL protector tool to keep your queries and mutations safe from intruders.
 - __Super easy to use:__ Just add a wrapper function around your `resolvers` and you are ready to go!
 - __Compatible:__ Works with all GraphQL Servers.
 - __Super efficient:__ Caches results of previous queries to make your database more responsive.
-- __Per-Type:__ Write permissions for your type specificly (check the example below).
+- __Per-Type:__ Write permissions for your type specifically (check the example below).
 - __Tested:__ Well [tested](https://github.com/maticzav/graphql-shield/tree/master/tests) functionalities!
 
 ## Install
@@ -20,7 +21,7 @@ A GraphQL protector tool to keep your queries and mutations safe from intruders.
 npm install graphql-shield
 ```
 
-## Usage
+## Example
 
 ```js
 const { GraphQLServer } = require('graphql-yoga')
@@ -93,13 +94,15 @@ server.start(() => console.log('Server is running on http://localhost:4000'))
 
 ## API
 
-#### `shield(resolvers, permissions, options?)`
+### `shield(resolvers, permissions, options?)`
 
-##### `resolvers`
+#### `resolvers`
+
 GraphQL resolvers.
 
 #### `permissions`
-A permission function must return a boolean.
+
+A permission-function must return a boolean.
 
 ```ts
 type IPermission = (
@@ -111,8 +114,8 @@ type IPermission = (
 ```
 
 - same arguments as for any GraphQL resolver.
-- can be promise or synchronous function
-- blacklisting permissions (you have to explicility prevent access)
+- can be a promise or synchronous function
+- blacklisting permissions (you have to explicitly prevent access)
 
 ```js
 const auth = (parent, args, ctx, info) => {
@@ -155,7 +158,8 @@ export default shield(resolvers, permissions, options)
 ```
 
 #### Options
-Optionaly disable caching or use debug mode to find your bugs faster.
+
+Optionally disable caching or use debug mode to find your bugs faster.
 
 ```ts
 interface Options {
@@ -164,7 +168,54 @@ interface Options {
 }
 ```
 
-> `cache` is enabled by default.
+## Caching
+
+GraphQL shield has `cache` enabled by default. Cache is used to prevent multiple calls of the same permission, thus making your server more responsive.
+
+### Usage
+
+In order to use `cache`, you have to define a separate permission-function - a function with a name.
+
+```ts
+const auth = () => authorise
+const permissions = {
+  Query: {
+    user: auth,
+  },
+  User: {
+    secret: auth
+  },
+}
+```
+
+```gql
+{
+  user {
+    secret
+  }
+}
+```
+
+`user` query resolves with a `User` type. `User` type has multiple fields - `id`, `name` and `secret`, where only `secret` explicitly requires the user to be authorised. Therefore, when the query is being executed the server should evaluate `auth` permission-function two times - once for each level. Since we are using `cache` we can prevent this unnecessary overload by saving the results of previously evaluated `auth` function in the cache and use it as a result of the new one as well. This way we can prevent multiple unnecessary calls and improve the overall responsiveness of our server.
+
+```ts
+// doesn't cache
+const permissions = {
+  Query: {
+    user: () => authorise,
+  },
+  User: {
+    secret: () => authorise
+  },
+}
+```
+
+The following example doesn't cache as we cannot draw any relation between the two permission-functions but the chain itself.
+
+### Requirements
+
+- Permission functions shouldn't rely on any external variables, but the resolver arguments themselves to prevent unpredited behaviour.
+- Permission functions with the same name are considered to have the same output.
 
 ## License
 
