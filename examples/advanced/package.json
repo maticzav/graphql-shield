@@ -7,7 +7,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "graphql-shield": "^1.0.6",
+    "graphql-shield": "latest",
     "graphql-yoga": "^1.2.5"
   }
 }
