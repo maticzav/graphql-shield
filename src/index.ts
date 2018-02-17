@@ -29,13 +29,6 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
       }
    }) 
 
-   // Copy unpermitted resolvers.
-   Object.keys(resolvers).forEach(key => {
-      if (!destination[key]) {
-         destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key], options)
-      }
-   })
-
    return destination
 }
 
