@@ -196,23 +196,7 @@ const permissions = {
 }
 ```
 
-`user` query resolves with a `User` type. `User` type has multiple fields - `id`, `name` and `secret`, where only `secret` explicitly requires the user to be authorised. Therefore, when the query is being executed the server should evaluate `auth` permission-function two times - once for each level. Since we are using `cache` we can prevent this unnecessary overload by saving the results of previously evaluated `auth` function in the cache and use it as a result of the new one as well. This way we can prevent multiple unnecessary calls and improve the overall responsiveness of our server.
-
-### Issues with caching
-
-```ts
-// doesn't cache
-const permissions = {
-  Query: {
-    user: () => authorise,
-  },
-  User: {
-    secret: () => authorise
-  },
-}
-```
-
-The following example doesn't cache as we cannot draw any relation between the two permission-functions but the chain itself.
+The following query resolves with a `User` type. `User` type has multiple fields - `id`, `name` and `secret`, where only `secret` explicitly requires the user to be authorised. Therefore, when the query is being executed the server should evaluate `auth` permission-function two times - once for each level. Since we are using `cache` we can prevent this unnecessary overload by saving the results of previously evaluated `auth` function in the cache and use it as a result of the new one as well. This way we can prevent multiple unnecessary calls and improve the overall responsiveness of our server.
 
 ### Requirements
 
