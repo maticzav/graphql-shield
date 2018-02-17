@@ -13,7 +13,7 @@ export const shield = (resolvers: IResolvers, permissions: IPermissions, options
 function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermissions, options: Options): IResolvers {
    let destination = {}
 
-	// Copy resolvers if no permission is defined.
+   // Copy resolvers if no permission is defined.
    if (permissions === undefined) {
       return resolvers
    }
@@ -68,32 +68,26 @@ function resolveResolverWithOptionsPermission(key: string, resolver: IResolverOp
    }
 }
 
-function resolveResolverPermission(key: string, resolver: IResolver, permission: IPermission, options: Options) {   
+function resolveResolverPermission(key: string, resolver: IResolver, permission: IPermission, options: Options) {
    return async (parent, args, ctx, info) => {      
       try {
          let authorised: boolean
-         let _ctx: any
 
          if (options.cache && ctx && ctx._cache && ctx._cache[permission.name]) {
             authorised = ctx._cache[permission.name]
          } else {
             authorised = await permission(parent, args, ctx, info)
          }
-
+               
          if (options.cache && isPermissionCachable(key, permission)) {
-            _ctx = {
-               ...ctx,
-               _cache: {
-                  ...ctx ? ctx._cache : {},
-                  [permission.name]: authorised
-               }
+            if (!ctx._cache) {
+               ctx._cache = {}
             }
-         } else {
-            _ctx = ctx
+            ctx._cache[permission.name] = authorised
          }
-         
+
          if (authorised) {
-            return resolver(parent, args, _ctx, info)
+            return resolver(parent, args, ctx, info)
          }
          throw new PermissionError()
       } catch (err) {
