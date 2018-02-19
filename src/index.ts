@@ -1,6 +1,8 @@
 import { IResolvers, IResolver, IPermissions, IPermission, Options, IResolverOptions } from './types'
 import chalk from 'chalk'
 
+// Export
+
 export const shield = (resolvers: IResolvers, permissions: IPermissions, options?: Options): IResolvers => {
    const _options = { 
       debug: false, 
@@ -13,35 +15,43 @@ export const shield = (resolvers: IResolvers, permissions: IPermissions, options
 function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermissions, options: Options): IResolvers {
    let destination = {}
 
-   // Copy resolvers if no permission is defined.
-   if (permissions === undefined) {
-      return resolvers
-   }
-
    // Create permission tree.
-   Object.keys(permissions).forEach(key => {
-      if (isMergableObject(permissions[key]) && isMergableObject(resolvers[key])) {
+   getObjectsKeys(permissions, resolvers).forEach(key => {
+      const mergablePermissions = isMergableObject(permissions[key])
+      const mergableResolvers = isMergableObject(resolvers[key])
+
+      if (mergablePermissions && mergableResolvers) {
          destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key], options)
-      } else if (isMergableObject(permissions[key])) {
+      } else if (mergablePermissions && !mergableResolvers) {
          destination[key] = mergeResolversAndPermissions({}, permissions[key], options)
+      } else if (!mergablePermissions && mergableResolvers) {
+         destination[key] = mergeResolversAndPermissions(resolvers[key], permissions, options)
       } else {
-         destination[key] = resolvePermission(key, resolvers[key], permissions[key], options)
+         destination[key] = generateResolverWithPermission(key, resolvers[key], permissions[key], options)
       }
    }) 
 
    return destination
 }
 
-function resolvePermission(key: string, resolver: IResolver, permission: IPermission, options: Options): IResolver {
-   if (!isResolverValid(resolver)) {
-      return resolveResolverPermission(key, identity(key), permission, options)
+// Tree generation helpers
+
+function generateResolverWithPermission(key: string, resolver: IResolver, permission: IPermission, options: Options): IResolver {
+   if (!resolver) {
+      resolver = _identity(key)
    }
+
+   if (!permission) {
+      permission = _allowInDebugMode(options)
+   }
+
    if (isResolverWithFragment(resolver)) {
       return resolveResolverWithFragmentPermission(key, resolver, permission, options)
    }
    if (isResolverWithOptions(resolver)) {
       return resolveResolverWithOptionsPermission(key, resolver, permission, options)
    }
+
    return resolveResolverPermission(key, resolver, permission, options)
 }
 
@@ -85,9 +95,7 @@ function resolveResolverPermission(key: string, resolver: IResolver, permission:
          throw new PermissionError()
       } catch (err) {
          if (options.debug) {
-            console.log(chalk.blue('DEBUG LOG:'))
-            console.log(err)
-            console.log(chalk.blue('~~~~~~~~~~'))
+            debug(err)
          }
          
          throw new PermissionError()
@@ -95,10 +103,56 @@ function resolveResolverPermission(key: string, resolver: IResolver, permission:
    }
 }
 
-function identity(key) {
+// Resolvers and permissions helpers
+
+function _identity(key) {
    return (parent, args, ctx, info) => {
       return parent[key]
    }
+}
+
+function _allowInDebugMode(options: Options) {
+   return (parent, args, ctx, info) => {
+      if (options.debug) {
+         debug`
+            This function would be permited in PRODUCITON.
+
+            You are in debug mode. To test production functionality set "debug" option to false.
+         `
+         return true
+      }
+      return false
+   }
+}
+
+export function every(...permissions: IPermission[]): IPermission {
+   return (parent, args, ctx, info) => {
+      return false
+   }
+}
+
+export function some(...permissions: IPermission[]): IPermission {
+   return (parent, args, ctx, info) => {
+      return false
+   }
+}
+
+export function map(permission: IPermission, resolvers: object): IPermissions {
+   return {}
+}
+
+// Helpers
+
+function getObjectsKeys(...objs: object[]): any[] {
+   return unique(concat(...objs.map(Object.keys)))
+}
+
+function unique(arr: any[]): any[] {
+   return [...Array.from(new Set(arr))]
+}
+
+function concat(...arr: any[][]): any[] {
+   return [].concat(...arr)
 }
 
 function isMergableObject(obj: any): boolean {
@@ -119,13 +173,20 @@ function isResolverWithOptions(type: any): boolean {
    return typeof type === 'object' && ('resolve' in type || 'subscribe' in type || '__resolveType' in type || '__isTypeOf' in type)
 }
 
-function isResolverValid(type: any): boolean {
-	return !!type
-}
-
 function isPermissionCachable(key: string, func: any): boolean {
 	return key !== func.name
 }
+
+function debug(strings: TemplateStringsArray): void {
+   console.log(chalk.blue('DEBUG LOG:'))
+   console.log(chalk.blue('~~~~~~~~~~'))
+   strings.forEach(str => {
+      console.log(str)
+   })
+   console.log(chalk.blue('~~~~~~~~~~'))
+}
+
+// Error type
 
 export class PermissionError extends Error {
    constructor() {

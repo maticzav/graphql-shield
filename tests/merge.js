@@ -32,9 +32,7 @@ const _permissions = {
    Subscription: {
       counter: (_, { code }) => code === 'code'
    },
-   NoResolver: {
-      other: () => true
-   },
+   NoResolver: () => true,
    Fragment: {
       count: (_, { code }) => code === 'code'
    }
@@ -58,11 +56,11 @@ test('Allow permission with logic.', async t => {
    t.is(res, 'agent')
 })
 
-test('Allow open permission.', async t => {
+test('Permit resolver with no permission.', async t => {
    const resolvers = setup()
 
-   const res = await resolvers.Query.open()
-   t.is(res, 'open')
+   const resolver = resolvers.Query.open
+   t.is(res, undefined)
 })
 
 test('Permit simple permission.', async t => {
