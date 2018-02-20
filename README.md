@@ -4,16 +4,20 @@
 
 [![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
 
-A GraphQL protector tool to keep your queries and mutations safe from intruders.
+A GraphQL server permission layer to keep your queries and mutations safe from intruders.
 
 ## Overview
+
+GraphQL Shield helps you create permission layer for your application. The idea behind it is to separate the permission logic, such as authorization, from your application logic. This way you can you can make sure no request will ever be resolved if it wasn't meant to be.
+
+## Features
 
 - __Super Flexible:__ It supports everything GraphQL server does.
 - __Super easy to use:__ Just add a wrapper function around your `resolvers` and you are ready to go!
 - __Compatible:__ Works with all GraphQL Servers.
 - __Super efficient:__ Caches results of previous queries to make your database more responsive.
 - __Per-Type:__ Write permissions for your type specifically (check the example below).
-- __Tested:__ Well [tested](https://github.com/maticzav/graphql-shield/tree/master/tests) functionalities!
+- __Tested:__ Very well [tested](https://github.com/maticzav/graphql-shield/tree/master/tests) functionalities!
 
 ## Install
 
