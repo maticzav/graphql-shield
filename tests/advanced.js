@@ -4,7 +4,8 @@ import { makeExecutableSchema } from 'graphql-tools'
 import { shield, PermissionError } from '../dist/src/index.js'
 
 // Setup
-const _typeDefs = gql`
+
+const _typeDefs = `
    type Query {
       events(take: Int): [Event!]!
       someNewFeature: String!
@@ -20,4 +21,6 @@ const _typeDefs = gql`
    }
 `
 
-const 
+// Tests
+
+test.todo('Advanced tests')

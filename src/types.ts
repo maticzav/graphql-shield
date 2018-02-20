@@ -18,7 +18,7 @@ export interface IResolvers {
 }
 
 export type IResolverObject = {
-   [key: string]: IResolver | IResolverOptions,
+   [key: string]: IResolver | IResolverOptions | IResolverWithFragment,
 }
 
 export type IResolver = GraphQLFieldResolver<any, any>
@@ -28,6 +28,11 @@ export interface IResolverOptions {
    subscribe?: IResolver
    __resolveType?: GraphQLTypeResolver<any, any>
    __isTypeOf?: GraphQLIsTypeOfFn<any, any>
+}
+
+export interface IResolverWithFragment {
+   fragment: String
+   resolve: IResolver
 }
 
 export interface Options {

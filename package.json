@@ -10,6 +10,8 @@
     "graphql": "^0.13.0"
   },
   "devDependencies": {
+    "@types/graphql": "^0.12.4",
+    "@types/node": "^9.4.6",
     "ava": "^0.25.0",
     "graphql-tools": "^2.21.0",
     "tslint": "^5.9.1",

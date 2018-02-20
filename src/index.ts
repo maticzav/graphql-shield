@@ -1,33 +1,43 @@
-import { IResolvers, IResolver, IPermissions, IPermission, Options, IResolverOptions } from './types'
+import { IResolvers, IResolver, IResolverOptions, IResolverWithFragment, IResolverObject, IPermissions, IPermission, Options } from './types'
 import chalk from 'chalk'
 
 // Export
 
 export const shield = (resolvers: IResolvers, permissions: IPermissions, options?: Options): IResolvers => {
+   const development = process.env.NODE_ENV !== 'production'   
+
+   // Override default options
    const _options = { 
-      debug: false, 
+      debug: false || development, 
       cache: true, 
       ...options 
    }
+
    return mergeResolversAndPermissions(resolvers, permissions, _options)
 }
 
-function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermissions, options: Options): IResolvers {
+// Tree
+
+function mergeResolversAndPermissions(
+   resolvers: IResolvers | IResolverObject, 
+   permissions: IPermissions, 
+   options: Options
+): IResolvers {
    let destination = {}
 
    // Create permission tree.
-   getObjectsKeys(permissions, resolvers).forEach(key => {
-      const mergablePermissions = isMergableObject(permissions[key])
-      const mergableResolvers = isMergableObject(resolvers[key])
+   getObjectsKeys(permissions, resolvers).forEach(key => {      
+      const mergablePermissions = isMergableObject(permissions)
+      const mergableResolvers = isMergableObject(resolvers)      
 
       if (mergablePermissions && mergableResolvers) {
-         destination[key] = mergeResolversAndPermissions(resolvers[key], permissions[key], options)
+         destination[key] = mergeResolversAndPermissions(resolvers[key] as IResolverObject, permissions[key], options)
       } else if (mergablePermissions && !mergableResolvers) {
-         destination[key] = mergeResolversAndPermissions({}, permissions[key], options)
+         destination[key] = mergeResolversAndPermissions({} as IResolverObject, permissions[key], options)
       } else if (!mergablePermissions && mergableResolvers) {
-         destination[key] = mergeResolversAndPermissions(resolvers[key], permissions, options)
+         destination[key] = mergeResolversAndPermissions(resolvers[key] as IResolverObject, permissions, options)
       } else {
-         destination[key] = generateResolverWithPermission(key, resolvers[key], permissions[key], options)
+         destination[key] = generateResolverWithPermission(key, resolvers[key] as IResolver | IResolverOptions | IResolverWithFragment, permissions[key], options)
       }
    }) 
 
@@ -36,7 +46,12 @@ function mergeResolversAndPermissions(resolvers: IResolver, permissions: IPermis
 
 // Tree generation helpers
 
-function generateResolverWithPermission(key: string, resolver: IResolver, permission: IPermission, options: Options): IResolver {
+function generateResolverWithPermission(
+   key: string, 
+   resolver: IResolver | IResolverOptions | IResolverWithFragment, 
+   permission: IPermission, 
+   options: Options
+): IResolver | IResolverOptions | IResolverWithFragment {
    if (!resolver) {
       resolver = _identity(key)
    }
@@ -46,23 +61,33 @@ function generateResolverWithPermission(key: string, resolver: IResolver, permis
    }
 
    if (isResolverWithFragment(resolver)) {
-      return resolveResolverWithFragmentPermission(key, resolver, permission, options)
+      return resolveResolverWithFragmentPermission(key, resolver as IResolverWithFragment, permission, options)
    }
    if (isResolverWithOptions(resolver)) {
-      return resolveResolverWithOptionsPermission(key, resolver, permission, options)
+      return resolveResolverWithOptionsPermission(key, resolver as IResolverOptions, permission, options)
    }
 
-   return resolveResolverPermission(key, resolver, permission, options)
+   return resolveResolverPermission(key, resolver as IResolver, permission, options)
 }
 
-function resolveResolverWithFragmentPermission(key: string, resolver: IResolver, permission: IPermission, options: Options) {
+function resolveResolverWithFragmentPermission(
+   key: string, 
+   resolver: IResolverWithFragment, 
+   permission: IPermission, 
+   options: Options
+): IResolverWithFragment {
    return {
       fragment: resolver.fragment,
       resolve: resolveResolverPermission(key, resolver.resolve, permission, options)
    }
 }
 
-function resolveResolverWithOptionsPermission(key: string, resolver: IResolverOptions, permission: IPermission, options: Options) {
+function resolveResolverWithOptionsPermission(
+   key: string, 
+   resolver: IResolverOptions, 
+   permission: IPermission, 
+   options: Options
+): IResolverOptions {
    return {
       resolve: resolver.resolve && resolveResolverPermission(key, resolver.resolve, permission, options),
       subscribe: resolver.subscribe && resolveResolverPermission(key, resolver.subscribe, permission, options),
@@ -71,7 +96,12 @@ function resolveResolverWithOptionsPermission(key: string, resolver: IResolverOp
    }
 }
 
-function resolveResolverPermission(key: string, resolver: IResolver, permission: IPermission, options: Options) {
+function resolveResolverPermission(
+   key: string, 
+   resolver: IResolver, 
+   permission: IPermission, 
+   options: Options
+): IResolver {
    return async (parent, args, ctx, info) => {      
       try {
          let authorised: boolean
@@ -105,13 +135,13 @@ function resolveResolverPermission(key: string, resolver: IResolver, permission:
 
 // Resolvers and permissions helpers
 
-function _identity(key) {
+function _identity(key): IResolver {
    return (parent, args, ctx, info) => {
       return parent[key]
    }
 }
 
-function _allowInDebugMode(options: Options) {
+function _allowInDebugMode(options: Options): IPermission {
    return (parent, args, ctx, info) => {
       if (options.debug) {
          debug`
