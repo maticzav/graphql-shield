@@ -125,9 +125,15 @@ function _allowInDebugMode(options: Options) {
    }
 }
 
-export function every(...permissions: IPermission[]): IPermission {
+export function every(..._permissions: IPermission[]): IPermission {
    return (parent, args, ctx, info) => {
-      return false
+      try {
+         const permissions = _permissions.map(permission => true)
+         
+         return permissions.every(p => p)
+      } catch(err) {
+         return false
+      }
    }
 }
 
