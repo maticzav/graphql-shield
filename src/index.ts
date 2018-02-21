@@ -27,15 +27,15 @@ function mergeResolversAndPermissions(
 
    // Create permission tree.
    getObjectsKeys(permissions, resolvers).forEach(key => {      
-      const mergablePermissions = isMergableObject(permissions)
-      const mergableResolvers = isMergableObject(resolvers)      
+      const mergablePermissions = isMergableObject(permissions[key])
+      const mergableResolvers = isMergableObject(resolvers[key])
 
       if (mergablePermissions && mergableResolvers) {
          destination[key] = mergeResolversAndPermissions(resolvers[key] as IResolverObject, permissions[key], options)
       } else if (mergablePermissions && !mergableResolvers) {
          destination[key] = mergeResolversAndPermissions({} as IResolverObject, permissions[key], options)
       } else if (!mergablePermissions && mergableResolvers) {
-         destination[key] = mergeResolversAndPermissions(resolvers[key] as IResolverObject, permissions, options)
+         destination[key] = generateResolversWithPermission(resolvers[key] as IResolverObject, permissions[key], options)
       } else {
          destination[key] = generateResolverWithPermission(key, resolvers[key] as IResolver | IResolverOptions | IResolverWithFragment, permissions[key], options)
       }
@@ -45,6 +45,15 @@ function mergeResolversAndPermissions(
 }
 
 // Tree generation helpers
+
+function generateResolversWithPermission(
+   resolvers: IResolverObject, 
+   permission: IPermission, 
+   options: Options
+): IResolvers {
+   const permissions = map(permission, resolvers)
+   return mergeResolversAndPermissions(resolvers, permissions, options)
+}
 
 function generateResolverWithPermission(
    key: string, 
@@ -112,7 +121,7 @@ function resolveResolverPermission(
             authorised = await permission(parent, args, ctx, info)
          }
                
-         if (options.cache && isPermissionCachable(key, permission)) {
+         if (options.cache && ctx && isPermissionCachable(key, permission)) {
             if (!ctx._cache) {
                ctx._cache = {}
             }
@@ -125,7 +134,9 @@ function resolveResolverPermission(
          throw new PermissionError()
       } catch (err) {
          if (options.debug) {
-            debug(err)
+            debug`
+               ${err}
+            `
          }
          
          throw new PermissionError()
@@ -145,9 +156,8 @@ function _allowInDebugMode(options: Options): IPermission {
    return (parent, args, ctx, info) => {
       if (options.debug) {
          debug`
-            This function would be permited in PRODUCITON.
-
-            You are in debug mode. To test production functionality set "debug" option to false.
+            This function would be permited in PRODUCITON. You are in debug mode. 
+            (To test production functionality set "debug" option to false.)
          `
          return true
       }
@@ -174,7 +184,10 @@ export function some(...permissions: IPermission[]): IPermission {
 }
 
 export function map(permission: IPermission, resolvers: object): IPermissions {
-   return {}
+   return getObjectsKeys(resolvers).reduce((acc, key) => {
+      acc[key] = permission
+      return acc
+   }, {})
 }
 
 // Helpers
@@ -213,12 +226,22 @@ function isPermissionCachable(key: string, func: any): boolean {
 	return key !== func.name
 }
 
-function debug(strings: TemplateStringsArray): void {
+function debug(strings: TemplateStringsArray, ...args: any[]): void {
+   const parts = strings.reduce((acc, val, index) => {
+      acc.push(val)
+
+      if(args[index]) {
+         acc.push(args[index])
+      }
+
+      return acc
+   }, [])
+
    console.log(chalk.blue('DEBUG LOG:'))
    console.log(chalk.blue('~~~~~~~~~~'))
-   strings.forEach(str => {
-      console.log(str)
-   })
+
+   console.log(parts.join(''))
+
    console.log(chalk.blue('~~~~~~~~~~'))
 }
 
