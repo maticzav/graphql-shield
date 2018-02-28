@@ -11,6 +11,7 @@ const _typeDefs = `
       logic(code: String!, agent: String!): String!
       failing: String!
       child: Child!
+      custom: String!
    }
 
    type Subscription {
@@ -39,7 +40,8 @@ const _resolvers = {
       simple: () => `simple`,
       logic: (_, { agent }) => agent,
       failing: () => 'failing',
-      child: () => ({ name: 'Matic', age: 9 })
+      child: () => ({ name: 'Matic', age: 9 }),
+      custom: () => 'custom'
    },
    Subscription: {
       counter: {
@@ -58,7 +60,8 @@ const _permissions = {
    Query: {
       simple: () => true,
       logic: (_, { code }) => code === 'code',
-      failing: () => false
+      failing: () => false,
+      custom: () => new PermissionError('custom message')
    },
    Subscription: {
       counter: (_, { code }) => code === 'code'
@@ -105,6 +108,16 @@ test('GraphQL permit simple request', async t => {
 
    t.is(res.data, null)
    t.not(res.errors, undefined)
+})
+
+test('GraphQL provide custom error message', async t => {
+    const schema = setup()
+
+   const query = ` { custom } `
+   const res = await graphql(schema, query)
+
+   t.is(res.data, null)
+   t.is(res.errors[0].message, 'custom message')
 })
 
 test('GraphQL allow logic request', async t => {
