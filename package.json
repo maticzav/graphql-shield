@@ -1,7 +1,7 @@
 {
   "name": "graphql-shield",
   "description": "A GraphQL protector tool to keep your queries and mutations safe from intruders.",
-  "version": "0.0.0-development",
+  "version": "0.0.0-semantic-release",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
@@ -29,6 +29,9 @@
   "files": [
     "dist"
   ],
+  "release": {
+    "branch": "master"
+  },
   "homepage": "https://github.com/maticzav/graphql-shield",
   "repository": {
     "type": "git",
