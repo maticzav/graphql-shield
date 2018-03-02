@@ -71,7 +71,7 @@ function resolveResolverWithOptionsPermission(key: string, resolver: IResolverOp
 function resolveResolverPermission(key: string, resolver: IResolver, permission: IPermission, options: Options) {
    return async (parent, args, ctx, info) => {      
       try {
-         let authorised: boolean
+         let authorised: boolean | PermissionError
 
          if (options.cache && ctx && ctx._cache && ctx._cache[permission.name]) {
             authorised = ctx._cache[permission.name]
@@ -86,7 +86,9 @@ function resolveResolverPermission(key: string, resolver: IResolver, permission:
             ctx._cache[permission.name] = authorised
          }
 
-         if (authorised) {
+         if (authorised && (authorised as PermissionError).isPermissionError) {
+            throw authorised;
+         } else if (authorised) {
             return resolver(parent, args, ctx, info)
          }
          throw new PermissionError()
@@ -96,8 +98,11 @@ function resolveResolverPermission(key: string, resolver: IResolver, permission:
             console.log(err)
             console.log(chalk.blue('~~~~~~~~~~'))
          }
-         
-         throw new PermissionError()
+         if (err.isPermissionError){
+            throw err;
+         } else {
+            throw new PermissionError()
+         }
       }
    }
 }
@@ -135,7 +140,9 @@ function isPermissionCachable(key: string, func: any): boolean {
 }
 
 export class PermissionError extends Error {
-   constructor() {
-      super(`Insufficient Permissions.`)
+   isPermissionError: boolean
+   constructor(msg?: string) {
+      super(msg || `Insufficient Permissions.`)
+      this.isPermissionError = true;
    }
 }
