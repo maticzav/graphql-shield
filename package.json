@@ -6,17 +6,17 @@
   "typings": "dist/src/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "dependencies": {
+    "chalk": "^2.3.2",
     "graphql": "^0.13.0"
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "chalk": "^2.3.1",
     "graphql-tools": "^2.21.0",
+    "semantic-release": "^12.4.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.7.0",
     "tslint-config-standard": "^7.0.0",
-    "typescript": "^2.7.1",
-    "semantic-release": "^12.4.1"
+    "typescript": "^2.7.1"
   },
   "scripts": {
     "prepublish": "npm run test",
