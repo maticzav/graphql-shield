@@ -58,6 +58,7 @@ const typeDefs = `
 
 // Rules
 
+@rule
 async function isAuthenticated(parent, args, ctx, info) {
   return ctx.user !== null
 }
