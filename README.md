@@ -8,7 +8,7 @@ A GraphQL server permission layer to keep your queries and mutations safe from i
 
 ## Overview
 
-GraphQL Shield helps you create permission layer for your application. The idea behind it is to separate the permission logic, such as authorization, from your application logic. This way you can you can make sure no request will ever be resolved if it wasn't meant to be.
+GraphQL Shield helps you create permission layer for your application. The idea behind it is to separate the permission logic, such as authorization, from your application logic. This way you can make sure no request will ever be resolved if it wasn't meant to be.
 
 ## Features
 
