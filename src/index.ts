@@ -1,23 +1,49 @@
 import { IMiddleware } from 'graphql-middleware'
-import { IRuleFunction, IRules } from './types'
+import { IRuleFunction, IRuleOptions, IRules } from './types'
 import { IMiddlewareFunction } from 'graphql-middleware/dist/types'
 
 export { IRules }
 
-// Rule decorator
+// Helpers
 
-let rules = new Map<string, IRuleFunction>()
+function flattenObject<edge>(obj: object): edge[] {
+  const values = Object.keys(obj).reduce((acc, key) => {
+    if (typeof obj[key] === 'object') {
+      return [...acc, ...flattenObject(obj[key])]
+    } else {
+      return [...acc, obj[key]]
+    }
+  }, [])
+  return values
+}
 
-export function rule(func: IRuleFunction): IRuleFunction {
-  const name = func.name
-  if (rules.has(name)) {
-    throw new Error(
-      `It seems like you are trying to override the existing ${name} rule!`,
-    )
-  } else {
-    rules.set(rule.name, func)
+// Rule
+
+class Rule {
+  name: string = undefined
+  cache: boolean = true
+  _func: IRuleFunction
+
+  constructor(func: IRuleFunction, options?: IRuleOptions) {
+    this.name = func.name
+    this.cache = options.cache
+    this._func = func
   }
-  return func
+
+  async resolve(): Promise<boolean> {
+    return false
+  }
+}
+
+export const rule = (options: IRuleOptions) => (func: IRuleFunction): Rule => {
+  return new Rule(func, options)
+}
+
+function extractRules(ruleMap: IRules): Rule[] {
+  const resolvers = flattenObject<Rule | IRuleFunction>(ruleMap)
+  const rules: Rule[] = resolvers.filter(<(x) => x is Rule>resolver => resolver instanceof Rule)
+
+  return rules
 }
 
 // Cache
@@ -37,7 +63,7 @@ function ruleToMiddleware(rule: IRuleFunction): IMiddlewareFunction {
         throw new Error()
       }
     } catch (err) {
-      if (err instanceof RuleError || process.env.NODE_END !== 'production') {
+      if (err instanceof CustomError || process.env.NODE_END !== 'production') {
         throw err
       } else {
         throw new Error('Not Authorised!')
@@ -60,7 +86,7 @@ export function shield(rules: IRules): IMiddleware {
 
 // Error
 
-export class RuleError extends Error {
+export class CustomError extends Error {
   constructor(...props) {
     super(...props)
   }

@@ -1,11 +1,33 @@
-import { rule, gqlShield, allow } from 'graphql-shield'
+import { rule, shield, allow } from 'graphql-shield'
 
 // Rules
 
-@rule
+@rule({cache: true})
 async function isAuthenticated(parent, args, ctx, info) {
   return ctx.user !== null
 }
+
+@rule({cache: false})
+async function isAdmin(parent, args, ctx, info) {
+  return ctx.user.role === 'ADMIN'
+}
+
+const typeDefs = gql`
+  type Query {
+    viewer: Viewer
+    posts: Posts!
+  }
+
+  type Viewer {
+    name: String!
+  }
+
+  type Post {
+    id: ID!
+    title: String!
+    text: String!
+  }
+`
 
 // Permissions
 

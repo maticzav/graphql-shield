@@ -12,6 +12,10 @@ export type IRuleFunction = (
   info: GraphQLResolveInfo,
 ) => Promise<boolean>
 
+export interface IRuleOptions {
+  cache?: boolean
+}
+
 export interface IRuleTypeMap {
   [key: string]: IRuleFunction | IRuleFieldMap
 }
