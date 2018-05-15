@@ -3,6 +3,7 @@
 # graphql-shield
 
 [![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
+[![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors) 
 
 A GraphQL server permission layer to keep your queries and mutations safe from intruders.
 
@@ -206,13 +207,35 @@ The following query resolves with a `User` type. `User` type has multiple fields
 * Permission functions shouldn't rely on any external variables, but the resolver arguments themselves to prevent unpredited behaviour.
 * Permission functions with the same name are considered to have the same output.
 
-## Sponsors
+## Contributors
 
-<object type="image/svg+xml" data="https://opencollective.com/graphql-shield/tiers/sponsor.svg?avatarHeight=36&width=600"></object>
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="graphs/contributors"><img src="https://opencollective.com/graphql-shield/contributors.svg?width=890&button=false" /></a>
+
 
 ## Backers
 
-<object type="image/svg+xml" data="https://opencollective.com/graphql-shield/tiers/backer.svg?avatarHeight=36&width=600"></object>
+Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/graphql-shield#backer)]
+
+<a href="https://opencollective.com/graphql-shield#backers" target="_blank"><img src="https://opencollective.com/graphql-shield/backers.svg?width=890"></a>
+
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/graphql-shield#sponsor)]
+
+<a href="https://opencollective.com/graphql-shield/sponsor/0/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/0/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/1/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/2/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/2/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/3/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/3/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/4/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/4/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/5/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/5/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/6/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/6/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/7/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/7/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/8/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/8/avatar.svg"></a>
+<a href="https://opencollective.com/graphql-shield/sponsor/9/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/9/avatar.svg"></a>
+
+
 
 ## License
 
