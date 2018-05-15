@@ -7,7 +7,8 @@
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "dependencies": {
     "chalk": "^2.3.2",
-    "graphql": "^0.13.0"
+    "graphql": "^0.13.0",
+    "opencollective": "^1.0.3"
   },
   "devDependencies": {
     "ava": "^0.25.0",
@@ -24,7 +25,8 @@
     "lint": "tslint --project tsconfig.json {src}/**/*.ts",
     "test-ava": "ava tests/*.js --verbose",
     "test": "npm run lint && npm run build && npm run test-ava",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "postinstall": "opencollective postinstall"
   },
   "files": [
     "dist"
@@ -46,5 +48,10 @@
     "shield",
     "server"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "collective": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/graphql-shield",
+    "logo": "https://opencollective.com/graphql-shield/logo.txt"
+  }
 }
