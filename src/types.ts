@@ -4,6 +4,7 @@ import {
   GraphQLTypeResolver,
   GraphQLResolveInfo,
 } from 'graphql'
+import { Rule, LogicRule } from './'
 
 export type IRuleFunction = (
   parent: any,
@@ -12,16 +13,22 @@ export type IRuleFunction = (
   info: GraphQLResolveInfo,
 ) => Promise<boolean>
 
+export type IRule = Rule | LogicRule
+
 export interface IRuleOptions {
   cache?: boolean
 }
 
 export interface IRuleTypeMap {
-  [key: string]: IRuleFunction | IRuleFieldMap
+  [key: string]: IRule | IRuleFieldMap
 }
 
 export interface IRuleFieldMap {
-  [key: string]: IRuleFunction
+  [key: string]: IRule
 }
 
-export type IRules = IRuleFunction | IRuleTypeMap
+export type IRules = IRule | IRuleTypeMap
+
+export interface IOptions {
+  debug?: boolean
+}
