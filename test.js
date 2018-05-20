@@ -125,16 +125,10 @@ const getPermissions = t =>
       noCacheA: noCache(t),
       noCacheB: noCache(t),
       customError: customError,
-    },
-    Mutation: {
-      allow: allow,
-      deny: deny,
-      nullable: deny,
-      cacheA: cache(t),
-      cacheB: cache(t),
-      noCacheA: noCache(t),
-      noCacheB: noCache(t),
-      customError: customError,
+      logicANDAllow: logicAndAllow(t),
+      logicANDDeny: logicAndDeny(t),
+      logicORAllow: logicOrAllow(t),
+      logicORDeny: logicOrDeny(t),
     },
     NestedType: {
       allow: allow,
@@ -143,6 +137,10 @@ const getPermissions = t =>
       cacheB: cache(t),
       noCacheA: noCache(t),
       noCacheB: noCache(t),
+      logicANDAllow: logicAndAllow(t),
+      logicANDDeny: logicAndDeny(t),
+      logicORAllow: logicOrAllow(t),
+      logicORDeny: logicOrDeny(t),
     },
     Type: deny,
   })
@@ -151,32 +149,13 @@ const getPermissions = t =>
 
 // Allow
 
-test('shield:Query:Allow access', async t => {
+test('shield:Allow access', async t => {
   const _schema = getSchema()
   const permissions = getPermissions(t)
 
   const schema = applyMiddleware(_schema, permissions)
   const query = `
     query {
-      allow
-    }
-  `
-
-  const res = await graphql(schema, query, null, {})
-  t.deepEqual(res, {
-    data: {
-      allow: 'allow',
-    },
-  })
-})
-
-test('shield:Mutation:Allow access', async t => {
-  const _schema = getSchema()
-  const permissions = getPermissions(t)
-
-  const schema = applyMiddleware(_schema, permissions)
-  const query = `
-    mutation {
       allow
     }
   `
@@ -191,30 +170,13 @@ test('shield:Mutation:Allow access', async t => {
 
 // Deny
 
-test('shield:Query:Deny access', async t => {
+test('shield:Deny access', async t => {
   const _schema = getSchema()
   const permissions = getPermissions(t)
 
   const schema = applyMiddleware(_schema, permissions)
   const query = `
     query {
-      deny
-    }
-  `
-
-  const res = await graphql(schema, query, null, {})
-
-  t.is(res.data, null)
-  t.is(res.errors[0].message, 'Not Authorised!')
-})
-
-test('shield:Mutation:Deny access', async t => {
-  const _schema = getSchema()
-  const permissions = getPermissions(t)
-
-  const schema = applyMiddleware(_schema, permissions)
-  const query = `
-    mutation {
       deny
     }
   `
@@ -227,34 +189,13 @@ test('shield:Mutation:Deny access', async t => {
 
 // Nullable
 
-test('shield:Query:Nullable access', async t => {
+test('shield:Nullable access', async t => {
   const _schema = getSchema()
   const permissions = getPermissions(t)
 
   const schema = applyMiddleware(_schema, permissions)
   const query = `
     query {
-      allow
-      nullable
-    }
-  `
-
-  const res = await graphql(schema, query, null, {})
-
-  t.deepEqual(res.data, {
-    allow: 'allow',
-    nullable: null,
-  })
-  t.is(res.errors[0].message, 'Not Authorised!')
-})
-
-test('shield:Mutation:Nullable access', async t => {
-  const _schema = getSchema()
-  const permissions = getPermissions(t)
-
-  const schema = applyMiddleware(_schema, permissions)
-  const query = `
-    mutation {
       allow
       nullable
     }
