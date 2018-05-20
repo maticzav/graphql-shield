@@ -17,7 +17,7 @@ export class Rule {
   cache: boolean = true
   _func: IRuleFunction
 
-  constructor(name: string, func: IRuleFunction, options?: IRuleOptions) {
+  constructor(name: string, func: IRuleFunction, options: IRuleOptions = {}) {
     this.name = name
     this.cache = options.cache
     this._func = func
@@ -49,19 +49,7 @@ export class LogicRule {
 
 // Extended Types
 
-class RuleOr extends LogicRule {
-  _rules: IRule[]
-
-  constructor(funcs: IRule[]) {
-    super(funcs)
-  }
-
-  async resolve(): Promise<boolean> {
-    return false
-  }
-}
-
-class RuleAnd extends LogicRule {
+export class RuleOr extends LogicRule {
   _rules: IRule[]
 
   constructor(funcs: IRule[]) {
@@ -69,7 +57,30 @@ class RuleAnd extends LogicRule {
   }
 
   async resolve(parent, args, ctx, info): Promise<boolean> {
-    return false
+    const tasks = this._rules.map(rule => rule.resolve(parent, args, ctx, info))
+    return Promise.all(tasks)
+      .then(ts => ts.every(t => t === true))
+      .catch(err => {
+        throw err
+      })
+  }
+}
+
+export class RuleAnd extends LogicRule {
+  _rules: IRule[]
+
+  constructor(funcs: IRule[]) {
+    super(funcs)
+  }
+
+  async resolve(parent, args, ctx, info): Promise<boolean> {
+    const tasks = this._rules.map(rule => rule.resolve(parent, args, ctx, info))
+
+    return Promise.all(tasks)
+      .then(ts => ts.every(t => t === true))
+      .catch(err => {
+        throw err
+      })
   }
 }
 
@@ -147,14 +158,24 @@ function generateCache(rules: Rule[]) {
 
 // Generators
 
-const wrapResolverWithRule = (rules: Rule[], options: IOptions) => (
+const wrapResolverWithRule = (options: IOptions) => (
   rule: IRule,
 ): IMiddlewareFunction =>
   async function(resolve, parent, args, ctx, info) {
+    // Cache
+    if (!ctx) {
+      ctx = {}
+    }
+
+    if (!ctx._shield) {
+      ctx._shield = {}
+    }
+
     if (!ctx._shield.cache) {
       ctx._shield.cache = {}
     }
 
+    // Execution
     try {
       const allow = await rule.resolve(parent, args, ctx, info)
 
@@ -192,28 +213,25 @@ function convertRulesToMiddleware(
   return middleware
 }
 
-function generateMiddleware(
-  ruleTree: IRules,
-  rules: Rule[],
-  options: IOptions,
-): IMiddleware {
+function generateMiddleware(ruleTree: IRules, options: IOptions): IMiddleware {
   const middleware = convertRulesToMiddleware(
     ruleTree,
-    wrapResolverWithRule(rules, options),
+    wrapResolverWithRule(options),
   )
 
-  return middleware as IMiddleware
+  return middleware
 }
 
 // Shield
 
 export function shield(ruleTree: IRules, options?: IOptions): IMiddleware {
   const rules = extractRules(ruleTree)
+  // TODO: add validation step (duplicates)
 
   const optionsWithDefault = {
     debug: false,
     ...options,
   }
 
-  return generateMiddleware(ruleTree, rules, optionsWithDefault)
+  return generateMiddleware(ruleTree, optionsWithDefault)
 }
