@@ -7,8 +7,8 @@ export { IRules }
 // Classes
 
 export class CustomError extends Error {
-  constructor(...props) {
-    super(...props)
+  constructor(...args) {
+    super(...args)
   }
 }
 
@@ -193,10 +193,13 @@ const wrapResolverWithRule = (options: IOptions) => (
     try {
       const allow = await rule.resolve(parent, args, ctx, info)
 
+      // NOTE: Shield catches non-permission errors as well,
+      //       to prevent unpredicted Errors from leaking
+      //       to the client.
       if (allow) {
         return resolve(parent, args, ctx, info)
       } else {
-        throw new Error()
+        throw new CustomError('Not Authorised!')
       }
     } catch (err) {
       if (err instanceof CustomError || options.debug) {

@@ -110,7 +110,7 @@ const noCache = t =>
   })
 
 const customError = rule('customError')(async (parent, args, ctx, info) => {
-  throw CustomError('customError')
+  throw new CustomError('customError')
 })
 
 const logicAndAllow = t => and(allow, cache(t), noCache(t))
@@ -147,7 +147,7 @@ const getPermissions = t =>
       logicORAllow: logicOrAllow(t),
       logicORDeny: logicOrDeny(t),
     },
-    Type: deny,
+    Type: allow,
   })
 
 // Helpers
@@ -315,4 +315,119 @@ test('shield:Cache:Nested: Two type-level with cache', async t => {
   }
 
   await resolves(t, schema)(query, expected)
+})
+
+// Logic
+
+test('shield:Logic: Allow AND', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      logicANDAllow
+    }
+  `
+  const expected = {
+    logicANDAllow: 'logicANDAllow',
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Logic: Deny AND', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      logicANDDeny
+    }
+  `
+  const expected = {
+    logicANDDeny: 'logicANDDeny',
+  }
+
+  await fails(t, schema)(query, 'Not Authorised!')
+})
+
+test('shield:Logic: Allow OR', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      logicORAllow
+    }
+  `
+  const expected = {
+    logicORAllow: 'logicORAllow',
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Logic: Deny OR', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      logicORDeny
+    }
+  `
+  const expected = {
+    logicORDeny: 'logicORDeny',
+  }
+
+  await fails(t, schema)(query, 'Not Authorised!')
+})
+
+// Errors
+
+test('shield:Error: Custom error', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      customError
+    }
+  `
+  const expected = {
+    customError: 'customError',
+  }
+
+  await fails(t, schema)(query, 'customError')
+})
+
+test.todo('shield:Error: Debug error')
+
+// Cache:Logic
+
+test('shield:Cache:Logic: All caches', async t => {
+  t.plan(5)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      cacheA
+      cacheB
+      logicANDAllow
+      logicORAllow
+    }
+  `
+  const expected = {
+    cacheA: 'cacheA',
+    cacheB: 'cacheB',
+    logicANDAllow: 'logicANDAllow',
+    logicORAllow: 'logicORAllow',
+  }
+  await resolves(t, schema)(query, expected)
+})
+
+// Wrapper
+
+test('shield:Type: Applies to entire type', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      typeWide {
+        a
+        b
+        c
+      }
+    }
+  `
+
+  await fails(t, schema)(query, 'Not Authorised!')
 })
