@@ -10,8 +10,8 @@ const typeDefs = `
   type Query {
     allow: String!
     deny: String!
-    nested: NestedType!
     nullable: String
+    nested: NestedType!
     cacheA: String!
     cacheB: String!
     noCacheA: String!
@@ -22,6 +22,7 @@ const typeDefs = `
     logicANDDeny: String!
     logicORAllow: String!
     logicORDeny: String!
+    logicNested: String!
   }
 
   type Type {
@@ -42,6 +43,7 @@ const typeDefs = `
     logicANDDeny: String!
     logicORAllow: String!
     logicORDeny: String!
+    logicNested: String!
   }
 `
 
@@ -49,8 +51,8 @@ const resolvers = {
   Query: {
     allow: () => 'allow',
     deny: () => 'deny',
-    nested: () => ({}),
     nullable: () => null,
+    nested: () => ({}),
     cacheA: () => 'cacheA',
     cacheB: () => 'cacheB',
     noCacheA: () => 'noCacheA',
@@ -60,6 +62,7 @@ const resolvers = {
     logicANDDeny: () => 'logicANDDeny',
     logicORAllow: () => 'logicORAllow',
     logicORDeny: () => 'logicORDeny',
+    logicNested: () => 'logicNested',
   },
   Type: {
     a: () => 'a',
@@ -78,6 +81,7 @@ const resolvers = {
     logicANDDeny: () => 'logicANDDeny',
     logicORAllow: () => 'logicORAllow',
     logicORDeny: () => 'logicORDeny',
+    logicNested: () => 'logicNested',
   },
 }
 
@@ -111,8 +115,9 @@ const customError = rule('customError')(async (parent, args, ctx, info) => {
 
 const logicAndAllow = t => and(allow, cache(t), noCache(t))
 const logicAndDeny = t => and(allow, cache(t), noCache(t), deny)
-const logicOrAllow = t => and(allow, cache(t), noCache(t))
-const logicOrDeny = t => and(deny, deny)
+const logicOrAllow = t => or(allow, cache(t), noCache(t))
+const logicOrDeny = t => or(deny, deny)
+const logicNested = t => and(logicAndAllow(t), logicOrDeny(t))
 
 const getPermissions = t =>
   shield({
@@ -145,55 +150,63 @@ const getPermissions = t =>
     Type: deny,
   })
 
+// Helpers
+const getTestsSchema = t => {
+  const _schema = getSchema()
+  const permissions = getPermissions(t)
+
+  return applyMiddleware(_schema, permissions)
+}
+
+const resolves = (t, schema) => async (query, expected) => {
+  const res = await graphql(schema, query, null, {})
+
+  t.is(res.errors, undefined)
+  t.deepEqual(res.data, expected)
+}
+
+const fails = (t, schema) => async (query, errorMessage) => {
+  const res = await graphql(schema, query, null, {})
+
+  t.is(res.data, null)
+  t.is(res.errors[0].message, errorMessage)
+}
+
 // Tests ---------------------------------------------------------------------
 
 // Allow
 
 test('shield:Allow access', async t => {
-  const _schema = getSchema()
-  const permissions = getPermissions(t)
-
-  const schema = applyMiddleware(_schema, permissions)
+  const schema = getTestsSchema()
   const query = `
     query {
       allow
     }
   `
+  const expected = {
+    allow: 'allow',
+  }
 
-  const res = await graphql(schema, query, null, {})
-  t.deepEqual(res, {
-    data: {
-      allow: 'allow',
-    },
-  })
+  await resolves(t, schema)(query, expected)
 })
 
 // Deny
 
 test('shield:Deny access', async t => {
-  const _schema = getSchema()
-  const permissions = getPermissions(t)
-
-  const schema = applyMiddleware(_schema, permissions)
+  const schema = getTestsSchema(t)
   const query = `
     query {
       deny
     }
   `
 
-  const res = await graphql(schema, query, null, {})
-
-  t.is(res.data, null)
-  t.is(res.errors[0].message, 'Not Authorised!')
+  await fails(t, schema)(query, 'Not Authorised!')
 })
 
 // Nullable
 
 test('shield:Nullable access', async t => {
-  const _schema = getSchema()
-  const permissions = getPermissions(t)
-
-  const schema = applyMiddleware(_schema, permissions)
+  const schema = getTestsSchema(t)
   const query = `
     query {
       allow
@@ -208,4 +221,98 @@ test('shield:Nullable access', async t => {
     nullable: null,
   })
   t.is(res.errors[0].message, 'Not Authorised!')
+})
+
+// Nested
+
+test('shield:Nested: Allow access', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      nested {
+        allow
+      }
+    }
+  `
+  const expected = {
+    nested: {
+      allow: 'allow',
+    },
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Nested: Deny acccess', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      nested {
+        deny
+      }
+    }
+  `
+
+  await fails(t, schema)(query, 'Not Authorised!')
+})
+
+// Cache
+
+test('shield:Cache: One type-level cache', async t => {
+  t.plan(3)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      cacheA
+      cacheB
+    }
+  `
+  const expected = {
+    cacheA: 'cacheA',
+    cacheB: 'cacheB',
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Cache: One type-level without cache', async t => {
+  t.plan(4)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      noCacheA
+      noCacheB
+    }
+  `
+  const expected = {
+    noCacheA: 'noCacheA',
+    noCacheB: 'noCacheB',
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Cache:Nested: Two type-level with cache', async t => {
+  t.plan(3)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      cacheA
+      cacheB
+      nested {
+        cacheA
+        cacheB
+      }
+    }
+  `
+  const expected = {
+    cacheA: 'cacheA',
+    cacheB: 'cacheB',
+    nested: {
+      cacheA: 'cacheA',
+      cacheB: 'cacheB',
+    },
+  }
+
+  await resolves(t, schema)(query, expected)
 })

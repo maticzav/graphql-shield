@@ -13,26 +13,46 @@ export class CustomError extends Error {
 }
 
 export class Rule {
-  name: string = undefined
-  cache: boolean = true
-  _func: IRuleFunction
+  readonly name: string = undefined
+  private cache: boolean = true
+  private _func: IRuleFunction
 
-  constructor(name: string, func: IRuleFunction, options: IRuleOptions = {}) {
+  constructor(name: string, func: IRuleFunction, _options: IRuleOptions = {}) {
+    const options = this.normalizeOptions(_options)
+
     this.name = name
     this.cache = options.cache
     this._func = func
   }
 
-  async resolve(parent, args, ctx, info): Promise<boolean> {
+  normalizeOptions(options: IRuleOptions) {
+    return {
+      cache: options.cache !== undefined ? options.cache : true,
+    }
+  }
+
+  async _resolve(parent, args, ctx, info) {
+    return this._func(parent, args, ctx, info)
+  }
+
+  async _resolveWithCache(parent, args, ctx, info) {
     if (!ctx._shield.cache[this.name]) {
-      ctx._shield.cache[this.name] = this._func(parent, args, ctx, info)
+      ctx._shield.cache[this.name] = this._resolve(parent, args, ctx, info)
     }
     return ctx._shield.cache[this.name]
+  }
+
+  async resolve(parent, args, ctx, info): Promise<boolean> {
+    if (this.cache) {
+      return this._resolveWithCache(parent, args, ctx, info)
+    } else {
+      return this._resolve(parent, args, ctx, info)
+    }
   }
 }
 
 export class LogicRule {
-  _rules: IRule[]
+  private _rules: IRule[]
 
   constructor(rules: IRule[]) {
     this._rules = rules
@@ -40,6 +60,13 @@ export class LogicRule {
 
   getRules() {
     return this._rules
+  }
+
+  async evaluate(parent, args, ctx, info) {
+    const rules = this.getRules()
+    const tasks = rules.map(rule => rule.resolve(parent, args, ctx, info))
+
+    return Promise.all(tasks)
   }
 
   async resolve(parent, args, ctx, info): Promise<boolean> {
@@ -50,37 +77,24 @@ export class LogicRule {
 // Extended Types
 
 export class RuleOr extends LogicRule {
-  _rules: IRule[]
-
   constructor(funcs: IRule[]) {
     super(funcs)
   }
 
   async resolve(parent, args, ctx, info): Promise<boolean> {
-    const tasks = this._rules.map(rule => rule.resolve(parent, args, ctx, info))
-    return Promise.all(tasks)
-      .then(ts => ts.every(t => t === true))
-      .catch(err => {
-        throw err
-      })
+    const res = await this.evaluate(parent, args, ctx, info)
+    return res.some(permission => permission)
   }
 }
 
 export class RuleAnd extends LogicRule {
-  _rules: IRule[]
-
   constructor(funcs: IRule[]) {
     super(funcs)
   }
 
   async resolve(parent, args, ctx, info): Promise<boolean> {
-    const tasks = this._rules.map(rule => rule.resolve(parent, args, ctx, info))
-
-    return Promise.all(tasks)
-      .then(ts => ts.every(t => t === true))
-      .catch(err => {
-        throw err
-      })
+    const res = await this.evaluate(parent, args, ctx, info)
+    return res.every(permission => permission)
   }
 }
 
