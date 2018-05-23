@@ -107,6 +107,7 @@ const cache = t =>
     return true
   })
 
+// TODO: t => rule doesn't work because the function is executed every time again
 const noCache = t =>
   rule('no_cache', { cache: false })(async (parent, args, ctx, info) => {
     t.pass()

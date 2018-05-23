@@ -109,7 +109,8 @@ function isRuleFunction(x: any): x is IRule {
 export const rule = (name: string, options: IRuleOptions) => (
   func: IRuleFunction,
 ): Rule => {
-  return new Rule(name, func, options)
+  const _name = Math.random().toString()
+  return new Rule(_name, func, options)
 }
 
 export const and = (...rules: IRule[]): RuleAnd => {
@@ -156,19 +157,20 @@ function extractRules(ruleTree: IRules): Rule[] {
   return rules
 }
 
-// Cache
+// Validation
 
-function generateCache(rules: Rule[]) {
-  const cache = rules.reduce(
-    (_cache, rule) => ({
-      ..._cache,
-      [rule.name]: rule.resolve,
-    }),
-    {},
-  )
-
-  return cache
-}
+// function validateRules(rules: Rule[]): boolean {
+//   const map = rules.reduce((_map, rule) => {
+//     if (!_map.has(rule.name)) {
+//       return _map.set(rule.name, rule)
+//     } else if (_map.get(rule.name)._func !== rule._func) {
+//       throw new Error(`Rule ${rule.name} seems to be duplicated.`)
+//     } else {
+//       return _map
+//     }
+//   }, new Map<string, Rule>())
+//   return true
+// }
 
 // Generators
 
@@ -239,16 +241,19 @@ function generateMiddleware(ruleTree: IRules, options: IOptions): IMiddleware {
   return middleware
 }
 
+function normalizeOptions(options: IOptions): IOptions {
+  return {
+    debug: options.debug !== undefined ? options.debug : false,
+  }
+}
+
 // Shield
 
-export function shield(ruleTree: IRules, options?: IOptions): IMiddleware {
+export function shield(ruleTree: IRules, _options: IOptions = {}): IMiddleware {
   const rules = extractRules(ruleTree)
-  // TODO: add validation step (duplicates)
+  const options = normalizeOptions(_options)
 
-  const optionsWithDefault = {
-    debug: false,
-    ...options,
-  }
+  // validateRules(rules)
 
-  return generateMiddleware(ruleTree, optionsWithDefault)
+  return generateMiddleware(ruleTree, options)
 }
