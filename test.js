@@ -17,6 +17,7 @@ const typeDefs = `
     noCacheA: String!
     noCacheB: String!
     customError: String!
+    debugError: String!
     typeWide: Type!
     logicANDAllow: String!
     logicANDDeny: String!
@@ -58,6 +59,9 @@ const resolvers = {
     noCacheA: () => 'noCacheA',
     noCacheB: () => 'noCacheB',
     customError: () => 'customError',
+    debugError: () => {
+      throw new Error('debugError')
+    },
     logicANDAllow: () => 'logicANDAllow',
     logicANDDeny: () => 'logicANDDeny',
     logicORAllow: () => 'logicORAllow',
@@ -391,7 +395,26 @@ test('shield:Error: Custom error', async t => {
   await fails(t, schema)(query, 'customError')
 })
 
-test.todo('shield:Error: Debug error')
+test('shield:Error: Debug error', async t => {
+  const _schema = getSchema()
+  const permissions = shield(
+    {
+      Query: {
+        debugError: allow,
+      },
+    },
+    { debug: true },
+  )
+
+  const schema = applyMiddleware(_schema, permissions)
+  const query = `
+    query {
+      debugError
+    }
+  `
+
+  await fails(t, schema)(query, 'debugError')
+})
 
 // Cache:Logic
 
@@ -415,7 +438,7 @@ test('shield:Cache:Logic: All caches', async t => {
   await resolves(t, schema)(query, expected)
 })
 
-// Wrapper
+// Type
 
 test('shield:Type: Applies to entire type', async t => {
   const schema = getTestsSchema(t)
