@@ -456,3 +456,22 @@ test('shield:Type: Applies to entire type', async t => {
 
   await fails(t, schema)(query, 'Not Authorised!')
 })
+
+test('shield:Validation: Fails with unvalid permissions.', async t => {
+  const schema = getSchema()
+
+  const ruleA = rule('a')(() => true)
+  const ruleB = rule('a')(() => true)
+
+  const permissionsError = t.throws(() => {
+    shield({
+      allow: ruleA,
+      deny: ruleB,
+    })
+  }, Error)
+
+  t.is(
+    permissionsError.message,
+    `Rule "a" seems to point to two different things.`,
+  )
+})
