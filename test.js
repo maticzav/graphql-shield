@@ -62,6 +62,7 @@ const resolvers = {
     debugError: () => {
       throw new Error('debugError')
     },
+    typeWide: () => ({}),
     logicANDAllow: () => 'logicANDAllow',
     logicANDDeny: () => 'logicANDDeny',
     logicORAllow: () => 'logicORAllow',
@@ -93,67 +94,67 @@ const getSchema = () => makeExecutableSchema({ typeDefs, resolvers })
 
 // Shield --------------------------------------------------------------------
 
-const allow = rule('allow')(async (parent, args, ctx, info) => {
-  return true
-})
+const getPermissions = t => {
+  const allow = rule('allow')(async (parent, args, ctx, info) => {
+    return true
+  })
 
-const deny = rule('deny')(async (parent, args, ctx, info) => {
-  return false
-})
+  const deny = rule()(async (parent, args, ctx, info) => {
+    return false
+  })
 
-const cache = t =>
-  rule('cache')(async (parent, args, ctx, info) => {
+  const cache = rule()(async (parent, args, ctx, info) => {
     t.pass()
     return true
   })
 
-// TODO: t => rule doesn't work because the function is executed every time again
-const noCache = t =>
-  rule('no_cache', { cache: false })(async (parent, args, ctx, info) => {
-    t.pass()
-    return true
+  const noCache = rule('no_cache', { cache: false })(
+    async (parent, args, ctx, info) => {
+      t.pass()
+      return true
+    },
+  )
+
+  const customError = rule()(async (parent, args, ctx, info) => {
+    throw new CustomError('customError')
   })
 
-const customError = rule('customError')(async (parent, args, ctx, info) => {
-  throw new CustomError('customError')
-})
+  const logicAndAllow = and(allow, cache, noCache)
+  const logicAndDeny = and(allow, cache, noCache, deny)
+  const logicOrAllow = or(allow, cache, noCache)
+  const logicOrDeny = or(deny, deny)
+  const logicNested = and(logicAndAllow, logicOrDeny)
 
-const logicAndAllow = t => and(allow, cache(t), noCache(t))
-const logicAndDeny = t => and(allow, cache(t), noCache(t), deny)
-const logicOrAllow = t => or(allow, cache(t), noCache(t))
-const logicOrDeny = t => or(deny, deny)
-const logicNested = t => and(logicAndAllow(t), logicOrDeny(t))
-
-const getPermissions = t =>
-  shield({
+  return shield({
     Query: {
       allow: allow,
       deny: deny,
       nullable: deny,
-      cacheA: cache(t),
-      cacheB: cache(t),
-      noCacheA: noCache(t),
-      noCacheB: noCache(t),
+      cacheA: cache,
+      cacheB: cache,
+      noCacheA: noCache,
+      noCacheB: noCache,
       customError: customError,
-      logicANDAllow: logicAndAllow(t),
-      logicANDDeny: logicAndDeny(t),
-      logicORAllow: logicOrAllow(t),
-      logicORDeny: logicOrDeny(t),
+      logicANDAllow: logicAndAllow,
+      logicANDDeny: logicAndDeny,
+      logicORAllow: logicOrAllow,
+      logicORDeny: logicOrDeny,
     },
     NestedType: {
       allow: allow,
       deny: deny,
-      cacheA: cache(t),
-      cacheB: cache(t),
-      noCacheA: noCache(t),
-      noCacheB: noCache(t),
-      logicANDAllow: logicAndAllow(t),
-      logicANDDeny: logicAndDeny(t),
-      logicORAllow: logicOrAllow(t),
-      logicORDeny: logicOrDeny(t),
+      cacheA: cache,
+      cacheB: cache,
+      noCacheA: noCache,
+      noCacheB: noCache,
+      logicANDAllow: logicAndAllow,
+      logicANDDeny: logicAndDeny,
+      logicORAllow: logicOrAllow,
+      logicORDeny: logicOrDeny,
     },
-    Type: allow,
+    Type: deny,
   })
+}
 
 // Helpers
 const getTestsSchema = t => {
@@ -401,7 +402,7 @@ test('shield:Error: Debug error', async t => {
   const permissions = shield(
     {
       Query: {
-        debugError: allow,
+        debugError: rule()(() => true),
       },
     },
     { debug: true },

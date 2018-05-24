@@ -106,11 +106,15 @@ function isRuleFunction(x: any): x is IRule {
 
 // Wrappers
 
-export const rule = (name: string, options: IRuleOptions) => (
+export const rule = (name: string | IRuleOptions, options: IRuleOptions) => (
   func: IRuleFunction,
 ): Rule => {
-  const _name = Math.random().toString()
-  return new Rule(_name, func, options)
+  if (typeof name !== 'string') {
+    options = name
+    name = Math.random().toString()
+  }
+
+  return new Rule(name, func, options)
 }
 
 export const and = (...rules: IRule[]): RuleAnd => {
