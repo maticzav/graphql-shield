@@ -49,6 +49,10 @@ export class Rule {
       return this._resolve(parent, args, ctx, info)
     }
   }
+
+  equals(rule: Rule) {
+    return this._func === rule._func
+  }
 }
 
 export class LogicRule {
@@ -163,18 +167,20 @@ function extractRules(ruleTree: IRules): Rule[] {
 
 // Validation
 
-// function validateRules(rules: Rule[]): boolean {
-//   const map = rules.reduce((_map, rule) => {
-//     if (!_map.has(rule.name)) {
-//       return _map.set(rule.name, rule)
-//     } else if (_map.get(rule.name)._func !== rule._func) {
-//       throw new Error(`Rule ${rule.name} seems to be duplicated.`)
-//     } else {
-//       return _map
-//     }
-//   }, new Map<string, Rule>())
-//   return true
-// }
+function validateRules(rules: Rule[]): boolean {
+  const map = rules.reduce((_map, rule) => {
+    if (!_map.has(rule.name)) {
+      return _map.set(rule.name, rule)
+    } else if (!_map.get(rule.name).equals(rule)) {
+      throw new Error(
+        `Rule "${rule.name}" seems to point to two different things.`,
+      )
+    } else {
+      return _map
+    }
+  }, new Map<string, Rule>())
+  return true
+}
 
 // Generators
 
@@ -257,7 +263,7 @@ export function shield(ruleTree: IRules, _options: IOptions = {}): IMiddleware {
   const rules = extractRules(ruleTree)
   const options = normalizeOptions(_options)
 
-  // validateRules(rules)
+  validateRules(rules)
 
   return generateMiddleware(ruleTree, options)
 }
