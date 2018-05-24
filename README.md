@@ -3,7 +3,7 @@
 # graphql-shield
 
 [![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
-[![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors) 
+[![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors)
 
 A GraphQL server permission layer to keep your queries and mutations safe from intruders.
 
@@ -210,7 +210,7 @@ The following query resolves with a `User` type. `User` type has multiple fields
 ## Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="graphs/contributors"><img src="https://opencollective.com/graphql-shield/contributors.svg?width=890&button=false" /></a>
+<a href="https://github.com/maticzav/graphql-shield/graphs/contributors"><img src="https://opencollective.com/graphql-shield/contributors.svg?width=890&button=false" /></a>
 
 
 ## Backers
