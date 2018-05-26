@@ -1,36 +1,34 @@
-import { GraphQLFieldResolver, GraphQLScalarType, GraphQLIsTypeOfFn, GraphQLTypeResolver } from 'graphql'
+import {
+  GraphQLFieldResolver,
+  GraphQLScalarType,
+  GraphQLTypeResolver,
+  GraphQLResolveInfo,
+} from 'graphql'
+import { Rule, LogicRule } from './'
 
-export type IPermissions = IPermissionsObject | IPermission
-
-export interface IPermissionsObject {
-   [key: string]: IPermissions
-}
-
-export type IPermission = (
-   parent: any, 
-   args: any, 
-   ctx: any,
-   info: any, 
+export type IRuleFunction = (
+  parent: any,
+  args: any,
+  context: any,
+  info: GraphQLResolveInfo,
 ) => boolean | Promise<boolean>
 
-export interface IResolvers {
-   [key: string]: (() => any) | IResolverObject | GraphQLScalarType
+export type IRule = Rule | LogicRule
+
+export interface IRuleOptions {
+  cache?: boolean
 }
 
-export type IResolverObject = {
-   [key: string]: IResolver | IResolverOptions,
+export interface IRuleTypeMap {
+  [key: string]: IRule | IRuleFieldMap
 }
 
-export type IResolver = GraphQLFieldResolver<any, any>
-
-export interface IResolverOptions {
-   resolve?: IResolver
-   subscribe?: IResolver
-   __resolveType?: GraphQLTypeResolver<any, any>
-   __isTypeOf?: GraphQLIsTypeOfFn<any, any>
+export interface IRuleFieldMap {
+  [key: string]: IRule
 }
 
-export interface Options {
-   debug?: boolean
-   cache?: boolean
+export type IRules = IRule | IRuleTypeMap
+
+export interface IOptions {
+  debug?: boolean
 }

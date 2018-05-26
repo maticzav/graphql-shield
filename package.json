@@ -1,36 +1,41 @@
 {
   "name": "graphql-shield",
-  "description": "A GraphQL protector tool to keep your queries and mutations safe from intruders.",
+  "description": "",
   "version": "0.0.0-semantic-release",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
+  "scripts": {
+    "prepublish": "npm run test",
+    "build": "rimraf dist && tsc -d",
+    "lint": "tslint --project tsconfig.json {src}/**/*.ts",
+    "test": "npm run lint && npm run build && ava --verbose",
+    "semantic-release": "semantic-release",
+    "postinstall": "opencollective postinstall"
+  },
   "dependencies": {
-    "chalk": "^2.3.2",
-    "graphql": "^0.13.0",
-    "opencollective": "^1.0.3"
+    "graphql-middleware": "1.2.1",
+    "opencollective": "1.0.3"
   },
   "devDependencies": {
+    "@types/graphql": "^0.13.0",
+    "@types/node": "^9.6.6",
     "ava": "^0.25.0",
-    "graphql-tools": "^2.21.0",
+    "graphql": "^0.13.2",
+    "graphql-tools": "^3.0.1",
+    "prettier": "^1.12.1",
+    "prettier-check": "^2.0.0",
+    "rimraf": "^2.6.2",
     "semantic-release": "^12.4.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.7.0",
     "tslint-config-standard": "^7.0.0",
     "typescript": "^2.7.1"
   },
-  "scripts": {
-    "prepublish": "npm run test",
-    "build": "rm -rf dist && tsc -d",
-    "lint": "tslint --project tsconfig.json {src}/**/*.ts",
-    "test-ava": "ava tests/*.js --verbose",
-    "test": "npm run lint && npm run build && npm run test-ava",
-    "semantic-release": "semantic-release",
-    "postinstall": "opencollective postinstall"
+  "peerDependencies": {
+    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0"
   },
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "release": {
     "branch": "master"
   },
@@ -42,12 +47,7 @@
   "bugs": {
     "url": "https://github.com/maticzav/graphql-shield/issues"
   },
-  "keywords": [
-    "graphql",
-    "permissions",
-    "shield",
-    "server"
-  ],
+  "keywords": ["graphql", "permissions", "shield", "server"],
   "license": "MIT",
   "collective": {
     "type": "opencollective",
