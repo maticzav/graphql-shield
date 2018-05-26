@@ -1,70 +1,76 @@
-const { GraphQLServer } = require('graphql-yoga')
-const { rule, shield } = require('graphql-shield')
-
-// Schema
+import { GraphQLServer } from 'graphql-yoga'
+import { rule, shield, and, or, not } from 'graphql-shield'
 
 const typeDefs = `
   type Query {
-    viewer: Viewer
-    posts: Posts!
+    frontPage: [Fruit!]!
+    fruits: [Fruit!]!
+    cusomers: [Customer!]!
   }
 
-  type Viewer {
+  type Mutation {
+    addFruitToBasket: Boolean!
+  }
+
+  type Fruit {
     name: String!
+    count: Int!
   }
 
-  type Post {
+  type Customer {
     id: ID!
-    title: String!
-    text: String!
-    secret: String!
+    basket: [Fruit!]!
   }
 `
 
-// Data
-
-const posts = [
-  {
-    id: 1,
-    title: 'GraphQL is awesome!',
-    text: 'Try GraphQL and explore the future of apis.',
-    secret: 'Shitty secret.',
-  },
-  {
-    id: 2,
-    title: 'I love strawberries!',
-    text: 'I just wanted to say that I like strawberries.',
-    secret: "Can't see that if not authenticated. You must be very special.",
-  },
-]
-
-const users = [
-  { id: 1, name: 'Matic' },
-  { id: 2, name: 'Johannes' },
-  { id: 3, name: 'Nilan' },
-]
-
-const getUser = id => {
-  const user = users.filter(user => user.id === id)
-  if (!user) {
-    throw new Error(`No such user!`)
-  }
-  return user
-}
-
-// Resolvers
-
 const resolvers = {
   Query: {
-    viewer: () => ({}),
-    posts: () => posts,
+    frontPage: () => [
+      { name: 'orange', count: 10 },
+      { name: 'apple', count: 1 },
+    ],
+    fruits: () => [
+      { name: 'orange', count: 10 },
+      { name: 'apple', count: 1 },
+      { name: 'strawberries', count: 100 },
+    ],
+    customers: () => [
+      { id: 1, basket: [{ name: 'orange', count: 1 }] },
+      { id: 2, basket: [{ name: 'apple', count: 2 }] },
+    ],
   },
-  Viewer: {
-    name: (parent, args, ctx, info) => {
-      const user = getUser(ctx.id)
-      return user.name
-    },
+  Mutation: {
+    addFruitToBasket: () => true,
   },
+}
+
+// Auth
+
+const users = {
+  mathew: {
+    id: 1,
+    name: 'Mathew',
+    role: 'admin',
+  },
+  george: {
+    id: 2,
+    name: 'George',
+    role: 'editor',
+  },
+  johnny: {
+    id: 3,
+    name: 'Johnny',
+    role: 'customer',
+  },
+}
+
+function getUser(req) {
+  const auth = req.get('Authorization')
+  if (users[auth]) {
+    return users[auth]
+  } else {
+    return null
+  }
 }
 
 // Rules
@@ -74,23 +80,36 @@ const isAuthenticated = rule()(async (parent, args, ctx, info) => {
 })
 
 const isAdmin = rule()(async (parent, args, ctx, info) => {
-  return ctx.user.role === 'ADMIN'
+  return ctx.user.role === 'admin'
+})
+
+const isEditor = rule()(async (parent, args, ctx, info) => {
+  return ctx.user.role === 'editor'
 })
 
 // Permissions
 
 const permissions = shield({
-  Query: allow,
-  Viewer: isAuthenticated,
-  Post: {
-    secret: isAuthenticated,
+  Query: {
+    frontPage: not(isAuthenticated),
+    fruits: and(isAuthenticated, or(isAdmin, isEditor)),
+    customers: and(isAuthenticated, isAdmin),
   },
+  Mutation: {
+    addFruitToBasket: isAuthenticated,
+  },
+  Fruit: isAuthenticated,
+  Cusomer: isAdmin,
 })
 
 const server = GraphQLServer({
-  schema,
+  typeDefs,
+  resolvers,
   middlewares: [permissions],
   context: req => ({
     ...req,
+    user: getUser(req),
   }),
 })
+
+server.start(() => console.log('Server is running on http://localhost:4000'))
