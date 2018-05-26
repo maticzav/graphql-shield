@@ -1,6 +1,6 @@
 {
   "name": "graphql-shield",
-  "description": "",
+  "description": "GraphQL Server permissions as another layer of abstraction!",
   "version": "0.0.0-semantic-release",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
