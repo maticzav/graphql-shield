@@ -20,7 +20,7 @@ GraphQL Shield helps you create permission layer for your application. Using int
 * 🤝 **Compatible:** Works with all GraphQL Servers.
 * 🚀 **Blazing fast:** Intelligent V8 Shield engine caches all your request to prevent anything from being called too many times.
 * 🎯 **Per-Type:** Write permissions for your schema, types or specific fields (check the example below).
-* 💯 **Tested:** Very well [tested](https://github.com/maticzav/graphql-shield/tree/master/tests) functionalities!
+* 💯 **Tested:** Very well [tested](https://github.com/maticzav/graphql-shield/tree/master/test.js) functionalities!
 
 ## Install
 
@@ -56,6 +56,41 @@ const typeDefs = `
   }
 `
 
+const resolvers = {
+  Query: {
+    frontPage: () => [{name: "orange", count: 10}, {name: "apple", count: 1}]
+  }
+}
+
+// Auth
+
+const users = {
+  mathew: {
+    id: 1,
+    name: "Mathew"
+    role: "admin"
+  },
+  george: {
+    id: 2,
+    name: "George",
+    role: "editor"
+  },
+  johnny: {
+    id: 3,
+    name: "Johnny",
+    role: "customer"
+  }
+}
+
+function getUser(req) {
+  const auth = req.get('Authorization')
+  if (users[auth]) {
+    return users[auth]
+  } else {
+    return null
+  }
+}
+
 // Rules
 
 const isAuthenticated = rule()(async (parent, args, ctx, info) => {
@@ -90,6 +125,10 @@ const server = GraphQLServer({
   typeDefs,
   resolvers,
   middlewares: [permissions],
+  context: req => ({
+    ...req,
+    user: getUser(req)
+  })
 })
 
 server.start(() => console.log('Server is running on http://localhost:4000'))
