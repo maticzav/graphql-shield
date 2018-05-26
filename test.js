@@ -2,7 +2,7 @@ import test from 'ava'
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, and, or, not, CustomError } from './dist'
+import { shield, rule, allow, deny, and, or, not, CustomError } from './dist'
 
 // Setup ---------------------------------------------------------------------
 
@@ -107,14 +107,6 @@ const getSchema = () => makeExecutableSchema({ typeDefs, resolvers })
 // Shield --------------------------------------------------------------------
 
 const getPermissions = t => {
-  const allow = rule('allow')(async (parent, args, ctx, info) => {
-    return true
-  })
-
-  const deny = rule()(async (parent, args, ctx, info) => {
-    return false
-  })
-
   const cache = rule()(async (parent, args, ctx, info) => {
     t.pass()
     return true
@@ -503,6 +495,23 @@ test('shield:Type: Applies to entire type', async t => {
   await fails(t, schema)(query, 'Not Authorised!')
 })
 
+// Schema
+test('shield:Type: Applies to entire schema', async t => {
+  const _schema = getSchema()
+  const deny = rule()(() => false)
+
+  const schema = applyMiddleware(_schema, shield(deny))
+  const query = `
+    query {
+      allow
+    }
+  `
+
+  await fails(t, schema)(query, 'Not Authorised!')
+})
+
+// Validation
+
 test('shield:Validation: Fails with unvalid permissions.', async t => {
   const schema = getSchema()
 
@@ -547,5 +556,5 @@ test('shield:OutOfTheBox: Works with no rules', async t => {
     }
   `
 
-  await fails(t, schema)(query, 'Not Authenticated!')
+  await fails(t, schema)(query, 'Not Authorised!')
 })

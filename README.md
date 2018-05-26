@@ -100,6 +100,9 @@ server.start(() => console.log('Server is running on http://localhost:4000'))
 ### Types
 
 ```ts
+// Rule
+function rule(name?: string, options?: IRuleOptions)(func: IRuleFunction): Rule
+
 type IRuleFunction = (
   parent: any,
   args: any,
@@ -107,15 +110,18 @@ type IRuleFunction = (
   info: GraphQLResolveInfo,
 ) => Promise<boolean>
 
-function rule(name?: string, options?: IRuleOptions)(func: IRuleFunction): Rule
-
 export interface IRuleOptions {
   cache?: boolean
 }
 
+// Logic
 function and(...rules: IRule[]): LogicRule
 function or(...rules: IRule[]): LogicRule
 function not(rule: IRule): LogicRule
+
+// Predefined rules
+const allow: Rule
+const deny: Rule
 
 type IRule = Rule | LogicRule
 
@@ -168,9 +174,15 @@ const admin = bool =>
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therfore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `CustomError`. This can be turned off by setting `debug` option to true.
 
+### `allow`, `deny`
+
+> GraphQL Shield predefined rules.
+
+`allow` and `deny` rules do exactly what their names describe.
+
 ### `and`, `or`, `not`
 
-> GraphQL Shield allows you to nest rules in logic operations.
+> `and`, `or` and `not` allow you to nest rules in logic operations.
 
 * Nested rules fail by default if error is thrown.
 

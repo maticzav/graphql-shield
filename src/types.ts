@@ -11,7 +11,7 @@ export type IRuleFunction = (
   args: any,
   context: any,
   info: GraphQLResolveInfo,
-) => Promise<boolean>
+) => boolean | Promise<boolean>
 
 export type IRule = Rule | LogicRule
 

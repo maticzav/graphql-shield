@@ -121,7 +121,7 @@ function isRuleFunction(x: any): x is IRule {
 
 // Wrappers
 
-export const rule = (name: string | IRuleOptions, options: IRuleOptions) => (
+export const rule = (name?: string | IRuleOptions, options?: IRuleOptions) => (
   func: IRuleFunction,
 ): Rule => {
   if (typeof name === 'string') {
@@ -143,6 +143,11 @@ export const or = (...rules: IRule[]): RuleOr => {
 export const not = (rule: IRule): RuleNot => {
   return new RuleNot(rule)
 }
+
+// Predefined rules
+
+export const allow: Rule = rule()(() => true)
+export const deny: Rule = rule()(() => false)
 
 // Helpers
 
@@ -275,7 +280,7 @@ function normalizeOptions(options: IOptions): IOptions {
 // Shield
 
 export function shield(
-  ruleTree: IRules = {},
+  ruleTree: IRules = allow,
   _options: IOptions = {},
 ): IMiddleware {
   const rules = extractRules(ruleTree)
