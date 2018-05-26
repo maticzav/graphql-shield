@@ -1949,9 +1949,9 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-middleware@1.2.4:
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-1.2.4.tgz#bd333c47e07801689f515892c8e0426b60bf72c2"
+graphql-middleware@1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-1.2.5.tgz#f68c0c399cf573a6334d1d9e04cddfec038ffd4a"
   dependencies:
     graphql-tools "^3.0.2"
 
