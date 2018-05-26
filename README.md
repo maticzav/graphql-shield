@@ -15,10 +15,10 @@ GraphQL Shield helps you create permission layer for your application. Using int
 
 ## Features
 
-* ✂️ **Super Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
-* 😌 **Super easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
+* ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
+* 😌 **Easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
 * 🤝 **Compatible:** Works with all GraphQL Servers.
-* 🚀 **Blazing fast:** Intelligent V8 Shield engine caches all your request to prevent anything from being called too many times.
+* 🚀 **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
 * 🎯 **Per-Type:** Write permissions for your schema, types or specific fields (check the example below).
 * 💯 **Tested:** Very well [tested](https://github.com/maticzav/graphql-shield/tree/master/test.js) functionalities!
 
