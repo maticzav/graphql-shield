@@ -10,49 +10,30 @@
     "build": "rimraf dist && tsc -d",
     "lint": "tslint --project tsconfig.json {src}/**/*.ts",
     "test": "npm run lint && npm run build && ava --verbose",
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release",
+    "postinstall": "opencollective postinstall"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "graphql-middleware": "1.2.1"
-=======
-    "chalk": "^2.3.2",
-    "graphql": "^0.13.0",
-    "opencollective": "^1.0.3"
->>>>>>> master
+    "graphql-middleware": "1.2.1",
+    "opencollective": "1.0.3"
   },
   "devDependencies": {
     "@types/graphql": "^0.13.0",
     "@types/node": "^9.6.6",
     "ava": "^0.25.0",
-<<<<<<< HEAD
     "graphql": "^0.13.2",
     "graphql-tools": "^3.0.1",
     "prettier": "^1.12.1",
     "prettier-check": "^2.0.0",
     "rimraf": "^2.6.2",
-=======
-    "graphql-tools": "^2.21.0",
->>>>>>> master
     "semantic-release": "^12.4.1",
     "tslint": "^5.9.1",
     "tslint-config-prettier": "^1.7.0",
     "tslint-config-standard": "^7.0.0",
     "typescript": "^2.7.1"
   },
-<<<<<<< HEAD
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0"
-=======
-  "scripts": {
-    "prepublish": "npm run test",
-    "build": "rm -rf dist && tsc -d",
-    "lint": "tslint --project tsconfig.json {src}/**/*.ts",
-    "test-ava": "ava tests/*.js --verbose",
-    "test": "npm run lint && npm run build && npm run test-ava",
-    "semantic-release": "semantic-release",
-    "postinstall": "opencollective postinstall"
->>>>>>> master
   },
   "files": ["dist"],
   "release": {
@@ -66,17 +47,7 @@
   "bugs": {
     "url": "https://github.com/maticzav/graphql-shield/issues"
   },
-<<<<<<< HEAD
   "keywords": ["graphql", "permissions", "shield", "server"],
-  "license": "MIT"
-}
-=======
-  "keywords": [
-    "graphql",
-    "permissions",
-    "shield",
-    "server"
-  ],
   "license": "MIT",
   "collective": {
     "type": "opencollective",
@@ -84,4 +55,3 @@
     "logo": "https://opencollective.com/graphql-shield/logo.txt"
   }
 }
->>>>>>> master
