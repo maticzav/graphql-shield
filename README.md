@@ -233,7 +233,7 @@ Shield, by default, catches all errors thrown durign resolver execution. This wa
 Nevertheless, you can use `CustomError` error types to report your custom error messages to your users.
 
 ```tsx
-import { CustomError } from 'graphql-shield`
+import { CustomError } from 'graphql-shield'
 
 const typeDefs = `
   type Query {
