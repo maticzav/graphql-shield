@@ -13,7 +13,7 @@
     "semantic-release": "semantic-release"
   },
   "dependencies": {
-    "graphql-middleware": "^1.2.1"
+    "graphql-middleware": "1.2.1"
   },
   "devDependencies": {
     "@types/graphql": "^0.13.0",

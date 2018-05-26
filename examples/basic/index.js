@@ -1,9 +1,9 @@
-import { GraphQLServer } from 'graphql-yoga'
-import { rule, shield } from 'graphql-shield'
+const { GraphQLServer } = require('graphql-yoga')
+const { rule, shield } = require('graphql-shield')
 
 // Schema
 
-const typeDefs = gql`
+const typeDefs = `
   type Query {
     viewer: Viewer
     posts: Posts!
@@ -69,13 +69,11 @@ const resolvers = {
 
 // Rules
 
-const isAuthenticated = rule(`isAuthenicated`, { cache: true })(
-  async (parent, args, ctx, info) => {
-    return ctx.user !== null
-  },
-)
+const isAuthenticated = rule()(async (parent, args, ctx, info) => {
+  return ctx.user !== null
+})
 
-const isAdmin = rule(`isAdmin`)(async (parent, args, ctx, info) => {
+const isAdmin = rule()(async (parent, args, ctx, info) => {
   return ctx.user.role === 'ADMIN'
 })
 

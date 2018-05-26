@@ -2,7 +2,7 @@ import test from 'ava'
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, and, or, CustomError } from './dist'
+import { shield, rule, and, or, not, CustomError } from './dist'
 
 // Setup ---------------------------------------------------------------------
 
@@ -16,7 +16,8 @@ const typeDefs = `
     cacheB: String!
     noCacheA: String!
     noCacheB: String!
-    customError: String!
+    customErrorRule: String!
+    customErrorResolver: String!
     debugError: String!
     typeWide: Type!
     logicANDAllow: String!
@@ -24,6 +25,8 @@ const typeDefs = `
     logicORAllow: String!
     logicORDeny: String!
     logicNested: String!
+    logicNOTAllow: String!
+    logicNOTDeny: String!
   }
 
   type Type {
@@ -45,6 +48,8 @@ const typeDefs = `
     logicORAllow: String!
     logicORDeny: String!
     logicNested: String!
+    logicNOTAllow: String!
+    logicNOTDeny: String!
   }
 `
 
@@ -58,7 +63,10 @@ const resolvers = {
     cacheB: () => 'cacheB',
     noCacheA: () => 'noCacheA',
     noCacheB: () => 'noCacheB',
-    customError: () => 'customError',
+    customErrorRule: () => 'customErrorRule',
+    customErrorResolver: () => {
+      throw new CustomError('customErrorResolver')
+    },
     debugError: () => {
       throw new Error('debugError')
     },
@@ -68,6 +76,8 @@ const resolvers = {
     logicORAllow: () => 'logicORAllow',
     logicORDeny: () => 'logicORDeny',
     logicNested: () => 'logicNested',
+    logicNOTAllow: () => 'logicNOTAllow',
+    logicNOTDeny: () => 'logicNOTDeny',
   },
   Type: {
     a: () => 'a',
@@ -87,6 +97,8 @@ const resolvers = {
     logicORAllow: () => 'logicORAllow',
     logicORDeny: () => 'logicORDeny',
     logicNested: () => 'logicNested',
+    logicNOTAllow: () => 'logicNOTAllow',
+    logicNOTDeny: () => 'logicNOTDeny',
   },
 }
 
@@ -115,8 +127,8 @@ const getPermissions = t => {
     },
   )
 
-  const customError = rule()(async (parent, args, ctx, info) => {
-    throw new CustomError('customError')
+  const customErrorRule = rule()(async (parent, args, ctx, info) => {
+    throw new CustomError('customErrorRule')
   })
 
   const logicAndAllow = and(allow, cache, noCache)
@@ -124,6 +136,8 @@ const getPermissions = t => {
   const logicOrAllow = or(allow, cache, noCache)
   const logicOrDeny = or(deny, deny)
   const logicNested = and(logicAndAllow, logicOrDeny)
+  const logicNotAllow = not(deny)
+  const logicNotDeny = not(allow)
 
   return shield({
     Query: {
@@ -134,11 +148,13 @@ const getPermissions = t => {
       cacheB: cache,
       noCacheA: noCache,
       noCacheB: noCache,
-      customError: customError,
+      customErrorRule: customErrorRule,
       logicANDAllow: logicAndAllow,
       logicANDDeny: logicAndDeny,
       logicORAllow: logicOrAllow,
       logicORDeny: logicOrDeny,
+      logicNOTAllow: logicNotAllow,
+      logicNOTDeny: logicNotDeny,
     },
     NestedType: {
       allow: allow,
@@ -151,6 +167,8 @@ const getPermissions = t => {
       logicANDDeny: logicAndDeny,
       logicORAllow: logicOrAllow,
       logicORDeny: logicOrDeny,
+      logicNOTAllow: logicNotAllow,
+      logicNOTDeny: logicNotDeny,
     },
     Type: deny,
   })
@@ -374,27 +392,55 @@ test('shield:Logic: Deny OR', async t => {
       logicORDeny
     }
   `
+  await fails(t, schema)(query, 'Not Authorised!')
+})
+
+test('shield:Logic: Allow NOT', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      logicNOTAllow
+    }
+  `
   const expected = {
-    logicORDeny: 'logicORDeny',
+    logicNOTAllow: 'logicNOTAllow',
   }
 
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Logic: Deny NOT', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      logicNOTDeny
+    }
+  `
   await fails(t, schema)(query, 'Not Authorised!')
 })
 
 // Errors
 
-test('shield:Error: Custom error', async t => {
+test('shield:Error: Custom error in Rule', async t => {
   const schema = getTestsSchema(t)
   const query = `
     query {
-      customError
+      customErrorRule
     }
   `
-  const expected = {
-    customError: 'customError',
-  }
 
-  await fails(t, schema)(query, 'customError')
+  await fails(t, schema)(query, 'customErrorRule')
+})
+
+test('shield:Error: Custom error in Resolver', async t => {
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      customErrorResolver
+    }
+  `
+
+  await fails(t, schema)(query, 'customErrorResolver')
 })
 
 test('shield:Error: Debug error', async t => {
@@ -474,4 +520,32 @@ test('shield:Validation: Fails with unvalid permissions.', async t => {
     permissionsError.message,
     `Rule "a" seems to point to two different things.`,
   )
+})
+
+// Out of the box
+
+test('shield:OutOfTheBox: Works with no rules', async t => {
+  const resolvers = {
+    Query: {
+      customError: () => {
+        throw new Error('Error with logic!')
+      },
+    },
+  }
+
+  const typeDefs = `
+    type Query {
+      customError: String!
+    }
+  `
+  const _schema = makeExecutableSchema({ typeDefs, resolvers })
+  const schema = applyMiddleware(_schema, shield())
+
+  const query = `
+    query {
+      customError
+    }
+  `
+
+  await fails(t, schema)(query, 'Not Authenticated!')
 })

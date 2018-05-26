@@ -102,6 +102,17 @@ export class RuleAnd extends LogicRule {
   }
 }
 
+export class RuleNot extends LogicRule {
+  constructor(func: IRule) {
+    super([func])
+  }
+
+  async resolve(parent, args, ctx, info): Promise<boolean> {
+    const res = await this.evaluate(parent, args, ctx, info)
+    return res.every(permission => !permission)
+  }
+}
+
 // Type checks
 
 function isRuleFunction(x: any): x is IRule {
@@ -113,12 +124,12 @@ function isRuleFunction(x: any): x is IRule {
 export const rule = (name: string | IRuleOptions, options: IRuleOptions) => (
   func: IRuleFunction,
 ): Rule => {
-  if (typeof name !== 'string') {
-    options = name
-    name = Math.random().toString()
+  if (typeof name === 'string') {
+    return new Rule(name, func, options)
+  } else {
+    const _name = Math.random().toString()
+    return new Rule(_name, func, name)
   }
-
-  return new Rule(name, func, options)
 }
 
 export const and = (...rules: IRule[]): RuleAnd => {
@@ -127,6 +138,10 @@ export const and = (...rules: IRule[]): RuleAnd => {
 
 export const or = (...rules: IRule[]): RuleOr => {
   return new RuleOr(rules)
+}
+
+export const not = (rule: IRule): RuleNot => {
+  return new RuleNot(rule)
 }
 
 // Helpers
@@ -259,7 +274,10 @@ function normalizeOptions(options: IOptions): IOptions {
 
 // Shield
 
-export function shield(ruleTree: IRules, _options: IOptions = {}): IMiddleware {
+export function shield(
+  ruleTree: IRules = {},
+  _options: IOptions = {},
+): IMiddleware {
   const rules = extractRules(ruleTree)
   const options = normalizeOptions(_options)
 

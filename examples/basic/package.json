@@ -3,8 +3,11 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "graphql-shield": "latest",
+    "graphql-shield": "2.0.0",
     "graphql-yoga": "^1.13.1"
   }
 }
