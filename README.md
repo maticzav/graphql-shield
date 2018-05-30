@@ -67,7 +67,7 @@ const resolvers = {
 const users = {
   mathew: {
     id: 1,
-    name: "Mathew"
+    name: "Mathew",
     role: "admin"
   },
   george: {
@@ -258,7 +258,7 @@ const permissions = shield({
   },
   Mutation: {
     createBlogPost: or(isAdmin, and(isOwner, isEditor))
-  }
+  },
   User: {
     secret: isOwner
   },
