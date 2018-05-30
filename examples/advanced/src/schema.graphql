@@ -1,0 +1,18 @@
+# import Product, BasketItem from "./generated/prisma.graphql"
+
+type Query {
+  viewer: Viewer
+  products: [Product!]!
+}
+
+type Mutation {
+  addItemToBasket(productId: ID!, quantity: Int!): Viewer
+  removeItemFromBasket(itemId: ID!): Viewer
+  addProduct(name: String!, description: String!, price: Int!): Product!
+  removeProduct(id: ID!): Product!
+}
+
+type Viewer {
+  email: String!
+  basket: [BasketItem!]!
+}
