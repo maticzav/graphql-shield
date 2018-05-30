@@ -1,0 +1,29 @@
+{
+  "name": "advanced",
+  "scripts": {
+    "start": "dotenv -- nodemon -e ts,graphql -x ts-node src/index.ts",
+    "dev": "npm-run-all --parallel start playground",
+    "debug": "dotenv -- nodemon -e ts,graphql -x ts-node --inspect src/index.ts",
+    "playground": "graphql playground",
+    "build": "rimraf dist && tsc"
+  },
+  "dependencies": {
+    "bcryptjs": "2.4.3",
+    "graphql-shield": "^2.0.6",
+    "graphql-yoga": "1.14.6",
+    "jsonwebtoken": "8.2.1",
+    "prisma-binding": "2.0.2"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "2.4.1",
+    "dotenv-cli": "1.4.0",
+    "graphql-cli": "2.16.0",
+    "nodemon": "1.17.5",
+    "npm-run-all": "4.1.3",
+    "prettier": "^1.13.2",
+    "prisma": "1.8.3",
+    "rimraf": "2.6.2",
+    "ts-node": "6.0.5",
+    "typescript": "2.8.3"
+  }
+}
