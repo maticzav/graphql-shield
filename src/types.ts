@@ -30,5 +30,5 @@ export interface IRuleFieldMap {
 export type IRules = IRule | IRuleTypeMap
 
 export interface IOptions {
-  debug?: boolean
+  allowExternalErrors?: boolean
 }
