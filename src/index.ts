@@ -234,7 +234,7 @@ const wrapResolverWithRule = (options: IOptions) => (
         throw new CustomError('Not Authorised!')
       }
     } catch (err) {
-      if (err instanceof CustomError || options.debug) {
+      if (err instanceof CustomError || options.debug || options.allowExternalErrors) {
         throw err
       } else {
         throw new Error('Not Authorised!')
@@ -274,6 +274,7 @@ function generateMiddleware(ruleTree: IRules, options: IOptions): IMiddleware {
 function normalizeOptions(options: IOptions): IOptions {
   return {
     debug: options.debug !== undefined ? options.debug : false,
+    allowExternalErrors: options.allowExternalErrors !== undefined ? options.allowExternalErrors : false,
   }
 }
 
