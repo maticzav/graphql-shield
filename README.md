@@ -208,11 +208,11 @@ const admin = bool =>
 
 #### `options`
 
-| Property | Required | Default | Description                                 |
-| -------- | -------- | ------- | ------------------------------------------- |
-| debug / allowExternalErrors   | false    | true    | Toggles catching internal resolvers errors. Currently, both properties perform the same action. |
+| Property            | Required | Default | Description                                 |
+| ------------------- | -------- | ------- | ------------------------------------------- |
+| allowExternalErrors | false    | true    | Toggles catching internal resolvers errors. |
 
-By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therfore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `CustomError`. This can be turned off by setting `debug` or `allowExternalErrors` option to true.
+By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therfore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `CustomError`. This can be turned off by setting `allowExternalErrors` option to true.
 
 Currently, the `allowExternalErrors` aliases the `debug` property.
 
