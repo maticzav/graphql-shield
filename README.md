@@ -214,8 +214,6 @@ const admin = bool =>
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therfore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `CustomError`. This can be turned off by setting `allowExternalErrors` option to true.
 
-Currently, the `allowExternalErrors` aliases the `debug` property.
-
 ### `allow`, `deny`
 
 > GraphQL Shield predefined rules.
