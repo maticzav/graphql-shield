@@ -456,6 +456,27 @@ test('shield:Error: Debug error', async t => {
   await fails(t, schema)(query, 'debugError')
 })
 
+test('shield:Error: AllowExternalErrors error', async t => {
+  const _schema = getSchema()
+  const permissions = shield(
+    {
+      Query: {
+        debugError: rule()(() => true),
+      },
+    },
+    { allowExternalErrors: true },
+  )
+
+  const schema = applyMiddleware(_schema, permissions)
+  const query = `
+    query {
+      debugError
+    }
+  `
+
+  await fails(t, schema)(query, 'debugError')
+})
+
 // Cache:Logic
 
 test('shield:Cache:Logic: All caches', async t => {
