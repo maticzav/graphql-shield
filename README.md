@@ -13,7 +13,7 @@ GraphQL Shield helps you create permission layer for your application. Using int
 
 [![Sponsored By GraphCMS](https://github.com/maticzav/graphql-shield/raw/master/media/graphcms.svg?sanitize=true)](https://graphcms.com/?ref=maticzav)
 
-Try building a groceries shop to better understand the benefits of GraphQL Shield https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35.
+Try building a groceries shop to better understand the benefits of GraphQL Shield, [Sweet sweet shop](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) 
 
 ## Features
 
