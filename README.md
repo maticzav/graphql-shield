@@ -147,7 +147,7 @@ server.start(() => console.log('Server is running on http://localhost:4000'))
 // Giving any schema (instance of GraphQLSchema)
 
 import { applyMiddleware } from 'graphql-middleware';
-
+// schema definition...
 schema = applyMiddleware(schema, permissions);
 ```
 
@@ -229,7 +229,7 @@ const admin = bool =>
 | ------------------- | -------- | ------- | ------------------------------------------- |
 | allowExternalErrors | false    | true    | Toggles catching internal resolvers errors. |
 
-By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therfore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `CustomError`. This can be turned off by setting `allowExternalErrors` option to true.
+By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `CustomError`. This can be turned off by setting `allowExternalErrors` option to true.
 
 ### `allow`, `deny`
 
@@ -285,7 +285,7 @@ const permissions = shield({
 
 ### `Custom Errors`
 
-Shield, by default, catches all errors thrown durign resolver execution. This way we can be 100% sure none of your internal logic will be exposed to the client if it was not meant to be.
+Shield, by default, catches all errors thrown during resolver execution. This way we can be 100% sure none of your internal logic will be exposed to the client if it was not meant to be.
 
 Nevertheless, you can use `CustomError` error types to report your custom error messages to your users.
 
