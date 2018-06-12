@@ -32,6 +32,8 @@ yarn add graphql-shield
 
 ## Example
 
+### GraphQL Yoga
+
 ```ts
 import { GraphQLServer } from 'graphql-yoga'
 import { rule, shield, and, or, not } from 'graphql-shield'
@@ -134,6 +136,19 @@ const server = GraphQLServer({
 })
 
 server.start(() => console.log('Server is running on http://localhost:4000'))
+```
+
+### Others
+
+```ts
+// Permissions...
+
+// Apply permissions middleware with applyMiddleware
+// Giving any schema (instance of GraphQLSchema)
+
+import { applyMiddleware } from 'graphql-middleware';
+
+schema = applyMiddleware(schema, permissions);
 ```
 
 ## API
