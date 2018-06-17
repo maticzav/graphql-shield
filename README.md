@@ -9,7 +9,7 @@
 
 ## Overview
 
-GraphQL Shield helps you create permission layer for your application. Using intuitive rule-API, you'll gain the power of shield engine on every request and reduce the load time of every request with smart caching. This way you can make sure your application will remain quick, and no internal data will be exposed.
+GraphQL Shield helps you create a permission layer for your application. Using an intuitive rule-API, you'll gain the power of the shield engine on every request and reduce the load time of every request with smart caching. This way you can make sure your application will remain quick, and no internal data will be exposed.
 
 [![Sponsored By GraphCMS](https://github.com/maticzav/graphql-shield/raw/master/media/graphcms.svg?sanitize=true)](https://graphcms.com/?ref=maticzav)
 
@@ -42,7 +42,7 @@ const typeDefs = `
   type Query {
     frontPage: [Fruit!]!
     fruits: [Fruit!]!
-    cusomers: [Customer!]!
+    customers: [Customer!]!
   }
 
   type Mutation {
@@ -122,7 +122,7 @@ const permissions = shield({
     addFruitToBasket: isAuthenticated,
   },
   Fruit: isAuthenticated,
-  Cusomer: isAdmin
+  Customer: isAdmin
 })
 
 const server = GraphQLServer({
@@ -205,7 +205,7 @@ export interface IOptions {
 
 #### `rules`
 
-A rule map must match your schema definition. All rules must be created using `rule` function to ensure caches are made correctly. You can apply your `rule` accross entire schema, Type scoped, or field specific.
+A rule map must match your schema definition. All rules must be created using the `rule` function to ensure caches are made correctly. You can apply your `rule` accross entire schema, Type scoped, or field specific.
 
 ##### Limitations
 
