@@ -18,19 +18,19 @@
     "opencollective": "1.0.3"
   },
   "devDependencies": {
-    "@types/graphql": "^0.13.0",
-    "@types/node": "^9.6.18",
-    "ava": "^0.25.0",
-    "graphql": "^0.13.2",
-    "graphql-tools": "^3.0.1",
-    "prettier": "^1.12.1",
-    "prettier-check": "^2.0.0",
-    "rimraf": "^2.6.2",
-    "semantic-release": "^15.0.0",
-    "tslint": "^5.9.1",
-    "tslint-config-prettier": "^1.7.0",
-    "tslint-config-standard": "^7.0.0",
-    "typescript": "^2.8.3"
+    "@types/graphql": "0.13.0",
+    "@types/node": "9.6.18",
+    "ava": "0.25.0",
+    "graphql": "0.13.2",
+    "graphql-tools": "3.0.1",
+    "prettier": "1.12.1",
+    "prettier-check": "2.0.0",
+    "rimraf": "2.6.2",
+    "semantic-release": "15.5.0",
+    "tslint": "5.9.1",
+    "tslint-config-prettier": "1.7.0",
+    "tslint-config-standard": "7.0.0",
+    "typescript": "2.8.3"
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0"
