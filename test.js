@@ -12,10 +12,14 @@ const typeDefs = `
     deny: String!
     nullable: String
     nested: NestedType!
-    cacheA: String!
-    cacheB: String!
+    cacheA: String! # backward compatibility
+    cacheB: String! # backward compatibility
     noCacheA: String!
     noCacheB: String!
+    contextualCacheA: String!
+    contextualCacheB: String!
+    strictCacheA: String!
+    strictCacheB: String!
     customErrorRule: String!
     customErrorResolver: String!
     debugError: String!
@@ -42,6 +46,8 @@ const typeDefs = `
     cacheB: String!
     noCacheA: String!
     noCacheB: String!
+    contextualCacheA: String!
+    strictCacheA: String!
     nested: NestedType!
     logicANDAllow: String!
     logicANDDeny: String!
@@ -63,6 +69,10 @@ const resolvers = {
     cacheB: () => 'cacheB',
     noCacheA: () => 'noCacheA',
     noCacheB: () => 'noCacheB',
+    contextualCacheA: () => 'contextualCacheA',
+    contextualCacheB: () => 'contextualCacheB',
+    strictCacheA: () => 'strictCacheA',
+    strictCacheB: () => 'strictCacheB',
     customErrorRule: () => 'customErrorRule',
     customErrorResolver: () => {
       throw new CustomError('customErrorResolver')
@@ -91,6 +101,8 @@ const resolvers = {
     cacheB: () => 'cacheB',
     noCacheA: () => 'noCacheA',
     noCacheB: () => 'noCacheB',
+    contextualCacheA: () => 'contextualCacheA',
+    strictCacheA: () => 'strictCacheA',
     nested: () => ({}),
     logicANDAllow: () => 'logicANDAllow',
     logicANDDeny: () => 'logicANDDeny',
@@ -119,6 +131,20 @@ const getPermissions = t => {
     },
   )
 
+  const contextualCache = rule({ cache: 'contextual' })(
+    async (parent, args, ctx, info) => {
+      t.pass()
+      return true
+    },
+  )
+
+  const strictCache = rule({ cache: 'strict' })(
+    async (parent, args, ctx, info) => {
+      t.pass()
+      return true
+    },
+  )
+
   const customErrorRule = rule()(async (parent, args, ctx, info) => {
     throw new CustomError('customErrorRule')
   })
@@ -140,6 +166,10 @@ const getPermissions = t => {
       cacheB: cache,
       noCacheA: noCache,
       noCacheB: noCache,
+      contextualCacheA: contextualCache,
+      contextualCacheB: contextualCache,
+      strictCacheA: strictCache,
+      strictCacheB: strictCache,
       customErrorRule: customErrorRule,
       logicANDAllow: logicAndAllow,
       logicANDDeny: logicAndDeny,
@@ -155,6 +185,8 @@ const getPermissions = t => {
       cacheB: cache,
       noCacheA: noCache,
       noCacheB: noCache,
+      contextualCacheA: contextualCache,
+      strictCacheA: strictCache,
       logicANDAllow: logicAndAllow,
       logicANDDeny: logicAndDeny,
       logicORAllow: logicOrAllow,
@@ -327,6 +359,82 @@ test('shield:Cache:Nested: Two type-level with cache', async t => {
     nested: {
       cacheA: 'cacheA',
       cacheB: 'cacheB',
+    },
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Cache:Contextual: Equal parents', async t => {
+  t.plan(3)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      contextualCacheA
+      contextualCacheB
+    }
+  `
+  const expected = {
+    contextualCacheA: 'contextualCacheA',
+    contextualCacheB: 'contextualCacheB',
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Cache:Contextual: Different parents', async t => {
+  t.plan(3)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      contextualCacheA
+      nested {
+        contextualCacheA
+      }
+    }
+  `
+  const expected = {
+    contextualCacheA: 'contextualCacheA',
+    nested: {
+      contextualCacheA: 'contextualCacheA',
+    },
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Cache:Strict: Equal parents.', async t => {
+  t.plan(3)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      strictCacheA
+      strictCacheB
+    }
+  `
+  const expected = {
+    strictCacheA: 'strictCacheA',
+    strictCacheB: 'strictCacheB',
+  }
+
+  await resolves(t, schema)(query, expected)
+})
+
+test('shield:Cache:Strict: Different parents.', async t => {
+  t.plan(4)
+  const schema = getTestsSchema(t)
+  const query = `
+    query {
+      strictCacheA
+      nested {
+        strictCacheA
+      }
+    }
+  `
+  const expected = {
+    strictCacheA: 'strictCacheA',
+    nested: {
+      strictCacheA: 'strictCacheA',
     },
   }
 

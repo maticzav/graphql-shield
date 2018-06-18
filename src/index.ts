@@ -1,5 +1,14 @@
 import { IMiddleware } from 'graphql-middleware'
-import { IRuleFunction, IRule, IRuleOptions, IRules, IOptions } from './types'
+import * as hash from 'object-hash'
+import {
+  IRuleFunction,
+  IRule,
+  IRuleOptions,
+  IRules,
+  IOptions,
+  ICache,
+  ICacheOptions,
+} from './types'
 import { IMiddlewareFunction } from 'graphql-middleware/dist/types'
 
 export { IRules }
@@ -14,7 +23,7 @@ export class CustomError extends Error {
 
 export class Rule {
   readonly name: string = undefined
-  private cache: boolean = true
+  private cache: ICache = 'contextual'
   private _func: IRuleFunction
 
   constructor(name: string, func: IRuleFunction, _options: IRuleOptions = {}) {
@@ -25,29 +34,54 @@ export class Rule {
     this._func = func
   }
 
+  normalizeCacheOption(cache: ICacheOptions): ICache {
+    switch (cache) {
+      case true: {
+        return 'strict'
+      }
+      case false: {
+        return 'no_cache'
+      }
+      default: {
+        return cache
+      }
+    }
+  }
+
   normalizeOptions(options: IRuleOptions) {
     return {
-      cache: options.cache !== undefined ? options.cache : true,
+      cache:
+        options.cache !== undefined
+          ? this.normalizeCacheOption(options.cache)
+          : 'contextual',
     }
   }
 
-  async _resolve(parent, args, ctx, info) {
-    return this._func(parent, args, ctx, info)
-  }
-
-  async _resolveWithCache(parent, args, ctx, info) {
-    if (!ctx._shield.cache[this.name]) {
-      ctx._shield.cache[this.name] = this._resolve(parent, args, ctx, info)
+  generateCacheKey(parent, args, ctx, info): string {
+    switch (this.cache) {
+      case 'strict': {
+        const _hash = hash({
+          parent,
+          args,
+        })
+        return `${this.name}-${_hash}`
+      }
+      case 'contextual': {
+        return this.name
+      }
+      case 'no_cache': {
+        return `${this.name}-${Math.random()}`
+      }
     }
-    return ctx._shield.cache[this.name]
   }
 
   async resolve(parent, args, ctx, info): Promise<boolean> {
-    if (this.cache) {
-      return this._resolveWithCache(parent, args, ctx, info)
-    } else {
-      return this._resolve(parent, args, ctx, info)
+    const cacheKey = this.generateCacheKey(parent, args, ctx, info)
+
+    if (!ctx._shield.cache[cacheKey]) {
+      ctx._shield.cache[cacheKey] = this._func(parent, args, ctx, info)
     }
+    return ctx._shield.cache[cacheKey]
   }
 
   equals(rule: Rule) {
@@ -234,7 +268,11 @@ const wrapResolverWithRule = (options: IOptions) => (
         throw new CustomError('Not Authorised!')
       }
     } catch (err) {
-      if (err instanceof CustomError || options.debug || options.allowExternalErrors) {
+      if (
+        err instanceof CustomError ||
+        options.debug ||
+        options.allowExternalErrors
+      ) {
         throw err
       } else {
         throw new Error('Not Authorised!')
@@ -274,7 +312,10 @@ function generateMiddleware(ruleTree: IRules, options: IOptions): IMiddleware {
 function normalizeOptions(options: IOptions): IOptions {
   return {
     debug: options.debug !== undefined ? options.debug : false,
-    allowExternalErrors: options.allowExternalErrors !== undefined ? options.allowExternalErrors : false,
+    allowExternalErrors:
+      options.allowExternalErrors !== undefined
+        ? options.allowExternalErrors
+        : false,
   }
 }
 

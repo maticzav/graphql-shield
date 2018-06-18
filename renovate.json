@@ -1,9 +1,9 @@
 {
-  "extends": ["config:base", "docker:disable"],
+  "extends": ["config:base", "docker:disable", ":automergePatch"],
   "pathRules": [
     {
       "paths": ["examples/**"],
-      "extends": [":semanticCommitTypeAll(chore)", ":automergeMinor"],
+      "extends": [":semanticCommitTypeAll(chore)", ":automergePatch"],
       "branchName":
         "{{branchPrefix}}examples-{{depNameSanitized}}-{{newVersionMajor}}.x"
     }

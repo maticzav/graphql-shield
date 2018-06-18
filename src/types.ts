@@ -6,6 +6,8 @@ import {
 } from 'graphql'
 import { Rule, LogicRule } from './'
 
+// Rules
+
 export type IRuleFunction = (
   parent: any,
   args: any,
@@ -15,9 +17,17 @@ export type IRuleFunction = (
 
 export type IRule = Rule | LogicRule
 
+export type ICache = 'strict' | 'contextual' | 'no_cache'
+
+// Rule Options
+
+export type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
+
 export interface IRuleOptions {
-  cache?: boolean
+  cache?: ICacheOptions
 }
+
+// RuleMap
 
 export interface IRuleTypeMap {
   [key: string]: IRule | IRuleFieldMap
@@ -29,7 +39,9 @@ export interface IRuleFieldMap {
 
 export type IRules = IRule | IRuleTypeMap
 
+// Options
+
 export interface IOptions {
-  debug?: boolean,
+  debug?: boolean
   allowExternalErrors?: boolean
 }

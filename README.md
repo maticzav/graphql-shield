@@ -166,8 +166,10 @@ type IRuleFunction = (
   info: GraphQLResolveInfo,
 ) => Promise<boolean>
 
+export type ICache = 'strict' | 'contextual' | 'no_cache'
+
 export interface IRuleOptions {
-  cache?: boolean
+  cache?: ICache
 }
 
 // Logic
@@ -213,15 +215,37 @@ A rule map must match your schema definition. All rules must be created using th
 
 ```jsx
 // Normal
-const admin = rule({ cache: true })(async (parent, args, ctx, info) => true)
+const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => true)
 
 // With external data
 const admin = bool =>
-  rule(`name`, { cache: true })(async (parent, args, ctx, info) => bool)
+  rule(`name`, { cache: 'contextual' })(async (parent, args, ctx, info) => bool)
 ```
 
-* Cache is enabled by default accross all rules. To prevent `cache` generation, set `{ cache: false }` when generating a rule.
+* Cache is enabled by default accross all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` when generating a rule.
 * By default, no rule is executed more than once in complete query execution. This accounts for significantly better load times and quick responses.
+
+##### Cache
+
+You can choose from three different cache options.
+
+1. `no_cache` - prevents rules from being cached.
+1. `contextual` - use when rule only relies on `ctx` parameter.
+1. `strict` - use when rule relies on `parent` or `args` parameter as well.
+
+```ts
+// Contextual
+const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+  return ctx.user.isAdmin
+})
+
+// Strict
+const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+  return ctx.user.isAdmin || args.code === 'secret' || parent.id === 'theone'
+})
+```
+
+> Backward compatiblity: `{ cache: false }` converts to `no_cache`, and `{ cache: true }` converts to `strict`.
 
 #### `options`
 
