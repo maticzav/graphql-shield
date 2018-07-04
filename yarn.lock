@@ -141,9 +141,9 @@
     into-stream "^3.1.0"
     lodash "^4.17.4"
 
-"@types/graphql@0.13.2":
-  version "0.13.2"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.2.tgz#cb7d01f7c543541514eb3e192576cc04d305c363"
+"@types/graphql@0.13.3":
+  version "0.13.3"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.3.tgz#23af65796d341f93ef5b485138bd52c67786452d"
 
 "@types/node@9.6.22":
   version "9.6.22"
