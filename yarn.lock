@@ -145,9 +145,9 @@
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.3.tgz#23af65796d341f93ef5b485138bd52c67786452d"
 
-"@types/node@9.6.22":
-  version "9.6.22"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.22.tgz#05b55093faaadedea7a4b3f76e9a61346a6dd209"
+"@types/node@9.6.23":
+  version "9.6.23"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.23.tgz#fc429962c1b75f32bd66214a3997f660e8434f0d"
 
 "@types/node@^9.4.6":
   version "9.6.18"
