@@ -124,7 +124,7 @@ const getPermissions = t => {
     return true
   })
 
-  const noCache = rule('no_cache', { cache: false })(
+  const noCache = rule({ cache: 'no_cache' }, { cache: false })(
     async (parent, args, ctx, info) => {
       t.pass()
       return true
@@ -658,32 +658,4 @@ test('shield:Validation: Fails with unvalid permissions.', async t => {
     permissionsError.message,
     `Rule "a" seems to point to two different things.`,
   )
-})
-
-// Out of the box
-
-test('shield:OutOfTheBox: Works with no rules', async t => {
-  const resolvers = {
-    Query: {
-      customError: () => {
-        throw new Error('Error with logic!')
-      },
-    },
-  }
-
-  const typeDefs = `
-    type Query {
-      customError: String!
-    }
-  `
-  const _schema = makeExecutableSchema({ typeDefs, resolvers })
-  const schema = applyMiddleware(_schema, shield())
-
-  const query = `
-    query {
-      customError
-    }
-  `
-
-  await fails(t, schema)(query, 'Not Authorised!')
 })

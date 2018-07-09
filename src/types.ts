@@ -4,9 +4,12 @@ import {
   GraphQLTypeResolver,
   GraphQLResolveInfo,
 } from 'graphql'
-import { Rule, LogicRule } from './'
+import { Rule, LogicRule } from './rules'
 
-// Rules
+export interface FragmentReplacement {
+  field: string
+  fragment: string
+}
 
 export type IRuleFunction = (
   parent: any,
@@ -17,6 +20,7 @@ export type IRuleFunction = (
 
 export type IRule = Rule | LogicRule
 
+export type IFragment = string
 export type ICache = 'strict' | 'contextual' | 'no_cache'
 
 // Rule Options
@@ -25,6 +29,7 @@ export type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
 
 export interface IRuleOptions {
   cache?: ICacheOptions
+  fragment?: IFragment
 }
 
 // RuleMap
@@ -44,4 +49,5 @@ export type IRules = IRule | IRuleTypeMap
 export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
+  blacklist?: boolean
 }
