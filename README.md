@@ -240,7 +240,7 @@ const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
 })
 
 // Strict
-const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+const admin = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
   return ctx.user.isAdmin || args.code === 'secret' || parent.id === 'theone'
 })
 ```
