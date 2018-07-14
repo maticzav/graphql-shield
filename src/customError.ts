@@ -3,3 +3,7 @@ export class CustomError extends Error {
     super(...args)
   }
 }
+
+export const error = (...args) => {
+  return new CustomError(...args)
+}

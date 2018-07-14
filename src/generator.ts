@@ -1,5 +1,10 @@
-import { IMiddleware, IMiddlewareFunction } from 'graphql-middleware'
-import { IRule, IRules, IOptions } from './types'
+import {
+  IMiddleware,
+  IMiddlewareFunction,
+  IMiddlewareGenerator,
+} from 'graphql-middleware'
+import { GraphQLSchema, GraphQLObjectType } from 'graphql'
+import { IRule, IRules, IOptions, IRuleTypeMap, ShieldRule } from './types'
 import { isRuleFunction } from './utils'
 import { CustomError } from './customError'
 
@@ -11,7 +16,7 @@ import { CustomError } from './customError'
  * initializes the cache object in context.
  *
  */
-const wrapResolverWithRule = (options: IOptions) => (
+const applyRuleToField = (options: IOptions) => (
   rule: IRule,
 ): IMiddlewareFunction =>
   async function(resolve, parent, args, ctx, info) {
@@ -51,31 +56,87 @@ const wrapResolverWithRule = (options: IOptions) => (
 
 /**
  *
+ * @param type
+ * @param rules
+ * @param options
+ *
+ *
+ *
+ */
+function applyRuleToType(
+  type: GraphQLObjectType,
+  rules: ShieldRule | IRuleTypeMap,
+  options: IOptions,
+): IMiddleware {
+  if (isRuleFunction(rules)) {
+    return applyRuleTo
+  } else {
+  }
+}
+
+/**
+ *
+ * @param schema
+ * @param rule
+ * @param options
+ *
+ * Applies the same rule over entire schema.
+ *
+ */
+function applyRuleToSchema(
+  schema: GraphQLSchema,
+  rule: ShieldRule,
+  options,
+): IMiddleware {
+  const typeMap = schema.getTypeMap()
+
+  const middleware = Object.keys(typeMap).reduce(
+    (middleware, type) => ({
+      ...middleware,
+      [type]: applyRuleToType(
+        typeMap[type] as GraphQLObjectType,
+        rule,
+        options,
+      ),
+    }),
+    {},
+  )
+
+  return middleware
+}
+
+/**
+ *
  * @param rules
  * @param wrapper
  *
  * Converts rule tree to middleware.
  *
  */
-function convertRulesToMiddleware(
+function generateMiddlewareFromSchemaAndRuleTree(
+  schema: GraphQLSchema,
   rules: IRules,
-  wrapper: (func: IRule) => IMiddlewareFunction,
+  options: IOptions,
 ): IMiddleware {
   if (isRuleFunction(rules)) {
-    return wrapper(rules)
+    return applyRuleToSchema(schema, rules, options)
+  } else {
+    const typeMap = schema.getTypeMap()
+
+    const middleware = Object.keys(typeMap).reduce(
+      (middleware, type) => ({
+        ...middleware,
+        [type]: applyRuleToType(
+          typeMap[type] as GraphQLObjectType,
+          rules[type],
+          options,
+        ),
+      }),
+      {},
+    )
+
+    return middleware
   }
-
-  const leafs = Object.keys(rules)
-  const middleware = leafs.reduce(
-    (acc, key) => ({
-      ...acc,
-      ...acc,
-      [key]: convertRulesToMiddleware(rules[key], wrapper),
-    }),
-    {},
-  )
-
-  return middleware
 }
 
 /**
@@ -86,14 +147,19 @@ function convertRulesToMiddleware(
  * Generates middleware from given rules.
  *
  */
-export function generateMiddlewareFromRuleTree(
+export function generateMiddlewareGeneratorFromRuleTree(
   ruleTree: IRules,
   options: IOptions,
-): IMiddleware {
-  const middleware = convertRulesToMiddleware(
-    ruleTree,
-    wrapResolverWithRule(options),
-  )
+): IMiddlewareGenerator {
+  const generator = (schema: GraphQLSchema) => {
+    const middleware = generateMiddlewareFromSchemaAndRuleTree(
+      schema,
+      ruleTree,
+      options,
+    )
 
-  return middleware
+    return middleware
+  }
+
+  return generator
 }

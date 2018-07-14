@@ -4,89 +4,26 @@ import {
   IRule,
   IRuleOptions,
   ICache,
-  ICacheOptions,
   IFragment,
+  ICacheContructorOptions,
+  IRuleConstructorOptions,
+  ILogicRule,
 } from './types'
 
-export class Rule {
-  readonly name: string = undefined
-  private cache: ICache = 'contextual'
-  private fragment: IFragment = undefined
-  private _func: IRuleFunction
+export class Rule implements IRule {
+  readonly name: string
 
-  constructor(name: string, func: IRuleFunction, _options: IRuleOptions = {}) {
-    const options = this.normalizeOptions(_options)
+  private cache: ICache
+  private fragment: IFragment
+  private func: IRuleFunction
 
-    this.name = name
+  constructor(constructorOptions: IRuleConstructorOptions) {
+    const options = this.normalizeOptions(constructorOptions)
+
+    this.name = options.name
     this.cache = options.cache
     this.fragment = options.fragment
-    this._func = func
-  }
-
-  /**
-   *
-   * @param cache
-   *
-   * This ensures backward capability of shield.
-   *
-   */
-  normalizeCacheOption(cache: ICacheOptions): ICache {
-    switch (cache) {
-      case true: {
-        return 'strict'
-      }
-      case false: {
-        return 'no_cache'
-      }
-      default: {
-        return cache
-      }
-    }
-  }
-
-  /**
-   *
-   * @param options
-   *
-   * Sets default values for options.
-   *
-   */
-  normalizeOptions(options: IRuleOptions) {
-    return {
-      cache:
-        options.cache !== undefined
-          ? this.normalizeCacheOption(options.cache)
-          : 'contextual',
-      fragment: options.fragment !== undefined ? options.fragment : undefined,
-    }
-  }
-
-  /**
-   *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
-   * Generates cache key based on cache option.
-   *
-   */
-  generateCacheKey(parent, args, ctx, info): string {
-    switch (this.cache) {
-      case 'strict': {
-        const _hash = hash({
-          parent,
-          args,
-        })
-        return `${this.name}-${_hash}`
-      }
-      case 'contextual': {
-        return this.name
-      }
-      case 'no_cache': {
-        return `${this.name}-${Math.random()}`
-      }
-    }
+    this.func = options.func
   }
 
   /**
@@ -103,7 +40,7 @@ export class Rule {
     const cacheKey = this.generateCacheKey(parent, args, ctx, info)
 
     if (!ctx._shield.cache[cacheKey]) {
-      ctx._shield.cache[cacheKey] = this._func(parent, args, ctx, info)
+      ctx._shield.cache[cacheKey] = this.func(parent, args, ctx, info)
     }
     return ctx._shield.cache[cacheKey]
   }
@@ -116,8 +53,8 @@ export class Rule {
    * and checks whether their functions are equal.
    *
    */
-  equals(rule: Rule) {
-    return this._func === rule._func
+  equals(rule: Rule): boolean {
+    return this.func === rule.func
   }
 
   /**
@@ -128,17 +65,95 @@ export class Rule {
   extractFragment() {
     return this.fragment
   }
-}
 
-export class LogicRule {
-  private _rules: IRule[]
-
-  constructor(rules: IRule[]) {
-    this._rules = rules
+  /**
+   *
+   * @param options
+   *
+   * Sets default values for options.
+   *
+   */
+  private normalizeOptions(options: IRuleConstructorOptions): IRuleOptions {
+    return {
+      name: options.name,
+      func: options.func,
+      cache:
+        options.cache !== undefined
+          ? this.normalizeCacheOption(options.cache)
+          : 'contextual',
+      fragment: options.fragment !== undefined ? options.fragment : undefined,
+    }
   }
 
-  getRules() {
-    return this._rules
+  /**
+   *
+   * @param cache
+   *
+   * This ensures backward capability of shield.
+   *
+   */
+  private normalizeCacheOption(cache: ICacheContructorOptions): ICache {
+    switch (cache) {
+      case true: {
+        return 'strict'
+      }
+      case false: {
+        return 'no_cache'
+      }
+      default: {
+        return cache
+      }
+    }
+  }
+
+  /**
+   *
+   * @param parent
+   * @param args
+   * @param ctx
+   * @param info
+   *
+   * Generates cache key based on cache option.
+   *
+   */
+  private generateCacheKey(parent, args, ctx, info): string {
+    switch (this.cache) {
+      case 'strict': {
+        const _hash = hash({
+          parent,
+          args,
+        })
+        return `${this.name}-${_hash}`
+      }
+      case 'contextual': {
+        return this.name
+      }
+      case 'no_cache': {
+        return `${this.name}-${Math.random()}`
+      }
+    }
+  }
+}
+
+export class LogicRule implements ILogicRule {
+  private rules: IRule[]
+
+  constructor(rules: IRule[]) {
+    this.rules = rules
+  }
+
+  /**
+   *
+   * @param parent
+   * @param args
+   * @param ctx
+   * @param info
+   *
+   * By default logic rule resolves to false.
+   *
+   */
+  async resolve(parent, args, ctx, info): Promise<boolean> {
+    return false
   }
 
   /**
@@ -160,16 +175,11 @@ export class LogicRule {
 
   /**
    *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
-   * By default logic rule resolves to false.
+   * Returns rules in a logic rule.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<boolean> {
-    return false
+  getRules() {
+    return this.rules
   }
 }
 

@@ -1,4 +1,4 @@
-import { IRule, IRules } from './types'
+import { ShieldRule, IRules } from './types'
 import { Rule, LogicRule } from './rules'
 
 /**
@@ -8,7 +8,7 @@ import { Rule, LogicRule } from './rules'
  * Makes sure that a certain field is a rule.
  *
  */
-export function isRuleFunction(x: any): x is IRule {
+export function isRuleFunction(x: any): x is ShieldRule {
   return x instanceof Rule || x instanceof LogicRule
 }
 
@@ -45,7 +45,7 @@ function flattenObjectOf<edge>(
  *
  */
 export function extractRules(ruleTree: IRules): Rule[] {
-  const resolvers = flattenObjectOf<IRule>(ruleTree, isRuleFunction)
+  const resolvers = flattenObjectOf<ShieldRule>(ruleTree, isRuleFunction)
   const rules: Rule[] = resolvers.reduce((rules, rule) => {
     switch (rule.constructor) {
       case Rule: {

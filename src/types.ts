@@ -1,53 +1,86 @@
-import {
-  GraphQLFieldResolver,
-  GraphQLScalarType,
-  GraphQLTypeResolver,
-  GraphQLResolveInfo,
-} from 'graphql'
-import { Rule, LogicRule } from './rules'
+import { GraphQLResolveInfo } from 'graphql'
+import { IMiddlewareGenerator } from 'graphql-middleware'
 
-export interface FragmentReplacement {
-  field: string
-  fragment: string
+// Rule
+
+export type ShieldRule = IRule | ILogicRule
+
+export declare class IRule {
+  readonly name: string
+
+  constructor(options: IRuleConstructorOptions)
+
+  equals(rule: IRule): boolean
+  extractFragment(): IFragment
+  resolve(parent, args, ctx, info): Promise<boolean>
 }
 
-export type IRuleFunction = (
-  parent: any,
-  args: any,
-  context: any,
-  info: GraphQLResolveInfo,
-) => boolean | Promise<boolean>
+export declare interface IRuleOptions {
+  name: string
+  func: IRuleFunction
+  cache?: ICache
+  fragment?: IFragment
+}
 
-export type IRule = Rule | LogicRule
+export declare class ILogicRule {
+  constructor(rules: IRule[])
+
+  evaluate(parent, args, ctx, info): Promise<boolean[]>
+  resolve(parent, args, ctx, info): Promise<boolean>
+  getRules(): IRule[]
+}
 
 export type IFragment = string
 export type ICache = 'strict' | 'contextual' | 'no_cache'
 
-// Rule Options
+export type IRuleFunction = (
+  parent?: any,
+  args?: any,
+  context?: any,
+  info?: GraphQLResolveInfo,
+) => boolean | Promise<boolean>
 
-export type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
+// Rule Constructor Options
 
-export interface IRuleOptions {
-  cache?: ICacheOptions
+export declare interface IRuleConstructorOptions {
+  name: string
+  func: IRuleFunction
+  cache?: ICacheContructorOptions
   fragment?: IFragment
 }
 
-// RuleMap
+export type ICacheContructorOptions =
+  | 'strict'
+  | 'contextual'
+  | 'no_cache'
+  | boolean
+
+export interface IRuleConstructorOptions {
+  cache?: ICacheContructorOptions
+  fragment?: IFragment
+}
+
+// Rules Definition Tree
 
 export interface IRuleTypeMap {
-  [key: string]: IRule | IRuleFieldMap
+  [key: string]: ShieldRule | IRuleFieldMap
 }
 
 export interface IRuleFieldMap {
-  [key: string]: IRule
+  [key: string]: ShieldRule
 }
 
-export type IRules = IRule | IRuleTypeMap
+export type IRules = ShieldRule | IRuleTypeMap
 
-// Options
+// Generator Options
 
 export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   blacklist?: boolean
 }
+
+export declare function shield(
+  ruleTree: IRules,
+  options: IOptions,
+): IMiddlewareGenerator

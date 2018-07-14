@@ -1,4 +1,4 @@
-import { IRuleFunction, IRuleOptions, IRule } from './types'
+import { IRuleFunction, IRule, IRuleConstructorOptions } from './types'
 import { Rule, RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse } from './rules'
 
 /**
@@ -10,15 +10,20 @@ import { Rule, RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse } from './rules'
  * once we start generating middleware from our ruleTree.
  *
  */
-export const rule = (name?: string | IRuleOptions, options?: IRuleOptions) => (
-  func: IRuleFunction,
-): Rule => {
-  if (typeof name === 'string') {
-    return new Rule(name, func, options)
-  } else {
-    const _name = Math.random().toString()
-    return new Rule(_name, func, name)
+export const rule = (
+  name?: string | IRuleConstructorOptions,
+  options?: IRuleConstructorOptions,
+) => (func: IRuleFunction): Rule => {
+  if (typeof name !== 'string') {
+    name = Math.random().toString()
   }
+
+  return new Rule({
+    name,
+    func,
+    fragment: options.fragment,
+    cache: options.cache,
+  })
 }
 
 /**

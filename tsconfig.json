@@ -3,8 +3,8 @@
     "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "src",
+    "outDir": "dist",
     "sourceMap": true,
     "lib": ["dom", "es2017", "esnext.asynciterable"],
     "experimentalDecorators": true
