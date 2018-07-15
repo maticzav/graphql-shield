@@ -12,7 +12,7 @@ export declare class IRule {
 
   equals(rule: IRule): boolean
   extractFragment(): IFragment
-  resolve(parent, args, ctx, info): Promise<boolean>
+  resolve(parent, args, ctx, info): Promise<IRuleResult>
 }
 
 export declare interface IRuleOptions {
@@ -25,20 +25,28 @@ export declare interface IRuleOptions {
 export declare class ILogicRule {
   constructor(rules: IRule[])
 
-  evaluate(parent, args, ctx, info): Promise<boolean[]>
-  resolve(parent, args, ctx, info): Promise<boolean>
   getRules(): IRule[]
+  extractFragment(): IFragment
+  evaluate(parent, args, ctx, info): Promise<IRuleResult[]>
+  resolve(parent, args, ctx, info): Promise<IRuleResult>
 }
 
 export type IFragment = string
 export type ICache = 'strict' | 'contextual' | 'no_cache'
-
+export type IRuleResult = boolean | ICustomError
 export type IRuleFunction = (
   parent?: any,
   args?: any,
   context?: any,
   info?: GraphQLResolveInfo,
-) => boolean | Promise<boolean>
+) => IRuleResult | Promise<IRuleResult>
+
+export declare class ICustomError implements Error {
+  name: string
+  message: string
+
+  constructor(message: any)
+}
 
 // Rule Constructor Options
 

@@ -8,7 +8,10 @@ import {
   ICacheContructorOptions,
   IRuleConstructorOptions,
   ILogicRule,
+  IRuleResult,
 } from './types'
+import { isCustomError } from './utils'
+import { error } from './customError'
 
 export class Rule implements IRule {
   readonly name: string
@@ -62,7 +65,7 @@ export class Rule implements IRule {
    * Extracts fragment from the rule.
    *
    */
-  extractFragment() {
+  extractFragment(): IFragment {
     return this.fragment
   }
 
@@ -152,7 +155,7 @@ export class LogicRule implements ILogicRule {
    * By default logic rule resolves to false.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<boolean> {
+  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
     return false
   }
 
@@ -166,7 +169,7 @@ export class LogicRule implements ILogicRule {
    * Evaluates all the rules.
    *
    */
-  async evaluate(parent, args, ctx, info) {
+  async evaluate(parent, args, ctx, info): Promise<IRuleResult[]> {
     const rules = this.getRules()
     const tasks = rules.map(rule => rule.resolve(parent, args, ctx, info))
 
@@ -181,13 +184,17 @@ export class LogicRule implements ILogicRule {
   getRules() {
     return this.rules
   }
+
+  extractFragment(): IFragment {
+    return ''
+  }
 }
 
 // Extended Types
 
 export class RuleOr extends LogicRule {
-  constructor(funcs: IRule[]) {
-    super(funcs)
+  constructor(rules: IRule[]) {
+    super(rules)
   }
 
   /**
@@ -200,9 +207,14 @@ export class RuleOr extends LogicRule {
    * Makes sure that at least one of them has evaluated to true.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<boolean> {
-    const res = await this.evaluate(parent, args, ctx, info)
-    return res.some(permission => permission)
+  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
+    const result = await this.evaluate(parent, args, ctx, info)
+
+    if (result.every(res => res === false || isCustomError(res))) {
+      return error(result)
+    } else {
+      return true
+    }
   }
 }
 
@@ -221,9 +233,14 @@ export class RuleAnd extends LogicRule {
    * Makes sure that all of them have resolved to true.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<boolean> {
-    const res = await this.evaluate(parent, args, ctx, info)
-    return res.every(permission => permission)
+  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
+    const result = await this.evaluate(parent, args, ctx, info)
+
+    if (result.some(res => res !== true)) {
+      return error(result.filter(res => res !== true))
+    } else {
+      return true
+    }
   }
 }
 

@@ -1,5 +1,6 @@
-import { ShieldRule, IRules } from './types'
+import { ShieldRule, IRules, ILogicRule, ICustomError } from './types'
 import { Rule, LogicRule } from './rules'
+import { CustomError } from './customError'
 
 /**
  *
@@ -8,8 +9,41 @@ import { Rule, LogicRule } from './rules'
  * Makes sure that a certain field is a rule.
  *
  */
+export function isRule(x: any): x is Rule {
+  return x instanceof Rule
+}
+
+/**
+ *
+ * @param x
+ *
+ * Makes sure that a certain field is a logic rule.
+ *
+ */
+export function isLogicRule(x: any): x is ILogicRule {
+  return x instanceof LogicRule
+}
+
+/**
+ *
+ * @param x
+ *
+ * Makes sure that a certain field is a rule or a logic rule.
+ *
+ */
 export function isRuleFunction(x: any): x is ShieldRule {
-  return x instanceof Rule || x instanceof LogicRule
+  return isRule(x) || isLogicRule(x)
+}
+
+/**
+ *
+ * @param x
+ *
+ * Make sure that value is a custom error.
+ *
+ */
+export function isCustomError(x: any): x is ICustomError {
+  return x instanceof CustomError
 }
 
 /**

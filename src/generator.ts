@@ -3,9 +3,9 @@ import {
   IMiddlewareFunction,
   IMiddlewareGenerator,
 } from 'graphql-middleware'
-import { GraphQLSchema, GraphQLObjectType } from 'graphql'
-import { IRule, IRules, IOptions, IRuleTypeMap, ShieldRule } from './types'
-import { isRuleFunction } from './utils'
+import { GraphQLSchema, GraphQLObjectType, GraphQLField } from 'graphql'
+import { IRules, IOptions, IRuleTypeMap, ShieldRule } from './types'
+import { isRuleFunction, isRule } from './utils'
 import { CustomError } from './customError'
 
 /**
@@ -16,10 +16,11 @@ import { CustomError } from './customError'
  * initializes the cache object in context.
  *
  */
-const applyRuleToField = (options: IOptions) => (
-  rule: IRule,
-): IMiddlewareFunction =>
-  async function(resolve, parent, args, ctx, info) {
+function generateFieldMiddlewareFromRule(
+  rule: ShieldRule,
+  options: IOptions,
+): IMiddlewareFunction {
+  async function middleware(resolve, parent, args, ctx, info) {
     // Cache
     if (!ctx) {
       ctx = {}
@@ -33,26 +34,41 @@ const applyRuleToField = (options: IOptions) => (
       ctx._shield.cache = {}
     }
 
+    // Execution
     try {
-      const allow = await rule.resolve(parent, args, ctx, info)
+      let res
 
-      if (allow) {
+      if (isRuleFunction(rule)) {
+        res = await rule.resolve(parent, args, ctx, info)
+      } else {
+        res = !options.blacklist
+      }
+
+      if (res instanceof CustomError) {
+        return res
+      } else if (res) {
         return resolve(parent, args, ctx, info)
       } else {
-        throw new CustomError('Not Authorised!')
+        return new Error('Not Authorised')
       }
     } catch (err) {
-      if (
-        err instanceof CustomError ||
-        options.debug ||
-        options.allowExternalErrors
-      ) {
-        throw err
+      if (options.debug || options.allowExternalErrors) {
+        return err
       } else {
-        throw new Error('Not Authorised!')
+        return new Error('Not Authorised!')
       }
     }
   }
+
+  if (isRuleFunction(rule) && rule.extractFragment()) {
+    return {
+      fragment: rule.extractFragment(),
+      resolve: middleware,
+    }
+  } else {
+    return middleware
+  }
+}
 
 /**
  *
@@ -69,8 +85,30 @@ function applyRuleToType(
   options: IOptions,
 ): IMiddleware {
   if (isRuleFunction(rules)) {
-    return applyRuleTo
+    const fieldMap = type.getFields()
+
+    const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
+      return {
+        ...middleware,
+        [field]: generateFieldMiddlewareFromRule(rules, options),
+      }
+    }, {})
+
+    return middleware
   } else {
+    const fieldMap = type.getFields()
+
+    const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
+      return {
+        ...middleware,
+        [field]: generateFieldMiddlewareFromRule(
+          rules[field] as ShieldRule,
+          options,
+        ),
+      }
+    }, {})
+
+    return middleware
   }
 }
 
