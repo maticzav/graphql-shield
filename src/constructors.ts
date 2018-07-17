@@ -9,18 +9,36 @@ import { Rule, RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse } from './rules'
  * Wraps a function into a Rule class. This way we can identify rules
  * once we start generating middleware from our ruleTree.
  *
+ * 1.
+ * const auth = rule()(async (parent, args, ctx, info) => {
+ *  return true
+ * })
+ *
+ * 2.
+ * const auth = rule('name')(async (parent, args, ctx, info) => {
+ *  return true
+ * })
+ *
+ * 3.
+ * const auth = rule({
+ *  name: 'name',
+ *  fragment: 'string',
+ *  cache: 'cache',
+ * })(async (parent, args, ctx, info) => {
+ *  return true
+ * })
+ *
  */
 export const rule = (
   name?: string | IRuleConstructorOptions,
   options?: IRuleConstructorOptions,
 ) => (func: IRuleFunction): Rule => {
   if (typeof name !== 'string') {
+    options = name || {}
     name = Math.random().toString()
   }
 
-  return new Rule({
-    name,
-    func,
+  return new Rule(name, func, {
     fragment: options.fragment,
     cache: options.cache,
   })

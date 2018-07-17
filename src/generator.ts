@@ -3,9 +3,15 @@ import {
   IMiddlewareFunction,
   IMiddlewareGenerator,
 } from 'graphql-middleware'
-import { GraphQLSchema, GraphQLObjectType, GraphQLField } from 'graphql'
-import { IRules, IOptions, IRuleTypeMap, ShieldRule } from './types'
-import { isRuleFunction, isRule } from './utils'
+import { GraphQLSchema, GraphQLObjectType, isObjectType } from 'graphql'
+import {
+  IRules,
+  IOptions,
+  IRuleTypeMap,
+  ShieldRule,
+  IRuleFieldMap,
+} from './types'
+import { isRuleFunction } from './utils'
 import { CustomError } from './customError'
 
 /**
@@ -61,10 +67,11 @@ function generateFieldMiddlewareFromRule(
   }
 
   if (isRuleFunction(rule) && rule.extractFragment()) {
-    return {
-      fragment: rule.extractFragment(),
-      resolve: middleware,
-    }
+    return middleware
+    // return {
+    //   fragment: rule.extractFragment(),
+    //   resolve: middleware,
+    // }
   } else {
     return middleware
   }
@@ -81,7 +88,7 @@ function generateFieldMiddlewareFromRule(
  */
 function applyRuleToType(
   type: GraphQLObjectType,
-  rules: ShieldRule | IRuleTypeMap,
+  rules: ShieldRule | IRuleFieldMap,
   options: IOptions,
 ): IMiddleware {
   if (isRuleFunction(rules)) {
@@ -101,10 +108,7 @@ function applyRuleToType(
     const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
       return {
         ...middleware,
-        [field]: generateFieldMiddlewareFromRule(
-          rules[field] as ShieldRule,
-          options,
-        ),
+        [field]: generateFieldMiddlewareFromRule(rules[field], options),
       }
     }, {})
 
@@ -128,17 +132,18 @@ function applyRuleToSchema(
 ): IMiddleware {
   const typeMap = schema.getTypeMap()
 
-  const middleware = Object.keys(typeMap).reduce(
-    (middleware, type) => ({
-      ...middleware,
-      [type]: applyRuleToType(
-        typeMap[type] as GraphQLObjectType,
-        rule,
-        options,
-      ),
-    }),
-    {},
-  )
+  const middleware = Object.keys(typeMap).reduce((middleware, typeName) => {
+    const type = typeMap[typeName]
+
+    if (isObjectType(type)) {
+      return {
+        ...middleware,
+        [typeName]: applyRuleToType(type, rule, options),
+      }
+    } else {
+      return middleware
+    }
+  }, {})
 
   return middleware
 }

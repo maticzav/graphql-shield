@@ -1,11 +1,8 @@
 import { ICustomError } from './types'
 
-export class CustomError implements ICustomError {
-  name: string
-  message: string
-
+export class CustomError extends Error implements ICustomError {
   constructor(message) {
-    // super(message)
+    super(message)
   }
 }
 

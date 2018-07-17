@@ -1,4 +1,4 @@
-import { IMiddlewareGenerator } from 'graphql-middleware'
+import { middleware, MiddlewareGenerator } from 'graphql-middleware'
 import { validateRules } from './utils'
 import { IRules, IOptions } from './types'
 import { generateMiddlewareGeneratorFromRuleTree } from './generator'
@@ -30,13 +30,18 @@ function normalizeOptions(options: IOptions): IOptions {
  * Validates rules and generates middleware from defined rule tree.
  *
  */
-export function shield(
+export function shield<TSource = any, TContext = any, TArgs = any>(
   ruleTree: IRules,
   options: IOptions = {},
-): IMiddlewareGenerator {
+): MiddlewareGenerator<TSource, TContext, TArgs> {
   const _options = normalizeOptions(options)
 
   validateRules(ruleTree)
 
-  return generateMiddlewareGeneratorFromRuleTree(ruleTree, _options)
+  const generatorFunction = generateMiddlewareGeneratorFromRuleTree(
+    ruleTree,
+    _options,
+  )
+
+  return middleware(generatorFunction)
 }

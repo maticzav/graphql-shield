@@ -224,7 +224,7 @@ const fails = (t, schema) => async (query, errorMessage) => {
 
 // Allow
 
-test('shield:Allow access', async t => {
+test.only('shield:Allow access', async t => {
   const schema = getTestsSchema()
   const query = `
     query {

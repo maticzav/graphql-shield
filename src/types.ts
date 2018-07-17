@@ -8,18 +8,16 @@ export type ShieldRule = IRule | ILogicRule
 export declare class IRule {
   readonly name: string
 
-  constructor(options: IRuleConstructorOptions)
+  constructor(options: IRuleOptions)
 
   equals(rule: IRule): boolean
   extractFragment(): IFragment
   resolve(parent, args, ctx, info): Promise<IRuleResult>
 }
 
-export declare interface IRuleOptions {
-  name: string
-  func: IRuleFunction
-  cache?: ICache
-  fragment?: IFragment
+export interface IRuleOptions {
+  cache: ICache
+  fragment: IFragment
 }
 
 export declare class ILogicRule {
@@ -41,21 +39,11 @@ export type IRuleFunction = (
   info?: GraphQLResolveInfo,
 ) => IRuleResult | Promise<IRuleResult>
 
-export declare class ICustomError implements Error {
-  name: string
-  message: string
-
+export declare class ICustomError extends Error {
   constructor(message: any)
 }
 
 // Rule Constructor Options
-
-export declare interface IRuleConstructorOptions {
-  name: string
-  func: IRuleFunction
-  cache?: ICacheContructorOptions
-  fragment?: IFragment
-}
 
 export type ICacheContructorOptions =
   | 'strict'

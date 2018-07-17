@@ -20,13 +20,13 @@ export class Rule implements IRule {
   private fragment: IFragment
   private func: IRuleFunction
 
-  constructor(constructorOptions: IRuleConstructorOptions) {
+  constructor(name, func, constructorOptions: IRuleConstructorOptions) {
     const options = this.normalizeOptions(constructorOptions)
 
-    this.name = options.name
+    this.name = name
+    this.func = func
     this.cache = options.cache
     this.fragment = options.fragment
-    this.func = options.func
   }
 
   /**
@@ -78,8 +78,6 @@ export class Rule implements IRule {
    */
   private normalizeOptions(options: IRuleConstructorOptions): IRuleOptions {
     return {
-      name: options.name,
-      func: options.func,
       cache:
         options.cache !== undefined
           ? this.normalizeCacheOption(options.cache)
