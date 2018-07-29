@@ -18,7 +18,7 @@ function normalizeOptions(options: IOptions): IOptions {
       options.allowExternalErrors !== undefined
         ? options.allowExternalErrors
         : false,
-    blacklist: options.blacklist !== undefined ? options.blacklist : false,
+    whitelist: options.whitelist !== undefined ? options.whitelist : false,
   }
 }
 

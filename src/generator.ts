@@ -47,7 +47,7 @@ function generateFieldMiddlewareFromRule(
       if (isRuleFunction(rule)) {
         res = await rule.resolve(parent, args, ctx, info)
       } else {
-        res = !options.blacklist
+        res = !options.whitelist
       }
 
       if (res instanceof CustomError) {
@@ -166,17 +166,19 @@ function generateMiddlewareFromSchemaAndRuleTree(
   } else {
     const typeMap = schema.getTypeMap()
 
-    const middleware = Object.keys(typeMap).reduce(
-      (middleware, type) => ({
-        ...middleware,
-        [type]: applyRuleToType(
-          typeMap[type] as GraphQLObjectType,
-          rules[type],
-          options,
-        ),
-      }),
-      {},
-    )
+    const middleware = Object.keys(typeMap)
+      .filter(type => isObjectType(typeMap[type]))
+      .reduce(
+        (middleware, type) => ({
+          ...middleware,
+          [type]: applyRuleToType(
+            typeMap[type] as GraphQLObjectType,
+            rules[type],
+            options,
+          ),
+        }),
+        {},
+      )
 
     return middleware
   }

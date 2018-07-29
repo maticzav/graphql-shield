@@ -73,7 +73,7 @@ export type IRules = ShieldRule | IRuleTypeMap
 export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
-  blacklist?: boolean
+  whitelist?: boolean
 }
 
 export declare function shield(
