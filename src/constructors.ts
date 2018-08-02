@@ -1,4 +1,4 @@
-import { IRuleFunction, IRule, IRuleConstructorOptions } from './types'
+import { IRuleFunction, IRuleConstructorOptions, ShieldRule } from './types'
 import { Rule, RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse } from './rules'
 
 /**
@@ -51,7 +51,7 @@ export const rule = (
  * Logical operator and serves as a wrapper for and operation.
  *
  */
-export const and = (...rules: IRule[]): RuleAnd => {
+export const and = (...rules: ShieldRule[]): RuleAnd => {
   return new RuleAnd(rules)
 }
 
@@ -62,7 +62,7 @@ export const and = (...rules: IRule[]): RuleAnd => {
  * Logical operator or serves as a wrapper for or operation.
  *
  */
-export const or = (...rules: IRule[]): RuleOr => {
+export const or = (...rules: ShieldRule[]): RuleOr => {
   return new RuleOr(rules)
 }
 
@@ -73,7 +73,7 @@ export const or = (...rules: IRule[]): RuleOr => {
  * Logical operator not serves as a wrapper for not operation.
  *
  */
-export const not = (rule: IRule): RuleNot => {
+export const not = (rule: ShieldRule): RuleNot => {
   return new RuleNot(rule)
 }
 

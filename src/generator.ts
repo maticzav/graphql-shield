@@ -4,15 +4,10 @@ import {
   IMiddlewareGenerator,
 } from 'graphql-middleware'
 import { GraphQLSchema, GraphQLObjectType, isObjectType } from 'graphql'
-import {
-  IRules,
-  IOptions,
-  IRuleTypeMap,
-  ShieldRule,
-  IRuleFieldMap,
-} from './types'
-import { isRuleFunction } from './utils'
+import { IRules, IOptions, ShieldRule, IRuleFieldMap } from './types'
+import { isRuleFunction, isRuleFieldMap } from './utils'
 import { CustomError } from './customError'
+import { allow, deny } from './constructors'
 
 /**
  *
@@ -42,39 +37,41 @@ function generateFieldMiddlewareFromRule(
 
     // Execution
     try {
-      let res
-
-      if (isRuleFunction(rule)) {
-        res = await rule.resolve(parent, args, ctx, info)
-      } else {
-        res = !options.whitelist
-      }
+      const res = await rule.resolve(parent, args, ctx, info)
 
       if (res instanceof CustomError) {
         return res
       } else if (res) {
         return resolve(parent, args, ctx, info)
       } else {
-        return new Error('Not Authorised')
+        return options.fallback
       }
     } catch (err) {
-      if (options.debug || options.allowExternalErrors) {
+      if (options.debug) {
+        throw err
+      } else if (options.allowExternalErrors) {
         return err
       } else {
-        return new Error('Not Authorised!')
+        return options.fallback
       }
     }
   }
 
-  if (isRuleFunction(rule) && rule.extractFragment()) {
-    return middleware
-    // return {
-    //   fragment: rule.extractFragment(),
-    //   resolve: middleware,
-    // }
-  } else {
-    return middleware
-  }
+  // if (isRule(rule)) {
+  //   return {
+  //     fragment: rule.extractFragment(),
+  //     resolve: middleware,
+  //   }
+  // } else if (isLogicRule(rule)) {
+  //   return {
+  //     fragments: rule.extractFragments(),
+  //     resolve: middleware,
+  //   }
+  // } else {
+  //   return middleware
+  // }
+
+  return middleware
 }
 
 /**
@@ -83,7 +80,7 @@ function generateFieldMiddlewareFromRule(
  * @param rules
  * @param options
  *
- *
+ * Generates middleware from rule for a particlar type.
  *
  */
 function applyRuleToType(
@@ -102,13 +99,37 @@ function applyRuleToType(
     }, {})
 
     return middleware
+  } else if (isRuleFieldMap(rules)) {
+    const fieldMap = type.getFields()
+
+    const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
+      if (rules[field]) {
+        return {
+          ...middleware,
+          [field]: generateFieldMiddlewareFromRule(rules[field], options),
+        }
+      } else {
+        return {
+          ...middleware,
+          [field]: generateFieldMiddlewareFromRule(
+            options.whitelist ? deny : allow,
+            options,
+          ),
+        }
+      }
+    }, {})
+
+    return middleware
   } else {
     const fieldMap = type.getFields()
 
     const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
       return {
         ...middleware,
-        [field]: generateFieldMiddlewareFromRule(rules[field], options),
+        [field]: generateFieldMiddlewareFromRule(
+          options.whitelist ? deny : allow,
+          options,
+        ),
       }
     }, {})
 

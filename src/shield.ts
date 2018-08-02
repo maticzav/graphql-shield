@@ -19,6 +19,10 @@ function normalizeOptions(options: IOptions): IOptions {
         ? options.allowExternalErrors
         : false,
     whitelist: options.whitelist !== undefined ? options.whitelist : false,
+    fallback:
+      options.fallback !== undefined
+        ? options.fallback
+        : new Error('Not Authorised'),
   }
 }
 

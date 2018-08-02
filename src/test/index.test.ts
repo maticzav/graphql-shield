@@ -2,9 +2,9 @@ import test from 'ava'
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, allow, deny } from '../index'
+import { shield, rule } from '../index'
 
-test('Rule allow access', async t => {
+test('Rule allow access (promise).', async t => {
   // Schema
   const typeDefs = `
     type Query {
@@ -23,13 +23,15 @@ test('Rule allow access', async t => {
   })
 
   // Permissions
+  const allow = rule()(async (parent, args, ctx, info) => {
+    return true
+  })
+
   const permissions = shield({
     Query: {
       test: allow,
     },
   })
-
-  debugger
 
   const schemaWithPermissions = applyMiddleware(schema, permissions)
 
@@ -48,6 +50,132 @@ test('Rule allow access', async t => {
   })
 })
 
-test.todo('Rule deny access')
-test.todo('Rule allow nested access')
-test.todo('Rule deny nested access')
+test('Rule allow access (immediate).', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Permissions
+  const allow = rule()((parent, args, ctx, info) => {
+    return true
+  })
+
+  const permissions = shield({
+    Query: {
+      test: allow,
+    },
+  })
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.deepEqual(res, {
+    data: {
+      test: 'pass',
+    },
+  })
+})
+
+test('Rule deny access (promise).', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Permissions
+  const deny = rule()(async (parent, args, ctx, info) => {
+    return false
+  })
+
+  const permissions = shield({
+    Query: {
+      test: deny,
+    },
+  })
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+})
+
+test('Rule deny access (immediate).', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Permissions
+  const deny = rule()((parent, args, ctx, info) => {
+    return false
+  })
+
+  const permissions = shield({
+    Query: {
+      test: deny,
+    },
+  })
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+})

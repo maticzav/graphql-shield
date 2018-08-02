@@ -9,9 +9,10 @@ import {
   IRuleConstructorOptions,
   ILogicRule,
   IRuleResult,
+  ShieldRule,
 } from './types'
-import { isCustomError } from './utils'
-import { error } from './customError'
+import { isCustomError, isLogicRule } from './utils'
+import { error, CustomError } from './customError'
 
 export class Rule implements IRule {
   readonly name: string
@@ -120,11 +121,11 @@ export class Rule implements IRule {
   private generateCacheKey(parent, args, ctx, info): string {
     switch (this.cache) {
       case 'strict': {
-        const _hash = hash({
+        const key = hash({
           parent,
           args,
         })
-        return `${this.name}-${_hash}`
+        return `${this.name}-${key}`
       }
       case 'contextual': {
         return this.name
@@ -137,9 +138,9 @@ export class Rule implements IRule {
 }
 
 export class LogicRule implements ILogicRule {
-  private rules: IRule[]
+  private rules: ShieldRule[]
 
-  constructor(rules: IRule[]) {
+  constructor(rules: ShieldRule[]) {
     this.rules = rules
   }
 
@@ -183,15 +184,23 @@ export class LogicRule implements ILogicRule {
     return this.rules
   }
 
-  extractFragment(): IFragment {
-    return ''
+  extractFragments(): IFragment[] {
+    const fragments = this.rules.reduce((fragments, rule) => {
+      if (isLogicRule(rule)) {
+        return fragments.concat(...rule.extractFragments())
+      } else {
+        return fragments.concat(rule.extractFragment())
+      }
+    }, [])
+
+    return fragments
   }
 }
 
 // Extended Types
 
 export class RuleOr extends LogicRule {
-  constructor(rules: IRule[]) {
+  constructor(rules: ShieldRule[]) {
     super(rules)
   }
 
@@ -217,8 +226,8 @@ export class RuleOr extends LogicRule {
 }
 
 export class RuleAnd extends LogicRule {
-  constructor(funcs: IRule[]) {
-    super(funcs)
+  constructor(rules: ShieldRule[]) {
+    super(rules)
   }
 
   /**
@@ -243,8 +252,8 @@ export class RuleAnd extends LogicRule {
 }
 
 export class RuleNot extends LogicRule {
-  constructor(func: IRule) {
-    super([func])
+  constructor(rule: ShieldRule) {
+    super([rule])
   }
 
   /**
@@ -258,8 +267,19 @@ export class RuleNot extends LogicRule {
    *
    */
   async resolve(parent, args, ctx, info): Promise<boolean> {
-    const res = await this.evaluate(parent, args, ctx, info)
-    return res.every(permission => !permission)
+    try {
+      const [res] = await this.evaluate(parent, args, ctx, info)
+
+      if (res instanceof CustomError) {
+        return true
+      } else if (res === false) {
+        return true
+      } else {
+        return false
+      }
+    } catch (err) {
+      return true
+    }
   }
 }
 

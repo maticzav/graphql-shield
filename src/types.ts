@@ -21,10 +21,10 @@ export interface IRuleOptions {
 }
 
 export declare class ILogicRule {
-  constructor(rules: IRule[])
+  constructor(rules: ShieldRule[])
 
-  getRules(): IRule[]
-  extractFragment(): IFragment
+  getRules(): ShieldRule[]
+  extractFragments(): IFragment[]
   evaluate(parent, args, ctx, info): Promise<IRuleResult[]>
   resolve(parent, args, ctx, info): Promise<IRuleResult>
 }
@@ -74,6 +74,7 @@ export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   whitelist?: boolean
+  fallback?: Error
 }
 
 export declare function shield(
