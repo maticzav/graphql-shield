@@ -6,7 +6,7 @@
   "typings": "dist/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "scripts": {
-    "prepublish": "npm run test",
+    "prepublishOnly": "npm run test",
     "build": "rimraf dist && tsc -d",
     "lint": "tslint --project tsconfig.json {src}/**/*.ts",
     "test": "npm run lint && npm run build && ava --verbose",
