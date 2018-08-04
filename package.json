@@ -18,7 +18,7 @@
     "opencollective": "1.0.3"
   },
   "devDependencies": {
-    "@types/graphql": "0.13.3",
+    "@types/graphql": "0.13.4",
     "@types/node": "9.6.25",
     "@types/object-hash": "1.2.0",
     "ava": "0.25.0",
