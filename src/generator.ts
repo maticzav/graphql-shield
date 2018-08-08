@@ -1,11 +1,11 @@
 import {
   IMiddleware,
   IMiddlewareFunction,
-  IMiddlewareGenerator,
+  IMiddlewareGeneratorConstructor,
 } from 'graphql-middleware'
 import { GraphQLSchema, GraphQLObjectType, isObjectType } from 'graphql'
 import { IRules, IOptions, ShieldRule, IRuleFieldMap } from './types'
-import { isRuleFunction, isRuleFieldMap } from './utils'
+import { isRuleFunction, isRuleFieldMap, isRule, isLogicRule } from './utils'
 import { CustomError } from './customError'
 import { allow, deny } from './constructors'
 
@@ -57,21 +57,19 @@ function generateFieldMiddlewareFromRule(
     }
   }
 
-  // if (isRule(rule)) {
-  //   return {
-  //     fragment: rule.extractFragment(),
-  //     resolve: middleware,
-  //   }
-  // } else if (isLogicRule(rule)) {
-  //   return {
-  //     fragments: rule.extractFragments(),
-  //     resolve: middleware,
-  //   }
-  // } else {
-  //   return middleware
-  // }
-
-  return middleware
+  if (isRule(rule) && rule.extractFragment()) {
+    return {
+      fragment: rule.extractFragment(),
+      resolve: middleware,
+    }
+  } else if (isLogicRule(rule)) {
+    return {
+      fragments: rule.extractFragments(),
+      resolve: middleware,
+    }
+  } else {
+    return middleware
+  }
 }
 
 /**
@@ -213,10 +211,14 @@ function generateMiddlewareFromSchemaAndRuleTree(
  * Generates middleware from given rules.
  *
  */
-export function generateMiddlewareGeneratorFromRuleTree(
+export function generateMiddlewareGeneratorFromRuleTree<
+  TSource = any,
+  TContext = any,
+  TArgs = any
+>(
   ruleTree: IRules,
   options: IOptions,
-): IMiddlewareGenerator {
+): IMiddlewareGeneratorConstructor<TSource, TContext, TArgs> {
   const generator = (schema: GraphQLSchema) => {
     const middleware = generateMiddlewareFromSchemaAndRuleTree(
       schema,

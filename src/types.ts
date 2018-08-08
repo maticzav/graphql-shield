@@ -77,7 +77,7 @@ export interface IOptions {
   fallback?: Error
 }
 
-export declare function shield(
+export declare function shield<TSource = any, TContext = any, TArgs = any>(
   ruleTree: IRules,
   options: IOptions,
-): IMiddlewareGenerator
+): IMiddlewareGenerator<TSource, TContext, TArgs>
