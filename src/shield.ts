@@ -43,14 +43,13 @@ export function shield<TSource = any, TContext = any, TArgs = any>(
   options: IOptionsConstructor = {},
 ): IMiddlewareGenerator<TSource, TContext, TArgs> {
   const normalizedOptions = normalizeOptions(options)
-
-  validateRules(ruleTree)
+  const validatedRuleTree = validateRules(ruleTree)
 
   const generatorFunction = generateMiddlewareGeneratorFromRuleTree<
     TSource,
     TContext,
     TArgs
-  >(ruleTree, normalizedOptions)
+  >(validatedRuleTree, normalizedOptions)
 
   return middleware(generatorFunction)
 }

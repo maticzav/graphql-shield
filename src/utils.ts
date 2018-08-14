@@ -34,8 +34,18 @@ export function isRuleFunction(x: any): x is ShieldRule {
   return isRule(x) || isLogicRule(x)
 }
 
+/**
+ *
+ * @param x
+ *
+ * Determines whether a certain field is rule field map or not.
+ *
+ */
 export function isRuleFieldMap(x: any): x is IRuleFieldMap {
-  return typeof x === 'object'
+  return (
+    typeof x === 'object' &&
+    Object.values(x).every(rule => isRuleFunction(rule))
+  )
 }
 
 /**
@@ -97,10 +107,10 @@ export function extractRules(ruleTree: IRules): Rule[] {
  * to different rules.
  *
  */
-export function validateRules(ruleTree: IRules): boolean {
+export function validateRules(ruleTree: IRules): IRules {
   const rules = extractRules(ruleTree)
 
-  const map = rules.reduce((_map, rule) => {
+  rules.reduce((_map, rule) => {
     if (!_map.has(rule.name)) {
       return _map.set(rule.name, rule)
     } else if (!_map.get(rule.name).equals(rule)) {
@@ -112,5 +122,5 @@ export function validateRules(ruleTree: IRules): boolean {
     }
   }, new Map<string, Rule>())
 
-  return true
+  return ruleTree
 }
