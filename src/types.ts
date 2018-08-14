@@ -12,7 +12,7 @@ export declare class IRule {
 
   equals(rule: IRule): boolean
   extractFragment(): IFragment
-  resolve(parent, args, ctx, info): Promise<IRuleResult>
+  resolve(parent, args, ctx, info, options: IOptions): Promise<IRuleResult>
 }
 
 export interface IRuleOptions {
@@ -26,8 +26,8 @@ export declare class ILogicRule {
 
   getRules(): ShieldRule[]
   extractFragments(): IFragment[]
-  evaluate(parent, args, ctx, info): Promise<IRuleResult[]>
-  resolve(parent, args, ctx, info): Promise<IRuleResult>
+  evaluate(parent, args, ctx, info, options: IOptions): Promise<IRuleResult[]>
+  resolve(parent, args, ctx, info, options: IOptions): Promise<IRuleResult>
 }
 
 export type IFragment = string
@@ -69,6 +69,13 @@ export type IRules = ShieldRule | IRuleTypeMap
 // Generator Options
 
 export interface IOptions {
+  debug: boolean
+  allowExternalErrors: boolean
+  whitelist: boolean
+  fallback: Error
+}
+
+export interface IOptionsConstructor {
   debug?: boolean
   allowExternalErrors?: boolean
   whitelist?: boolean

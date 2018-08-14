@@ -36,7 +36,7 @@ function generateFieldMiddlewareFromRule(
 
     // Execution
     try {
-      const res = await rule.resolve(parent, args, ctx, info)
+      const res = await rule.resolve(parent, args, ctx, info, options)
 
       if (res === true) {
         return resolve(parent, args, ctx, info)

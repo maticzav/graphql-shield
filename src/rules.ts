@@ -10,6 +10,7 @@ import {
   ILogicRule,
   ShieldRule,
   IRuleResult,
+  IOptions,
 } from './types'
 import { isLogicRule } from './utils'
 
@@ -41,14 +42,22 @@ export class Rule implements IRule {
    * Resolves rule and writes to cache its result.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
-    const cacheKey = this.generateCacheKey(parent, args, ctx, info)
-
-    if (!ctx._shield.cache[cacheKey]) {
-      ctx._shield.cache[cacheKey] = this.func(parent, args, ctx, info)
-    }
-
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult> {
     try {
+      // Cache
+      const cacheKey = this.generateCacheKey(parent, args, ctx, info)
+
+      if (!ctx._shield.cache[cacheKey]) {
+        ctx._shield.cache[cacheKey] = this.func(parent, args, ctx, info)
+      }
+
+      // Resolve
       const res = await ctx._shield.cache[cacheKey]
 
       if (res === true) {
@@ -59,7 +68,9 @@ export class Rule implements IRule {
         return false
       }
     } catch (err) {
-      if (this.error !== undefined) {
+      if (options.debug) {
+        throw err
+      } else if (this.error !== undefined) {
         return this.error
       } else {
         return false
@@ -177,7 +188,13 @@ export class LogicRule implements ILogicRule {
    * By default logic rule resolves to false.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult> {
     return false
   }
 
@@ -191,9 +208,17 @@ export class LogicRule implements ILogicRule {
    * Evaluates all the rules.
    *
    */
-  async evaluate(parent, args, ctx, info): Promise<IRuleResult[]> {
+  async evaluate(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult[]> {
     const rules = this.getRules()
-    const tasks = rules.map(rule => rule.resolve(parent, args, ctx, info))
+    const tasks = rules.map(rule =>
+      rule.resolve(parent, args, ctx, info, options),
+    )
 
     return Promise.all(tasks)
   }
@@ -237,8 +262,14 @@ export class RuleOr extends LogicRule {
    * Makes sure that at least one of them has evaluated to true.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
-    const result = await this.evaluate(parent, args, ctx, info)
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult> {
+    const result = await this.evaluate(parent, args, ctx, info, options)
 
     if (result.every(res => res !== true)) {
       return false
@@ -263,9 +294,15 @@ export class RuleAnd extends LogicRule {
    * Makes sure that all of them have resolved to true.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult> {
     try {
-      const result = await this.evaluate(parent, args, ctx, info)
+      const result = await this.evaluate(parent, args, ctx, info, options)
 
       if (result.some(res => res !== true)) {
         return false
@@ -293,9 +330,15 @@ export class RuleNot extends LogicRule {
    * Negates the result.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult> {
     try {
-      const [res] = await this.evaluate(parent, args, ctx, info)
+      const [res] = await this.evaluate(parent, args, ctx, info, options)
 
       if (res !== true) {
         return true

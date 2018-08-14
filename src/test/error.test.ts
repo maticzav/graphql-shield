@@ -146,7 +146,7 @@ test('Error in resolver, allow external errors.', async t => {
   t.is(res.errors[0].message, 'external')
 })
 
-test('Error in rule, allow external errors.', async t => {
+test('Error in rule with allow external errors, returns fallback.', async t => {
   // Schema
   const typeDefs = `
     type Query {
@@ -189,7 +189,7 @@ test('Error in rule, allow external errors.', async t => {
   const res = await graphql(schemaWithPermissions, query)
 
   t.is(res.data, null)
-  t.is(res.errors[0].message, 'external')
+  t.is(res.errors[0].message, 'Not Authorised!')
 })
 
 test('Custom error message in rule, rule returns boolean.', async t => {
@@ -364,7 +364,7 @@ test('Custom error in rule, rule throws.', async t => {
   t.is(res.errors[0].message, 'custom')
 })
 
-test('Return original error in debug mode.', async t => {
+test('Return original error in debug mode, rule.', async t => {
   // Schema
   const typeDefs = `
     type Query {
@@ -392,7 +392,55 @@ test('Return original error in debug mode.', async t => {
       Query: allow,
     },
     {
-      allowExternalErrors: true,
+      debug: true,
+    },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+  t.is(res.errors[0].message, 'debug')
+})
+
+test('Return original error in debug mode, resolver.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => {
+        throw new Error('debug')
+      },
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Permissions
+  const allow = rule()(() => {
+    return true
+  })
+
+  const permissions = shield(
+    {
+      Query: allow,
+    },
+    {
+      debug: true,
     },
   )
 

@@ -1,6 +1,6 @@
 import { middleware, IMiddlewareGenerator } from 'graphql-middleware'
 import { validateRules } from './utils'
-import { IRules, IOptions } from './types'
+import { IRules, IOptions, IOptionsConstructor } from './types'
 import { generateMiddlewareGeneratorFromRuleTree } from './generator'
 
 /**
@@ -11,7 +11,11 @@ import { generateMiddlewareGeneratorFromRuleTree } from './generator'
  * shield can process.
  *
  */
-function normalizeOptions(options: IOptions): IOptions {
+function normalizeOptions(options: IOptionsConstructor): IOptions {
+  if (typeof options.fallback === 'string') {
+    options.fallback = new Error(options.fallback)
+  }
+
   return {
     debug: options.debug !== undefined ? options.debug : false,
     allowExternalErrors:
@@ -36,9 +40,9 @@ function normalizeOptions(options: IOptions): IOptions {
  */
 export function shield<TSource = any, TContext = any, TArgs = any>(
   ruleTree: IRules,
-  options: IOptions = {},
+  options: IOptionsConstructor = {},
 ): IMiddlewareGenerator<TSource, TContext, TArgs> {
-  const _options = normalizeOptions(options)
+  const normalizedOptions = normalizeOptions(options)
 
   validateRules(ruleTree)
 
@@ -46,7 +50,7 @@ export function shield<TSource = any, TContext = any, TArgs = any>(
     TSource,
     TContext,
     TArgs
-  >(ruleTree, _options)
+  >(ruleTree, normalizedOptions)
 
   return middleware(generatorFunction)
 }
