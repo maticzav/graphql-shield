@@ -20,7 +20,6 @@ export class Rule implements IRule {
   private cache: ICache
   private fragment: IFragment
   private func: IRuleFunction
-  private error: Error
 
   constructor(name, func, constructorOptions: IRuleConstructorOptions) {
     const options = this.normalizeOptions(constructorOptions)
@@ -29,7 +28,6 @@ export class Rule implements IRule {
     this.func = func
     this.cache = options.cache
     this.fragment = options.fragment
-    this.error = options.error
   }
 
   /**
@@ -60,18 +58,16 @@ export class Rule implements IRule {
       // Resolve
       const res = await ctx._shield.cache[cacheKey]
 
-      if (res === true) {
+      if (res instanceof Error) {
+        return res
+      } else if (res === true) {
         return true
-      } else if (this.error !== undefined) {
-        return this.error
       } else {
         return false
       }
     } catch (err) {
       if (options.debug) {
         throw err
-      } else if (this.error !== undefined) {
-        return this.error
       } else {
         return false
       }
@@ -107,17 +103,12 @@ export class Rule implements IRule {
    *
    */
   private normalizeOptions(options: IRuleConstructorOptions): IRuleOptions {
-    if (typeof options.error === 'string') {
-      options.error = new Error(options.error)
-    }
-
     return {
       cache:
         options.cache !== undefined
           ? this.normalizeCacheOption(options.cache)
           : 'contextual',
       fragment: options.fragment !== undefined ? options.fragment : undefined,
-      error: options.error !== undefined ? options.error : undefined,
     }
   }
 

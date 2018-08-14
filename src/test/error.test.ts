@@ -192,7 +192,7 @@ test('Error in rule with allow external errors, returns fallback.', async t => {
   t.is(res.errors[0].message, 'Not Authorised!')
 })
 
-test('Custom error message in rule, rule returns boolean.', async t => {
+test('Custom error in rule.', async t => {
   // Schema
   const typeDefs = `
     type Query {
@@ -211,10 +211,10 @@ test('Custom error message in rule, rule returns boolean.', async t => {
   })
 
   // Permissions
-  const allow = rule({
-    error: 'custom',
-  })(() => {
-    return false
+  const error = new Error(`${Math.random()}`)
+
+  const allow = rule()(() => {
+    return error
   })
 
   const permissions = shield({
@@ -232,136 +232,7 @@ test('Custom error message in rule, rule returns boolean.', async t => {
   const res = await graphql(schemaWithPermissions, query)
 
   t.is(res.data, null)
-  t.is(res.errors[0].message, 'custom')
-})
-
-test('Custom error in rule, rule returns boolean.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const allow = rule({
-    error: new Error('custom'),
-  })(() => {
-    return false
-  })
-
-  const permissions = shield({
-    Query: allow,
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-  t.is(res.errors[0].message, 'custom')
-})
-
-test('Custom error message in rule, rule throws.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const allow = rule({
-    error: 'custom',
-  })(() => {
-    throw new Error()
-  })
-
-  const permissions = shield({
-    Query: allow,
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-  t.is(res.errors[0].message, 'custom')
-})
-
-test('Custom error in rule, rule throws.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const allow = rule({
-    error: new Error('custom'),
-  })(() => {
-    throw new Error()
-  })
-
-  const permissions = shield({
-    Query: allow,
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-  t.is(res.errors[0].message, 'custom')
+  t.is(res.errors[0].message, error.message)
 })
 
 test('Return original error in debug mode, rule.', async t => {

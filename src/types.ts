@@ -18,7 +18,6 @@ export declare class IRule {
 export interface IRuleOptions {
   cache: ICache
   fragment: IFragment
-  error?: Error
 }
 
 export declare class ILogicRule {
@@ -51,7 +50,6 @@ export type ICacheContructorOptions =
 export interface IRuleConstructorOptions {
   cache?: ICacheContructorOptions
   fragment?: IFragment
-  error?: string | Error
 }
 
 // Rules Definition Tree

@@ -389,9 +389,7 @@ test('Logic NOT - custom error -> true, allow.', async t => {
   })
 
   // Permissions
-  const fail = rule({
-    error: 'Test Error',
-  })(async (parent, args, ctx, info) => {
+  const fail = rule()(async (parent, args, ctx, info) => {
     return false
   })
 

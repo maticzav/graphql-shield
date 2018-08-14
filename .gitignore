@@ -1,7 +1,9 @@
 node_modules
 dist
+coverage
 
 *.log*
 .DS_Store
 .vscode
+.nyc_output
 package-lock.json
