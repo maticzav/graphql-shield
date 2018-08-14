@@ -8,11 +8,10 @@ import {
   ICacheContructorOptions,
   IRuleConstructorOptions,
   ILogicRule,
-  IRuleResult,
   ShieldRule,
+  IRuleResult,
 } from './types'
-import { isCustomError, isLogicRule } from './utils'
-import { error, CustomError } from './customError'
+import { isLogicRule } from './utils'
 
 export class Rule implements IRule {
   readonly name: string
@@ -20,6 +19,7 @@ export class Rule implements IRule {
   private cache: ICache
   private fragment: IFragment
   private func: IRuleFunction
+  private error: Error
 
   constructor(name, func, constructorOptions: IRuleConstructorOptions) {
     const options = this.normalizeOptions(constructorOptions)
@@ -28,6 +28,7 @@ export class Rule implements IRule {
     this.func = func
     this.cache = options.cache
     this.fragment = options.fragment
+    this.error = options.error
   }
 
   /**
@@ -40,13 +41,30 @@ export class Rule implements IRule {
    * Resolves rule and writes to cache its result.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<boolean> {
+  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
     const cacheKey = this.generateCacheKey(parent, args, ctx, info)
 
     if (!ctx._shield.cache[cacheKey]) {
       ctx._shield.cache[cacheKey] = this.func(parent, args, ctx, info)
     }
-    return ctx._shield.cache[cacheKey]
+
+    try {
+      const res = await ctx._shield.cache[cacheKey]
+
+      if (res === true) {
+        return true
+      } else if (this.error !== undefined) {
+        return this.error
+      } else {
+        return false
+      }
+    } catch (err) {
+      if (this.error !== undefined) {
+        return this.error
+      } else {
+        return false
+      }
+    }
   }
 
   /**
@@ -78,12 +96,17 @@ export class Rule implements IRule {
    *
    */
   private normalizeOptions(options: IRuleConstructorOptions): IRuleOptions {
+    if (typeof options.error === 'string') {
+      options.error = new Error(options.error)
+    }
+
     return {
       cache:
         options.cache !== undefined
           ? this.normalizeCacheOption(options.cache)
           : 'contextual',
       fragment: options.fragment !== undefined ? options.fragment : undefined,
+      error: options.error !== undefined ? options.error : undefined,
     }
   }
 
@@ -217,8 +240,8 @@ export class RuleOr extends LogicRule {
   async resolve(parent, args, ctx, info): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info)
 
-    if (result.every(res => res === false || isCustomError(res))) {
-      return error(result)
+    if (result.every(res => res !== true)) {
+      return false
     } else {
       return true
     }
@@ -241,12 +264,16 @@ export class RuleAnd extends LogicRule {
    *
    */
   async resolve(parent, args, ctx, info): Promise<IRuleResult> {
-    const result = await this.evaluate(parent, args, ctx, info)
+    try {
+      const result = await this.evaluate(parent, args, ctx, info)
 
-    if (result.some(res => res !== true)) {
-      return error(result.filter(res => res !== true))
-    } else {
-      return true
+      if (result.some(res => res !== true)) {
+        return false
+      } else {
+        return true
+      }
+    } catch (err) {
+      return false
     }
   }
 }
@@ -266,13 +293,11 @@ export class RuleNot extends LogicRule {
    * Negates the result.
    *
    */
-  async resolve(parent, args, ctx, info): Promise<boolean> {
+  async resolve(parent, args, ctx, info): Promise<IRuleResult> {
     try {
       const [res] = await this.evaluate(parent, args, ctx, info)
 
-      if (res instanceof CustomError) {
-        return true
-      } else if (res === false) {
+      if (res !== true) {
         return true
       } else {
         return false
@@ -293,7 +318,7 @@ export class RuleTrue extends LogicRule {
    * Always true.
    *
    */
-  async resolve(): Promise<boolean> {
+  async resolve(): Promise<IRuleResult> {
     return true
   }
 }
@@ -308,7 +333,7 @@ export class RuleFalse extends LogicRule {
    * Always false.
    *
    */
-  async resolve(): Promise<boolean> {
+  async resolve(): Promise<IRuleResult> {
     return false
   }
 }

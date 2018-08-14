@@ -22,7 +22,7 @@ function normalizeOptions(options: IOptions): IOptions {
     fallback:
       options.fallback !== undefined
         ? options.fallback
-        : new Error('Not Authorised'),
+        : new Error('Not Authorised!'),
   }
 }
 

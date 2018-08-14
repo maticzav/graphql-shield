@@ -18,6 +18,7 @@ export declare class IRule {
 export interface IRuleOptions {
   cache: ICache
   fragment: IFragment
+  error?: Error
 }
 
 export declare class ILogicRule {
@@ -31,17 +32,13 @@ export declare class ILogicRule {
 
 export type IFragment = string
 export type ICache = 'strict' | 'contextual' | 'no_cache'
-export type IRuleResult = boolean | ICustomError
+export type IRuleResult = boolean | Error
 export type IRuleFunction = (
   parent?: any,
   args?: any,
   context?: any,
   info?: GraphQLResolveInfo,
 ) => IRuleResult | Promise<IRuleResult>
-
-export declare class ICustomError extends Error {
-  constructor(message: any)
-}
 
 // Rule Constructor Options
 
@@ -54,6 +51,7 @@ export type ICacheContructorOptions =
 export interface IRuleConstructorOptions {
   cache?: ICacheContructorOptions
   fragment?: IFragment
+  error?: string | Error
 }
 
 // Rules Definition Tree
@@ -74,7 +72,7 @@ export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   whitelist?: boolean
-  fallback?: Error
+  fallback?: string | Error
 }
 
 export declare function shield<TSource = any, TContext = any, TArgs = any>(

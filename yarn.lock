@@ -1967,7 +1967,7 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-middleware@^1.6.4:
+graphql-middleware@1.6.4:
   version "1.6.4"
   resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-1.6.4.tgz#9f70338badc362a4a5467e38ce9481d2145f2aaf"
   dependencies:

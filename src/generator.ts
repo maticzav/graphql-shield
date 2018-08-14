@@ -6,7 +6,6 @@ import {
 import { GraphQLSchema, GraphQLObjectType, isObjectType } from 'graphql'
 import { IRules, IOptions, ShieldRule, IRuleFieldMap } from './types'
 import { isRuleFunction, isRuleFieldMap, isRule, isLogicRule } from './utils'
-import { CustomError } from './customError'
 import { allow, deny } from './constructors'
 
 /**
@@ -39,12 +38,12 @@ function generateFieldMiddlewareFromRule(
     try {
       const res = await rule.resolve(parent, args, ctx, info)
 
-      if (res instanceof CustomError) {
-        return res
-      } else if (res) {
+      if (res === true) {
         return resolve(parent, args, ctx, info)
-      } else {
+      } else if (res === false) {
         return options.fallback
+      } else {
+        return res
       }
     } catch (err) {
       if (options.debug) {

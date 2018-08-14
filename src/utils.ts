@@ -1,12 +1,5 @@
-import {
-  ShieldRule,
-  IRules,
-  ILogicRule,
-  ICustomError,
-  IRuleFieldMap,
-} from './types'
+import { ShieldRule, IRules, ILogicRule, IRuleFieldMap } from './types'
 import { Rule, LogicRule } from './rules'
-import { CustomError } from './customError'
 
 /**
  *
@@ -43,17 +36,6 @@ export function isRuleFunction(x: any): x is ShieldRule {
 
 export function isRuleFieldMap(x: any): x is IRuleFieldMap {
   return typeof x === 'object'
-}
-
-/**
- *
- * @param x
- *
- * Make sure that value is a custom error.
- *
- */
-export function isCustomError(x: any): x is ICustomError {
-  return x instanceof CustomError
 }
 
 /**

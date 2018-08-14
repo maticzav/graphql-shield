@@ -41,6 +41,7 @@ export const rule = (
   return new Rule(name, func, {
     fragment: options.fragment,
     cache: options.cache,
+    error: options.error,
   })
 }
 

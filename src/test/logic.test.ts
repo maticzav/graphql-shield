@@ -2,7 +2,7 @@ import test from 'ava'
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, error, allow, deny, and, or, not } from '../index'
+import { shield, rule, allow, deny, and, or, not } from '../index'
 
 test('Logic Allow.', async t => {
   // Schema
@@ -389,8 +389,10 @@ test('Logic NOT - custom error -> true, allow.', async t => {
   })
 
   // Permissions
-  const fail = rule()(async (parent, args, ctx, info) => {
-    return error('Test Error')
+  const fail = rule({
+    error: 'Test Error',
+  })(async (parent, args, ctx, info) => {
+    return false
   })
 
   const permissions = shield({
