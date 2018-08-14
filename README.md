@@ -251,7 +251,7 @@ const admin = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
 
 | Property            | Required | Default | Description                                 |
 | ------------------- | -------- | ------- | ------------------------------------------- |
-| allowExternalErrors | false    | true    | Toggles catching internal resolvers errors. |
+| allowExternalErrors | false    | false    | Toggles catching internal resolvers errors. |
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `CustomError`. This can be turned off by setting `allowExternalErrors` option to true.
 
