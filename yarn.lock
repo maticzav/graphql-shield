@@ -156,9 +156,9 @@
   version "0.13.4"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-0.13.4.tgz#55ae9c29f0fd6b85ee536f5c72b4769d5c5e06b1"
 
-"@types/node@9.6.28":
-  version "9.6.28"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.28.tgz#198927ce0786106ec2a7c8652d46d5f8b87bfc5f"
+"@types/node@9.6.29":
+  version "9.6.29"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.29.tgz#9b3c5b288c77fbd2ab5684d36e3528cb9ee5429f"
 
 "@types/object-hash@1.2.0":
   version "1.2.0"
