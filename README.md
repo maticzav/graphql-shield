@@ -2,8 +2,10 @@
 
 # graphql-shield
 
-[![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
-[![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers) [![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors)
+[![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) 
+[![Coverage Status](https://coveralls.io/repos/github/maticzav/graphql-shield/badge.svg?branch=master)](https://coveralls.io/github/maticzav/graphql-shield?branch=master)
+[![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
+[![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers)[![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors)
 
 > GraphQL Server permissions as another layer of abstraction!
 
@@ -15,14 +17,15 @@ GraphQL Shield helps you create a permission layer for your application. Using a
 
 Try building a groceries shop to better understand the benefits of GraphQL Shield! [Banana &Co.](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) 🍏🍌🍓.
 
+Explore common receipts and learn about advanced GraphQL! [GraphQL Shield 3.0](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) ⚔️🛡🐴.
+
 ## Features
 
-- ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
-- 😌 **Easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
-- 🤝 **Compatible:** Works with all GraphQL Servers.
-- 🚀 **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
-- 🎯 **Per-Type:** Write permissions for your schema, types or specific fields (check the example below).
-- 💯 **Tested:** Very well [tested](https://github.com/maticzav/graphql-shield/tree/master/test.js) functionalities!
+* ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
+* 😌 **Easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
+* 🤝 **Compatible:** Works with all GraphQL Servers.
+* 🚀 **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
+* 🎯 **Per-Type:** Write permissions for your schema, types or specific fields (check the example below).
 
 ## Install
 
@@ -161,19 +164,16 @@ schema = applyMiddleware(schema, permissions)
 // Rule
 function rule(name?: string, options?: IRuleOptions)(func: IRuleFunction): Rule
 
-type IRuleFunction = (
-  parent: any,
-  args: any,
-  context: any,
-  info: GraphQLResolveInfo,
-) => Promise<boolean>
+export type IFragment = string
+export type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
+export type IRuleResult = boolean | Error
 
-type ICacheOptions =
-  | 'strict'
-  | 'contextual'
-  | 'no_cache'
-
-type IFragment = string
+export type IRuleFunction = (
+  parent?: any,
+  args?: any,
+  context?: any,
+  info?: GraphQLResolveInfo,
+) => IRuleResult | Promise<IRuleResult>
 
 interface IRuleOptions {
   cache?: ICacheOptions
@@ -187,7 +187,7 @@ function not(rule: IRule): LogicRule
 const allow: LogicRule
 const deny: LogicRule
 
-type IRule = Rule | LogicRule
+export type ShieldRule = IRule | ILogicRule
 
 interface IRuleFieldMap {
   [key: string]: IRule
@@ -197,7 +197,7 @@ interface IRuleTypeMap {
   [key: string]: IRule | IRuleFieldMap
 }
 
-type IRules = IRule | IRuleTypeMap
+export type IRules = ShieldRule | IRuleTypeMap
 
 function shield(rules?: IRules, options?: IOptions): IMiddleware
 
@@ -205,7 +205,7 @@ export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   whitelist?: boolean
-  fallback?: Error
+  fallback?: string | Error
 }
 ```
 
@@ -219,7 +219,7 @@ A rule map must match your schema definition. All rules must be created using th
 
 ##### Limitations
 
-- All rules must have a distinct name. Usually, you won't have to care about this as all names are by default automatically generated to prevent such problems. In case your function needs additional variables from other parts of the code and is defined as a function, you'll set a specific name to your rule to avoid name generation.
+* All rules must have a distinct name. Usually, you won't have to care about this as all names are by default automatically generated to prevent such problems. In case your function needs additional variables from other parts of the code and is defined as a function, you'll set a specific name to your rule to avoid name generation.
 
 ```jsx
 // Normal
@@ -234,8 +234,8 @@ const admin = bool =>
   )
 ```
 
-- Cache is enabled by default accross all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` when generating a rule.
-- By default, no rule is executed more than once in complete query execution. This accounts for significantly better load times and quick responses.
+* Cache is enabled by default accross all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` or `{ cache: false }` when generating a rule.
+* By default, no rule is executed more than once in complete query execution. This accounts for significantly better load times and quick responses.
 
 ##### Cache
 
@@ -279,8 +279,6 @@ By default `shield` ensures no internal data is exposed to client if it was not 
 ### `and`, `or`, `not`
 
 > `and`, `or` and `not` allow you to nest rules in logic operations.
-
-- Nested rules fail by default if error is thrown.
 
 #### And Rule
 
@@ -326,11 +324,9 @@ const permissions = shield({
 
 Shield, by default, catches all errors thrown during resolver execution. This way we can be 100% sure none of your internal logic will be exposed to the client if it was not meant to be.
 
-Nevertheless, you can use `error` wrapper to report your custom error messages to your users.
+To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision.
 
 ```tsx
-import { CustomError } from 'graphql-shield'
-
 const typeDefs = `
   type Query {
     customError: String!
@@ -340,7 +336,7 @@ const typeDefs = `
 const resolvers = {
   Query: {
     customError: () => {
-      throw new CustomError('customErrorResolver')
+      return new Error('customErrorResolver')
     },
   },
 }
@@ -353,6 +349,96 @@ const server = GraphQLServer({
   middlewares: [permissions],
 })
 ```
+
+### Global Fallback
+
+GraphQL Shield allows you to set a globally defined fallback that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
+
+```ts
+const permissions = shield({
+  Query: {
+    items: allow
+  },
+}, {
+  fallback: "To je napaka!" // meaning "This is a mistake" in Slovene.
+})
+
+const permissions = shield({
+  Query: {
+    items: allow
+  },
+}, {
+  fallback: new CustomError("You are something special!")
+})
+```
+
+### Fragments
+
+Fragments allow you to define which fields your rule requires to work correctly. This comes in extremely handy when your rules rely on data from database. You can use fragments to define which data your rule relies on.
+
+```ts
+const isItemOwner = rule({
+  cache: "strict",
+  fragment: "fragment ItemID on Item { id }"
+})(async ({ id }, args, ctx, info) => {
+  return ctx.db.exists.Item({
+    id,
+    owner: { id: ctx.user.id }
+  })
+})
+
+const permissions = shield({
+  Query: {
+    items: allow
+  },
+  Item: {
+    id: allow,
+    name: allow,
+    secret: isItemOwner
+  }
+}, {
+  whitelist: true
+})
+```
+
+### Whitelisting vs Blacklisting
+
+Shield allows you to lock-in your schema. This way, you can seamleslly develop and publish your work without worrying about exposing your data. To lock in your service simply set `whitelist` to `true` like this;
+
+```ts
+const typeDefs = `
+  type Query {
+    users: [User!]!
+    newFeatures: FeaturesConnection!
+  }
+
+  type User {
+    id: ID!
+    name: String!
+    author: Author!
+  }
+
+  type Author {
+    id: ID!
+    name: String!
+    secret: String
+  }
+`
+
+
+const permissions = shield({
+  Query: {
+    users: allow,
+  },
+  User: allow,
+  Author: {
+    id: allow,
+    name: allow,
+  }
+})
+```
+
+You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.
 
 ## Contributors
 
