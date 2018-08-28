@@ -14,7 +14,7 @@
     "lint": "tslint --project tsconfig.json {src}/**/*.ts && prettier-check --ignore-path .gitignore src/**/*.ts",
     "prettier": "prettier --write --ignore-path .gitignore src/**/*.ts",
     "testonly": "ava",
-    "coverage": "nyc ava && nyc report --reporter 'text'",
+    "coverage": "nyc ava && nyc report --reporter 'text-lcov' | coveralls",
     "prepublishOnly": "npm run compile",
     "prerelease": "npm run test",
     "semantic-release": "semantic-release",
