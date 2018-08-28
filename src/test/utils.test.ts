@@ -7,7 +7,7 @@ import {
   isRuleFunction,
   extractRules,
 } from '../utils'
-import { rule, and } from '../constructors'
+import { rule, and, or, not } from '../constructors'
 
 test('Extracts rules correctly', async t => {
   const rule1 = rule()(() => true)
@@ -20,6 +20,9 @@ test('Extracts rules correctly', async t => {
       foo: rule1,
       bar: rule2,
     },
+    Qux: and(rule1, rule2),
+    Not: not(rule1),
+    Oreo: or(rule1, rule2),
     Mutation: rule3,
     Bar: rule4,
   })

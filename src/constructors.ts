@@ -34,7 +34,7 @@ export const rule = (
   options?: IRuleConstructorOptions,
 ) => (func: IRuleFunction): Rule => {
   if (typeof name === 'object') {
-    options = name || {}
+    options = name
     name = Math.random().toString()
   } else if (typeof name === 'string') {
     options = options || {}

@@ -228,7 +228,11 @@ export class LogicRule implements ILogicRule {
       if (isLogicRule(rule)) {
         return fragments.concat(...rule.extractFragments())
       } else {
-        return fragments.concat(rule.extractFragment())
+        if (rule.extractFragment()) {
+          return fragments.concat(rule.extractFragment())
+        } else {
+          return fragments
+        }
       }
     }, [])
 

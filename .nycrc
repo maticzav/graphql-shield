@@ -3,7 +3,7 @@
   "exclude": ["src/**/*.test.ts"],
   "extension": [".ts"],
   "require": ["ts-node/register"],
-  "reporter": ["text"],
+  "reporter": ["text", "html"],
   "sourceMap": true,
   "instrument": true,
   "check-coverage": true,

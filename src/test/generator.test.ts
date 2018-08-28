@@ -1,8 +1,9 @@
 import test from 'ava'
 import { graphql } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
+import { applyMiddleware, middleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule, allow, deny } from '../'
+import { generateMiddlewareGeneratorFromRuleTree } from '../generator'
 
 test('Generator - whitelist permissions.', async t => {
   // Schema
@@ -212,4 +213,52 @@ test('Generator - apply fragments in generated middleware correctly.', async t =
       fragment: 'pass',
     },
   ])
+})
+
+test('Generator generates schema wide middleware correctly.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String
+      type: Test
+    }
+
+    type Test {
+      typeTest: String
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => 'pass',
+    },
+    Test: {
+      typeTest: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  const permissions = shield(deny)
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+      type {
+        typeTest
+      }
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.deepEqual(res.data, {
+    test: null,
+    type: null,
+  })
+  t.not(res.errors.length, 0)
 })

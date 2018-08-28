@@ -8,11 +8,16 @@ test('Extracts fragment from rule correctly.', async t => {
 })
 
 test('Extracts fragment from logic rule correctly.', async t => {
+  const ruleWithNoFragment = rule()(() => true)
   const ruleWithFragmentA = rule({ fragment: 'pass-A' })(() => true)
   const ruleWithFragmentB = rule({ fragment: 'pass-B' })(() => true)
   const ruleWithFragmentC = rule({ fragment: 'pass-C' })(() => true)
 
-  const logicRuleAND = and(ruleWithFragmentA, ruleWithFragmentB)
+  const logicRuleAND = and(
+    ruleWithNoFragment,
+    ruleWithFragmentA,
+    ruleWithFragmentB,
+  )
   const logicRuleNOT = not(logicRuleAND)
   const logicRuleOR = or(ruleWithFragmentB, ruleWithFragmentC, logicRuleNOT)
 
