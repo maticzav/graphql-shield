@@ -350,7 +350,7 @@ const server = GraphQLServer({
 })
 ```
 
-### Global Fallback
+### `Global Fallback`
 
 GraphQL Shield allows you to set a globally defined fallback that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
 
@@ -372,7 +372,7 @@ const permissions = shield({
 })
 ```
 
-### Fragments
+### `Fragments`
 
 Fragments allow you to define which fields your rule requires to work correctly. This comes in extremely handy when your rules rely on data from database. You can use fragments to define which data your rule relies on.
 
@@ -401,7 +401,7 @@ const permissions = shield({
 })
 ```
 
-### Whitelisting vs Blacklisting
+### `Whitelisting vs Blacklisting`
 
 Shield allows you to lock-in your schema. This way, you can seamleslly develop and publish your work without worrying about exposing your data. To lock in your service simply set `whitelist` to `true` like this;
 
