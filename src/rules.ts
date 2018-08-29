@@ -267,7 +267,8 @@ export class RuleOr extends LogicRule {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
     if (result.every(res => res !== true)) {
-      return false
+      const customError = result.find(res => res instanceof Error);
+      return customError || false
     } else {
       return true
     }
@@ -300,7 +301,8 @@ export class RuleAnd extends LogicRule {
       const result = await this.evaluate(parent, args, ctx, info, options)
 
       if (result.some(res => res !== true)) {
-        return false
+        const customError = result.find(res => res instanceof Error)
+        return customError || false
       } else {
         return true
       }
