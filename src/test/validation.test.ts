@@ -34,8 +34,10 @@ test('Finds a type missing in schema and warns developer.', async t => {
     () => {
       applyMiddleware(schema, permissions)
     },
-    ValidationError,
-    `It seems like you have applied rules to Fail1, Fail2 types but Shield cannot find them in your schema.`,
+    {
+      instanceOf: ValidationError,
+      message: `It seems like you have applied rules to Fail1, Fail2 types but Shield cannot find them in your schema.`,
+    },
   )
 })
 
@@ -71,7 +73,10 @@ test('Finds the fields missing in schema and warns developer.', async t => {
     () => {
       applyMiddleware(schema, permissions)
     },
-    ValidationError,
-    `It seems like you have applied rules to Query.b, Query.c fields but Shield cannot find them in your schema.`,
+    {
+      instanceOf: ValidationError,
+      message:
+        'It seems like you have applied rules to Query.b, Query.c fields but Shield cannot find them in your schema.',
+    },
   )
 })

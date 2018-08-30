@@ -104,10 +104,11 @@ function applyRuleToType(
 
     const fieldErrors = Object.keys(rules)
       .filter(type => !Object.prototype.hasOwnProperty.call(fieldMap, type))
-      .map(field => `{type.name}.{field}`)
+      .map(field => `${type.name}.${field}`)
+      .join(', ')
     if (fieldErrors.length > 0) {
       throw new ValidationError(
-        `It seems like you have applied rules to "${fieldErrors}" fields but Shield cannot find them in your schema.`,
+        `It seems like you have applied rules to ${fieldErrors} fields but Shield cannot find them in your schema.`,
       )
     }
 
@@ -200,12 +201,12 @@ function generateMiddlewareFromSchemaAndRuleTree(
 
     // Validation
 
-    const typeErrors = Object.keys(rules).filter(
-      type => !Object.prototype.hasOwnProperty.call(typeMap, type),
-    )
+    const typeErrors = Object.keys(rules)
+      .filter(type => !Object.prototype.hasOwnProperty.call(typeMap, type))
+      .join(', ')
     if (typeErrors.length > 0) {
       throw new ValidationError(
-        `It seems like you have applied rules to "${typeErrors}" types but Shield cannot find them in your schema.`,
+        `It seems like you have applied rules to ${typeErrors} types but Shield cannot find them in your schema.`,
       )
     }
 
