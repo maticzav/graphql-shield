@@ -1,9 +1,8 @@
 import test from 'ava'
 import { graphql } from 'graphql'
-import { applyMiddleware, middleware } from 'graphql-middleware'
+import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, allow, deny } from '../'
-import { generateMiddlewareGeneratorFromRuleTree } from '../generator'
+import { shield, allow, deny } from '../'
 
 test('Generator - whitelist permissions.', async t => {
   // Schema
@@ -159,60 +158,6 @@ test('Generator - blacklist permissions.', async t => {
     deny: null,
   })
   t.not(res.errors.length, 0)
-})
-
-test('Generator - apply fragments in generated middleware correctly.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-      type: Test!
-    }
-
-    type Test {
-      typeTest: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-    Test: {
-      typeTest: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const ruleWithFragment = rule({
-    fragment: 'pass',
-  })(async (parent, args, ctx, info) => {
-    return true
-  })
-
-  const permissions = shield({
-    Query: {
-      test: ruleWithFragment,
-    },
-    Test: ruleWithFragment,
-  })
-
-  const { fragmentReplacements } = applyMiddleware(schema, permissions)
-
-  t.deepEqual(fragmentReplacements, [
-    {
-      field: 'test',
-      fragment: 'pass',
-    },
-    {
-      field: 'typeTest',
-      fragment: 'pass',
-    },
-  ])
 })
 
 test('Generator generates schema wide middleware correctly.', async t => {
