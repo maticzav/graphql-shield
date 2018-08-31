@@ -440,7 +440,7 @@ const permissions = shield({
 
 You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.
 
-## Common Problems
+## Troubleshooting
 
 * When a single field is "Not Authorized!" the entire parent object returns null.
 
