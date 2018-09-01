@@ -444,7 +444,9 @@ You can achieve same functionality by setting every "rule-undefined" field to `d
 
 * When a single field is "Not Authorized!" the entire parent object returns null.
 
-This occurs when a non-nullable field (specified in the schema) returns a null value (due to GraphQL Shield blocking the field's value). GraphQL is a strongly typed language so when a field returns an unexpected value the response becomes invalid.
+This occurs when a non-nullable field (specified in the schema) returns a null value (due to GraphQL Shield blocking the field's value). GraphQL is a strongly typed language - the schema serves as a contract between client and server - which requires that the server response follow the schema definition.
+
+See [#126](https://github.com/maticzav/graphql-shield/issues/126#issuecomment-416524581) and [#97](https://github.com/maticzav/graphql-shield/issues/97#issuecomment-404867307) for more detailed explanations.
 
 ## Contributors
 
