@@ -442,11 +442,15 @@ You can achieve same functionality by setting every "rule-undefined" field to `d
 
 ## Troubleshooting
 
-* When a single field is "Not Authorized!" the entire parent object returns null.
+#### When a single field is "Not Authorized!" the entire parent object returns null.
 
 This occurs when a non-nullable field (specified in the schema) returns a null value (due to GraphQL Shield blocking the field's value). GraphQL is a strongly typed language - the schema serves as a contract between client and server - which requires that the server response follow the schema definition.
 
 See [#126](https://github.com/maticzav/graphql-shield/issues/126#issuecomment-416524581) and [#97](https://github.com/maticzav/graphql-shield/issues/97#issuecomment-404867307) for more detailed explanations.
+
+#### A rule is excuted only once even though the dataset contains multiple values (and thus should execute the rule multiple times)
+
+This occurs because of caching. When the cache is set to "contextual" only the contextual variable of the rule is expected to be evaluated. Setting the cache to "strict" allows the rule to rely on parent and args parameters as well.
 
 ## Contributors
 
