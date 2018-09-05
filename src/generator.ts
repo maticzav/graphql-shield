@@ -8,6 +8,7 @@ import { allow, deny } from './constructors'
 import { IRules, IOptions, ShieldRule, IRuleFieldMap } from './types'
 import { isRuleFunction, isRuleFieldMap, isRule, isLogicRule } from './utils'
 import { ValidationError } from './validation'
+import { isGraphiQLType } from './graphiql'
 
 /**
  *
@@ -78,7 +79,7 @@ function generateFieldMiddlewareFromRule(
  * @param rules
  * @param options
  *
- * Generates middleware from rule for a particlar type.
+ * Generates middleware from rule for a particular type.
  *
  */
 function applyRuleToType(
@@ -112,7 +113,7 @@ function applyRuleToType(
       )
     }
 
-    // Generationn
+    // Generation
 
     const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
       if (rules[field]) {
@@ -136,12 +137,19 @@ function applyRuleToType(
     const fieldMap = type.getFields()
 
     const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
-      return {
-        ...middleware,
-        [field]: generateFieldMiddlewareFromRule(
-          options.whitelist ? deny : allow,
-          options,
-        ),
+      if (options.graphiql && isGraphiQLType(type)) {
+        return {
+          ...middleware,
+          [field]: generateFieldMiddlewareFromRule(allow, options),
+        }
+      } else {
+        return {
+          ...middleware,
+          [field]: generateFieldMiddlewareFromRule(
+            options.whitelist ? deny : allow,
+            options,
+          ),
+        }
       }
     }, {})
 

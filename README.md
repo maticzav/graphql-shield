@@ -2,7 +2,7 @@
 
 # graphql-shield
 
-[![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master) 
+[![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master)
 [![Coverage Status](https://coveralls.io/repos/github/maticzav/graphql-shield/badge.svg?branch=master)](https://coveralls.io/github/maticzav/graphql-shield?branch=master)
 [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
 [![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers)[![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors)
@@ -21,11 +21,11 @@ Explore common receipts and learn about advanced GraphQL! [GraphQL Shield 3.0](h
 
 ## Features
 
-* ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
-* 😌 **Easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
-* 🤝 **Compatible:** Works with all GraphQL Servers.
-* 🚀 **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
-* 🎯 **Per-Type:** Write permissions for your schema, types or specific fields (check the example below).
+- ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
+- 😌 **Easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
+- 🤝 **Compatible:** Works with all GraphQL Servers.
+- 🚀 **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
+- 🎯 **Per-Type or Per-Field:** Write permissions for your schema, types or specific fields (check the example below).
 
 ## Install
 
@@ -219,7 +219,7 @@ A rule map must match your schema definition. All rules must be created using th
 
 ##### Limitations
 
-* All rules must have a distinct name. Usually, you won't have to care about this as all names are by default automatically generated to prevent such problems. In case your function needs additional variables from other parts of the code and is defined as a function, you'll set a specific name to your rule to avoid name generation.
+- All rules must have a distinct name. Usually, you won't have to care about this as all names are by default automatically generated to prevent such problems. In case your function needs additional variables from other parts of the code and is defined as a function, you'll set a specific name to your rule to avoid name generation.
 
 ```jsx
 // Normal
@@ -234,8 +234,8 @@ const admin = bool =>
   )
 ```
 
-* Cache is enabled by default accross all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` or `{ cache: false }` when generating a rule.
-* By default, no rule is executed more than once in complete query execution. This accounts for significantly better load times and quick responses.
+- Cache is enabled by default accross all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` or `{ cache: false }` when generating a rule.
+- By default, no rule is executed more than once in complete query execution. This accounts for significantly better load times and quick responses.
 
 ##### Cache
 
@@ -257,16 +257,17 @@ const admin = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
 })
 ```
 
-> Backward compatiblity: `{ cache: false }` converts to `no_cache`, and `{ cache: true }` converts to `strict`.
+> Backward compatibility: `{ cache: false }` converts to `no_cache`, and `{ cache: true }` converts to `strict`.
 
 #### `options`
 
-| Property            | Required | Default                 | Description                                   |
-| ------------------- | -------- | ----------------------- | --------------------------------------------- |
-| allowExternalErrors | false    | false                   | Toggle catching internal errors.              |
-| debug               | false    | false                   | Toggle debug mode.                            |
-| whitelist           | false    | false                   | Whitelist rules instead of blacklisting them. |
-| fallback            | false    | Error('Not Authorised') | Error Permission system fallbacks to.         |
+| Property            | Required | Default                 | Description                                                 |
+| ------------------- | -------- | ----------------------- | ----------------------------------------------------------- |
+| allowExternalErrors | false    | false                   | Toggle catching internal errors.                            |
+| debug               | false    | false                   | Toggle debug mode.                                          |
+| whitelist           | false    | false                   | Whitelist rules instead of blacklisting them.               |
+| graphiql            | false    | false                   | Allow introspection query regardless of `whitelist` option. |
+| fallback            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
 
@@ -355,21 +356,27 @@ const server = GraphQLServer({
 GraphQL Shield allows you to set a globally defined fallback that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
 
 ```ts
-const permissions = shield({
-  Query: {
-    items: allow
+const permissions = shield(
+  {
+    Query: {
+      items: allow,
+    },
   },
-}, {
-  fallback: "To je napaka!" // meaning "This is a mistake" in Slovene.
-})
+  {
+    fallback: 'To je napaka!', // meaning "This is a mistake" in Slovene.
+  },
+)
 
-const permissions = shield({
-  Query: {
-    items: allow
+const permissions = shield(
+  {
+    Query: {
+      items: allow,
+    },
   },
-}, {
-  fallback: new CustomError("You are something special!")
-})
+  {
+    fallback: new CustomError('You are something special!'),
+  },
+)
 ```
 
 ### `Fragments`
@@ -378,27 +385,30 @@ Fragments allow you to define which fields your rule requires to work correctly.
 
 ```ts
 const isItemOwner = rule({
-  cache: "strict",
-  fragment: "fragment ItemID on Item { id }"
+  cache: 'strict',
+  fragment: 'fragment ItemID on Item { id }',
 })(async ({ id }, args, ctx, info) => {
   return ctx.db.exists.Item({
     id,
-    owner: { id: ctx.user.id }
+    owner: { id: ctx.user.id },
   })
 })
 
-const permissions = shield({
-  Query: {
-    items: allow
+const permissions = shield(
+  {
+    Query: {
+      items: allow,
+    },
+    Item: {
+      id: allow,
+      name: allow,
+      secret: isItemOwner,
+    },
   },
-  Item: {
-    id: allow,
-    name: allow,
-    secret: isItemOwner
-  }
-}, {
-  whitelist: true
-})
+  {
+    whitelist: true,
+  },
+)
 ```
 
 ### `Whitelisting vs Blacklisting`
@@ -425,7 +435,6 @@ const typeDefs = `
   }
 `
 
-
 const permissions = shield({
   Query: {
     users: allow,
@@ -434,7 +443,7 @@ const permissions = shield({
   Author: {
     id: allow,
     name: allow,
-  }
+  },
 })
 ```
 
