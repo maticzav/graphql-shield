@@ -205,6 +205,7 @@ export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   whitelist?: boolean
+  graphiql?: boolean
   fallback?: string | Error
 }
 ```
