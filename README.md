@@ -410,6 +410,37 @@ const permissions = shield(
     whitelist: true,
   },
 )
+
+// GraphQL Yoga
+
+const server = new GraphQLServer({
+  typeDefs: './src/schema.graphql',
+  resolvers,
+  middlewares: [permissions],
+  context: ({
+    request,
+    response,
+    fragmentReplacements: middlewareFragmentReplacements,
+  }) => {
+    return {
+      request,
+      response,
+      db: new Prisma({
+        fragmentReplacements: [
+          ...middlewareFragmentReplacements,
+          ...resolverFragmentReplacements,
+        ],
+        endpoint: process.env.PRISMA_ENDPOINT,
+        secret: process.env.PRISMA_SECRET,
+        debug: true,
+      }),
+    }
+  },
+})
+
+// GraphQL Middleware
+
+const { schema, fragmentReplacements } = applyMiddleware(schema, permissions)
 ```
 
 ### `Whitelisting vs Blacklisting`
