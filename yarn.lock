@@ -5212,9 +5212,9 @@ tslint-config-prettier@1.15.0:
   version "1.15.0"
   resolved "https://registry.yarnpkg.com/tslint-config-prettier/-/tslint-config-prettier-1.15.0.tgz#76b9714399004ab6831fdcf76d89b73691c812cf"
 
-tslint-config-standard@7.1.0:
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/tslint-config-standard/-/tslint-config-standard-7.1.0.tgz#6bcc435a179478e365f6cc62312a561221985760"
+tslint-config-standard@8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/tslint-config-standard/-/tslint-config-standard-8.0.1.tgz#e4dd3128e84b0e34b51990b68715a641f2b417e4"
   dependencies:
     tslint-eslint-rules "^5.3.1"
 
