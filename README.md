@@ -260,6 +260,56 @@ const admin = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
 
 > Backward compatibility: `{ cache: false }` converts to `no_cache`, and `{ cache: true }` converts to `strict`.
 
+##### Custom Errors
+
+Shield, by default, catches all errors thrown during resolver execution. This way we can be 100% sure none of your internal logic can be exposed to the client if it was not meant to be.
+
+To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision under control. 
+
+You can return custom error from resolver or from rule itself. Rules that return error are treated as failing, therefore not processing any further resolvers.
+
+```tsx
+const typeDefs = `
+  type Query {
+    customErrorInResolver: String
+    customErrorInRule: String
+  }
+`
+
+const resolvers = {
+  Query: {
+    customErrorInResolver: () => {
+      return new Error('Custom error message from resolver.')
+    },
+    customErrorInRule: () => {
+      // Querying is stopped because rule returns an error
+      console.log("This won't be logged.")
+      return "you won't see me!"
+    }
+  },
+}
+
+const ruleWithCustomError = rule()(async (parent, args, ctx, info) => {
+  return new Error('Custom error message from rule.')
+})
+
+const permissions = shield({
+  Query: {
+    customErrorInRule: ruleWithCustomError
+  }
+})
+
+const server = GraphQLServer({
+  typeDefs,
+  resolvers,
+  middlewares: [permissions],
+})
+```
+
+> Errors thrown in resolvers can be tracked using `debug` option. This way Shield ensures your code is production ready at all times.
+
+> If you wish to see errors thrown inside resolvers, you can set `allowExternalErrors` option to `true`. This way, Shield won't hide custom errors thrown during query resolving.
+
 #### `options`
 
 | Property            | Required | Default                 | Description                                                 |
@@ -319,36 +369,6 @@ const permissions = shield({
   User: {
     secret: isOwner,
   },
-})
-```
-
-### `Custom Errors`
-
-Shield, by default, catches all errors thrown during resolver execution. This way we can be 100% sure none of your internal logic will be exposed to the client if it was not meant to be.
-
-To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision.
-
-```tsx
-const typeDefs = `
-  type Query {
-    customError: String!
-  }
-`
-
-const resolvers = {
-  Query: {
-    customError: () => {
-      return new Error('customErrorResolver')
-    },
-  },
-}
-
-const permissions = shield()
-
-const server = GraphQLServer({
-  typeDefs,
-  resolvers,
-  middlewares: [permissions],
 })
 ```
 
@@ -479,7 +499,7 @@ const permissions = shield({
 })
 ```
 
-You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.
+> You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.
 
 ## Troubleshooting
 
