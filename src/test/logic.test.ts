@@ -212,6 +212,53 @@ test('Logic AND - some rules throw, deny.', async t => {
   t.is(res.data, null)
 })
 
+test('Logic AND - some rules return error, deny', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Permissions
+  const testError = new Error('test')
+  const ruleError = rule()(() => testError)
+
+  const permissions = shield(
+    {
+      Query: {
+        test: and(allow, allow, ruleError),
+      },
+    },
+    {
+      debug: true,
+    },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+  t.is(res.errors[0].message, testError.message)
+})
+
 test('Logic OR - some rules pass, allow.', async t => {
   // Schema
   const typeDefs = `
@@ -290,6 +337,48 @@ test('Logic OR - no rule passes, deny', async t => {
   const res = await graphql(schemaWithPermissions, query)
 
   t.is(res.data, null)
+})
+
+test('Logic OR - some rules return error, deny', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Permissions
+  const testError = new Error('test')
+  const ruleError = rule()(() => testError)
+
+  const permissions = shield({
+    Query: {
+      test: or(deny, deny, ruleError),
+    },
+  })
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+  t.is(res.errors[0].message, testError.message)
 })
 
 test('Logic NOT - true -> false, deny.', async t => {
@@ -526,6 +615,7 @@ test('Logic rule by default resolves to false', async t => {
       allowExternalErrors: false,
       debug: false,
       whitelist: false,
+      graphiql: true,
       fallback: new Error(),
     },
   )

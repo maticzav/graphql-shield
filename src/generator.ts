@@ -4,9 +4,11 @@ import {
   IMiddlewareGeneratorConstructor,
 } from 'graphql-middleware'
 import { GraphQLSchema, GraphQLObjectType, isObjectType } from 'graphql'
+import { allow, deny } from './constructors'
 import { IRules, IOptions, ShieldRule, IRuleFieldMap } from './types'
 import { isRuleFunction, isRuleFieldMap, isRule, isLogicRule } from './utils'
-import { allow, deny } from './constructors'
+import { ValidationError } from './validation'
+import { isGraphiQLType } from './graphiql'
 
 /**
  *
@@ -77,7 +79,7 @@ function generateFieldMiddlewareFromRule(
  * @param rules
  * @param options
  *
- * Generates middleware from rule for a particlar type.
+ * Generates middleware from rule for a particular type.
  *
  */
 function applyRuleToType(
@@ -98,6 +100,20 @@ function applyRuleToType(
     return middleware
   } else if (isRuleFieldMap(rules)) {
     const fieldMap = type.getFields()
+
+    // Validation
+
+    const fieldErrors = Object.keys(rules)
+      .filter(type => !Object.prototype.hasOwnProperty.call(fieldMap, type))
+      .map(field => `${type.name}.${field}`)
+      .join(', ')
+    if (fieldErrors.length > 0) {
+      throw new ValidationError(
+        `It seems like you have applied rules to ${fieldErrors} fields but Shield cannot find them in your schema.`,
+      )
+    }
+
+    // Generation
 
     const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
       if (rules[field]) {
@@ -121,12 +137,19 @@ function applyRuleToType(
     const fieldMap = type.getFields()
 
     const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
-      return {
-        ...middleware,
-        [field]: generateFieldMiddlewareFromRule(
-          options.whitelist ? deny : allow,
-          options,
-        ),
+      if (options.graphiql && isGraphiQLType(type)) {
+        return {
+          ...middleware,
+          [field]: generateFieldMiddlewareFromRule(allow, options),
+        }
+      } else {
+        return {
+          ...middleware,
+          [field]: generateFieldMiddlewareFromRule(
+            options.whitelist ? deny : allow,
+            options,
+          ),
+        }
       }
     }, {})
 
@@ -183,6 +206,19 @@ function generateMiddlewareFromSchemaAndRuleTree(
     return applyRuleToSchema(schema, rules, options)
   } else {
     const typeMap = schema.getTypeMap()
+
+    // Validation
+
+    const typeErrors = Object.keys(rules)
+      .filter(type => !Object.prototype.hasOwnProperty.call(typeMap, type))
+      .join(', ')
+    if (typeErrors.length > 0) {
+      throw new ValidationError(
+        `It seems like you have applied rules to ${typeErrors} types but Shield cannot find them in your schema.`,
+      )
+    }
+
+    // Generation
 
     const middleware = Object.keys(typeMap)
       .filter(type => isObjectType(typeMap[type]))

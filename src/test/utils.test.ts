@@ -8,6 +8,7 @@ import {
   extractRules,
 } from '../utils'
 import { rule, and, or, not } from '../constructors'
+import { ValidationError } from '../validation'
 
 test('Extracts rules correctly', async t => {
   const rule1 = rule()(() => true)
@@ -36,16 +37,22 @@ test('Validates rules correctly, fails', async t => {
   const rule3 = rule()(() => true)
   const rule4 = rule()(() => true)
 
-  t.throws(() => {
-    validateRules({
-      Query: {
-        foo: rule1,
-        bar: rule2,
-      },
-      Mutation: rule3,
-      Bar: rule4,
-    })
-  })
+  t.throws(
+    () => {
+      validateRules({
+        Query: {
+          foo: rule1,
+          bar: rule2,
+        },
+        Mutation: rule3,
+        Bar: rule4,
+      })
+    },
+    {
+      instanceOf: ValidationError,
+      message: `Rule "fail" seems to point at two different things.`,
+    },
+  )
 })
 
 test('Validates rules correctly, succeeds', async t => {

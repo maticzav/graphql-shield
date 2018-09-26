@@ -1,5 +1,6 @@
 import { ShieldRule, IRules, ILogicRule, IRuleFieldMap } from './types'
 import { Rule, LogicRule } from './rules'
+import { ValidationError } from './validation'
 
 /**
  *
@@ -111,8 +112,8 @@ export function validateRules(ruleTree: IRules): IRules {
     if (!_map.has(rule.name)) {
       return _map.set(rule.name, rule)
     } else if (!_map.get(rule.name).equals(rule)) {
-      throw new Error(
-        `Rule "${rule.name}" seems to point to two different things.`,
+      throw new ValidationError(
+        `Rule "${rule.name}" seems to point at two different things.`,
       )
     } else {
       return _map

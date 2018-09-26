@@ -23,6 +23,7 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
         ? options.allowExternalErrors
         : false,
     whitelist: options.whitelist !== undefined ? options.whitelist : false,
+    graphiql: options.graphiql !== undefined ? options.graphiql : false,
     fallback:
       options.fallback !== undefined
         ? options.fallback
