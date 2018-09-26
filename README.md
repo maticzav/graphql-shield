@@ -162,7 +162,7 @@ schema = applyMiddleware(schema, permissions)
 
 ```ts
 // Rule
-function rule(name?: string, options?: IRuleOptions)(func: IRuleFunction): Rule
+function rule(name?: string, options?: IRuleOptions): (func: IRuleFunction) => Rule
 
 export type IFragment = string
 export type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
