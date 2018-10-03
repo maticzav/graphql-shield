@@ -130,7 +130,7 @@ const permissions = shield({
   Customer: isAdmin,
 })
 
-const server = GraphQLServer({
+const server = new GraphQLServer({
   typeDefs,
   resolvers,
   middlewares: [permissions],
