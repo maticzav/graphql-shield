@@ -479,9 +479,9 @@
   version "14.0.1"
   resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.0.1.tgz#ff44c20fefdf0cf8c390f64b0dfbbc3c10dbaa87"
 
-"@types/node@9.6.32":
-  version "9.6.32"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.32.tgz#1b64134f630b30c9cda4810aa4a94fc2d4141dbd"
+"@types/node@9.6.34":
+  version "9.6.34"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-9.6.34.tgz#e03f9008f5fba43feb21223a82d3983531e004a2"
 
 "@types/object-hash@1.2.0":
   version "1.2.0"
@@ -4628,9 +4628,9 @@ sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
-semantic-release@15.9.16:
-  version "15.9.16"
-  resolved "https://registry.yarnpkg.com/semantic-release/-/semantic-release-15.9.16.tgz#70391ef6a9246253f54061ecd06634994e305b1e"
+semantic-release@15.9.17:
+  version "15.9.17"
+  resolved "https://registry.yarnpkg.com/semantic-release/-/semantic-release-15.9.17.tgz#fe3eb554e1e186da167b30c61bb1f9a454ebeabc"
   dependencies:
     "@semantic-release/commit-analyzer" "^6.0.0"
     "@semantic-release/error" "^2.2.0"
