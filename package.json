@@ -28,7 +28,7 @@
     "@types/graphql": "14.0.2",
     "@types/node": "9.6.35",
     "@types/object-hash": "1.2.0",
-    "ava": "1.0.0-beta.8",
+    "ava": "1.0.0-rc.1",
     "coveralls": "3.0.2",
     "graphql": "14.0.2",
     "graphql-middleware": "1.7.4",
