@@ -32,7 +32,7 @@
     "coveralls": "3.0.2",
     "graphql": "14.0.2",
     "graphql-middleware": "2.0.1",
-    "graphql-tools": "3.1.1",
+    "graphql-tools": "4.0.2",
     "nyc": "13.0.1",
     "prettier": "1.14.3",
     "prettier-check": "2.0.0",
