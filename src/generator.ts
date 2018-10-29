@@ -4,7 +4,7 @@ import {
   IMiddlewareGeneratorConstructor,
 } from 'graphql-middleware'
 import { GraphQLSchema, GraphQLObjectType, isObjectType } from 'graphql'
-import { allow, deny } from './constructors'
+import { allow } from './constructors'
 import { IRules, IOptions, ShieldRule, IRuleFieldMap } from './types'
 import { isRuleFunction, isRuleFieldMap, isRule, isLogicRule } from './utils'
 import { ValidationError } from './validation'
@@ -125,7 +125,7 @@ function applyRuleToType(
         return {
           ...middleware,
           [field]: generateFieldMiddlewareFromRule(
-            options.whitelist ? deny : allow,
+            options.defaultRule,
             options,
           ),
         }
@@ -146,7 +146,7 @@ function applyRuleToType(
         return {
           ...middleware,
           [field]: generateFieldMiddlewareFromRule(
-            options.whitelist ? deny : allow,
+            options.defaultRule,
             options,
           ),
         }

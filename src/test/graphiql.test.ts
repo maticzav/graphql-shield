@@ -3,7 +3,7 @@ import { graphql, getIntrospectionQuery } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield } from '../index'
-import { allow } from '../constructors'
+import { allow, deny } from '../constructors'
 
 test('GraphiQL introspection query works.', async t => {
   // Schema
@@ -28,7 +28,7 @@ test('GraphiQL introspection query works.', async t => {
   const permissions = shield(
     {},
     {
-      whitelist: true,
+      defaultRule: deny,
       graphiql: true,
     },
   )
@@ -68,7 +68,7 @@ test('GraphiQL normal query works.', async t => {
       },
     },
     {
-      whitelist: true,
+      defaultRule: deny,
       graphiql: true,
     },
   )

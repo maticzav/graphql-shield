@@ -2,6 +2,7 @@ import { middleware, IMiddlewareGenerator } from 'graphql-middleware'
 import { validateRules } from './utils'
 import { IRules, IOptions, IOptionsConstructor } from './types'
 import { generateMiddlewareGeneratorFromRuleTree } from './generator'
+import { allow } from './constructors'
 
 /**
  *
@@ -22,7 +23,8 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
       options.allowExternalErrors !== undefined
         ? options.allowExternalErrors
         : false,
-    whitelist: options.whitelist !== undefined ? options.whitelist : false,
+    defaultRule:
+      options.defaultRule !== undefined ? options.defaultRule : allow,
     graphiql: options.graphiql !== undefined ? options.graphiql : false,
     fallback:
       options.fallback !== undefined

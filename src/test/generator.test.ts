@@ -2,7 +2,7 @@ import test from 'ava'
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, allow, deny } from '../'
+import { shield, rule, allow, deny } from '../'
 
 test('Generator - whitelist permissions.', async t => {
   // Schema
@@ -48,7 +48,7 @@ test('Generator - whitelist permissions.', async t => {
       },
     },
     {
-      whitelist: true,
+      defaultRule: deny,
       debug: true,
     },
   )
@@ -158,6 +158,108 @@ test('Generator - blacklist permissions.', async t => {
     deny: null,
   })
   t.not(res.errors.length, 0)
+})
+
+test('Generator - custom default permissions.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      check: String
+      allow: Test
+      deny: Test
+    }
+
+    type Test {
+      check: String
+      allow: String
+      deny: String
+    }
+  `
+  const resolvers = {
+    Query: {
+      check: () => 'pass',
+      allow: () => ({}),
+      deny: () => ({}),
+    },
+    Test: {
+      check: () => 'pass',
+      allow: () => 'pass',
+      deny: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  const customRule = rule()((parent, args, ctx) => {
+    return ctx.allow === true
+  })
+
+  // Permissions
+  const permissions = shield(
+    {
+      Query: {
+        allow: allow,
+        deny: deny,
+      },
+      Test: {
+        allow: allow,
+        deny: deny,
+      },
+    },
+    {
+      defaultRule: customRule,
+      debug: true,
+    },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      check
+      allow {
+        check
+        allow
+        deny
+      }
+      deny {
+        check
+        allow
+        deny
+      }
+    }
+  `
+  const ctx1 = { allow: true }
+  const res = await graphql(schemaWithPermissions, query, undefined, ctx1)
+
+  t.deepEqual(res.data, {
+    check: 'pass',
+    allow: {
+      check: 'pass',
+      allow: 'pass',
+      deny: null,
+    },
+    deny: null,
+  })
+  t.not(res.errors.length, 0)
+
+  const ctx2 = { allow: false }
+  const res2 = await graphql(schemaWithPermissions, query, undefined, ctx2)
+
+  t.deepEqual(res2.data, {
+    check: null,
+    allow: {
+      check: null,
+      allow: 'pass',
+      deny: null,
+    },
+    deny: null,
+  })
+  t.not(res2.errors.length, 0)
 })
 
 test('Generator generates schema wide middleware correctly.', async t => {

@@ -69,7 +69,7 @@ export type IRules = ShieldRule | IRuleTypeMap
 export interface IOptions {
   debug: boolean
   allowExternalErrors: boolean
-  whitelist: boolean
+  defaultRule: ShieldRule
   graphiql: boolean
   fallback: Error
 }
@@ -77,7 +77,7 @@ export interface IOptions {
 export interface IOptionsConstructor {
   debug?: boolean
   allowExternalErrors?: boolean
-  whitelist?: boolean
+  defaultRule?: ShieldRule
   graphiql?: boolean
   fallback?: string | Error
 }
