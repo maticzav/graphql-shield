@@ -2217,25 +2217,15 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.2, graceful-fs@^4.1.6, graceful-fs@~4.1.11
   version "4.1.11"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.11.tgz#0e8bdfe4d1ddb8854d64e04ea7c00e2a026e5658"
 
-graphql-middleware@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-2.0.1.tgz#702cbed93b971bd818dc94d9bf45abc693fd2afe"
+graphql-middleware@2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-2.0.2.tgz#99a3b0ff3f3e3fa66c6ddc8608e6e4eb1d2bb99c"
   dependencies:
-    graphql-tools "^4.0.2"
+    graphql-tools "^4.0.3"
 
-graphql-tools@4.0.3:
+graphql-tools@4.0.3, graphql-tools@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.3.tgz#23b5cb52c519212b1b2e4630a361464396ad264b"
-  dependencies:
-    apollo-link "^1.2.3"
-    apollo-utilities "^1.0.1"
-    deprecated-decorator "^0.1.6"
-    iterall "^1.1.3"
-    uuid "^3.1.0"
-
-graphql-tools@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/graphql-tools/-/graphql-tools-4.0.2.tgz#9da22974cc6bf6524ed4f4af35556fd15aa6516d"
   dependencies:
     apollo-link "^1.2.3"
     apollo-utilities "^1.0.1"
