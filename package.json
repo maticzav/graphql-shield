@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/graphql": "14.0.3",
-    "@types/node": "9.6.35",
+    "@types/node": "9.6.36",
     "@types/object-hash": "1.2.0",
     "ava": "1.0.0-rc.1",
     "coveralls": "3.0.2",
