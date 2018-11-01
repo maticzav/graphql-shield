@@ -320,7 +320,7 @@ const server = GraphQLServer({
 | graphiql            | false    | false                   | Allow introspection query regardless of `fallbackRule` option. |
 | fallbackError            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
 
-By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
+By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
 
 ### `allow`, `deny`
 
