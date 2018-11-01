@@ -614,7 +614,8 @@ test('Logic rule by default resolves to false', async t => {
     {
       allowExternalErrors: false,
       debug: false,
-      fallbackRule: allow,
+      whitelist: false,
+      fallbackRule: undefined,
       graphiql: true,
       fallback: new Error(),
     },

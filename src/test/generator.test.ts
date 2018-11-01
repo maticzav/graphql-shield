@@ -48,7 +48,7 @@ test('Generator - whitelist permissions.', async t => {
       },
     },
     {
-      fallbackRule: deny,
+      whitelist: true,
       debug: true,
     },
   )
@@ -160,7 +160,7 @@ test('Generator - blacklist permissions.', async t => {
   t.not(res.errors.length, 0)
 })
 
-test('Generator - custom default permissions.', async t => {
+test('Generator - fallbackRule deny permissions.', async t => {
   // Schema
   const typeDefs = `
     type Query {
@@ -193,24 +193,18 @@ test('Generator - custom default permissions.', async t => {
     resolvers,
   })
 
-  const customRule = rule()((parent, args, ctx) => {
-    return ctx.allow === true
-  })
-
   // Permissions
   const permissions = shield(
     {
       Query: {
         allow: allow,
-        deny: deny,
       },
       Test: {
         allow: allow,
-        deny: deny,
       },
     },
     {
-      fallbackRule: customRule,
+      fallbackRule: deny,
       debug: true,
     },
   )
@@ -233,8 +227,85 @@ test('Generator - custom default permissions.', async t => {
       }
     }
   `
-  const ctx1 = { allow: true }
-  const res = await graphql(schemaWithPermissions, query, undefined, ctx1)
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.deepEqual(res.data, {
+    check: null,
+    allow: {
+      check: null,
+      allow: 'pass',
+      deny: null,
+    },
+    deny: null,
+  })
+  t.not(res.errors.length, 0)
+})
+
+test('Generator - fallbackRule allow permissions.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      check: String
+      allow: Test
+      deny: Test
+    }
+
+    type Test {
+      check: String
+      allow: String
+      deny: String
+    }
+  `
+  const resolvers = {
+    Query: {
+      check: () => 'pass',
+      allow: () => ({}),
+      deny: () => ({}),
+    },
+    Test: {
+      check: () => 'pass',
+      allow: () => 'pass',
+      deny: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Permissions
+  const permissions = shield(
+    {
+      Query: {
+        deny: deny,
+      },
+      Test: {
+        deny: deny,
+      },
+    },
+    { fallbackRule: allow },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      check
+      allow {
+        check
+        allow
+        deny
+      }
+      deny {
+        check
+        allow
+        deny
+      }
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
 
   t.deepEqual(res.data, {
     check: 'pass',
@@ -246,10 +317,89 @@ test('Generator - custom default permissions.', async t => {
     deny: null,
   })
   t.not(res.errors.length, 0)
+})
 
+test('Generator - fallbackRule custom permissions.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      check: String
+      allow: Test
+      deny: Test
+    }
+     type Test {
+      check: String
+      allow: String
+      deny: String
+    }
+  `
+  const resolvers = {
+    Query: {
+      check: () => 'pass',
+      allow: () => ({}),
+      deny: () => ({}),
+    },
+    Test: {
+      check: () => 'pass',
+      allow: () => 'pass',
+      deny: () => 'pass',
+    },
+  }
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+  const customRule = rule()((parent, args, ctx) => {
+    return ctx.allow === true
+  })
+  // Permissions
+  const permissions = shield(
+    {
+      Query: {
+        allow: allow,
+        deny: deny,
+      },
+      Test: {
+        allow: allow,
+        deny: deny,
+      },
+    },
+    {
+      fallbackRule: customRule,
+      debug: true,
+    },
+  )
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+  // Execution
+  const query = `
+    query {
+      check
+      allow {
+        check
+        allow
+        deny
+      }
+      deny {
+        check
+        allow
+        deny
+      }
+    }
+  `
+  const ctx1 = { allow: true }
+  const res = await graphql(schemaWithPermissions, query, undefined, ctx1)
+  t.deepEqual(res.data, {
+    check: 'pass',
+    allow: {
+      check: 'pass',
+      allow: 'pass',
+      deny: null,
+    },
+    deny: null,
+  })
+  t.not(res.errors.length, 0)
   const ctx2 = { allow: false }
   const res2 = await graphql(schemaWithPermissions, query, undefined, ctx2)
-
   t.deepEqual(res2.data, {
     check: null,
     allow: {
@@ -260,6 +410,28 @@ test('Generator - custom default permissions.', async t => {
     deny: null,
   })
   t.not(res2.errors.length, 0)
+})
+
+test('Generator - throws if both whitelist and fallbackRule are specified.', async t => {
+  t.throws(
+    () => {
+      shield(
+        {
+          Query: {
+            deny: deny,
+          },
+          Test: {
+            deny: deny,
+          },
+        },
+        { whitelist: true, fallbackRule: allow },
+      )
+    },
+    {
+      message:
+        'You specified both `whitelist` and `fallbackRule`. Please use one or the other.',
+    },
+  )
 })
 
 test('Generator generates schema wide middleware correctly.', async t => {

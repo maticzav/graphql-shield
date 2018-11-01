@@ -13,6 +13,12 @@ import { allow } from './constructors'
  *
  */
 function normalizeOptions(options: IOptionsConstructor): IOptions {
+  if (options.whitelist !== undefined && options.fallbackRule !== undefined) {
+    throw new Error(
+      'You specified both `whitelist` and `fallbackRule`. Please use one or the other.',
+    )
+  }
+
   if (typeof options.fallback === 'string') {
     options.fallback = new Error(options.fallback)
   }
@@ -23,6 +29,7 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
       options.allowExternalErrors !== undefined
         ? options.allowExternalErrors
         : false,
+    whitelist: options.whitelist !== undefined ? options.whitelist : false,
     fallbackRule:
       options.fallbackRule !== undefined ? options.fallbackRule : allow,
     graphiql: options.graphiql !== undefined ? options.graphiql : false,
