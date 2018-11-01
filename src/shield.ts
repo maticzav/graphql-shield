@@ -19,8 +19,18 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
     )
   }
 
+  if (options.fallback !== undefined && options.fallbackError !== undefined) {
+    throw new Error(
+      'You specified both `fallback` and `fallbackError`. Please use one or the other.',
+    )
+  }
+
   if (typeof options.fallback === 'string') {
     options.fallback = new Error(options.fallback)
+  }
+
+  if (typeof options.fallbackError === 'string') {
+    options.fallbackError = new Error(options.fallbackError)
   }
 
   return {
@@ -33,10 +43,13 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
     fallbackRule:
       options.fallbackRule !== undefined ? options.fallbackRule : allow,
     graphiql: options.graphiql !== undefined ? options.graphiql : false,
-    fallback:
-      options.fallback !== undefined
-        ? options.fallback
-        : new Error('Not Authorised!'),
+    fallback: undefined,
+    fallbackError:
+      options.fallbackError !== undefined
+        ? options.fallbackError
+        : options.fallback !== undefined
+          ? options.fallback
+          : new Error('Not Authorised!'),
   }
 }
 

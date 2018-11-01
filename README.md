@@ -206,7 +206,7 @@ export interface IOptions {
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
   graphiql?: boolean
-  fallback?: string | Error
+  fallbackError?: string | Error
 }
 ```
 
@@ -318,7 +318,7 @@ const server = GraphQLServer({
 | debug               | false    | false                   | Toggle debug mode.                                          |
 | fallbackRule           | false    | allow                   | The default rule for every "rule-undefined" field.               |
 | graphiql            | false    | false                   | Allow introspection query regardless of `fallbackRule` option. |
-| fallback            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
+| fallbackError            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
 
@@ -372,9 +372,9 @@ const permissions = shield({
 })
 ```
 
-### `Global Fallback`
+### `Global Fallback Error`
 
-GraphQL Shield allows you to set a globally defined fallback that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
+GraphQL Shield allows you to set a globally defined fallback error that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
 
 ```ts
 const permissions = shield(
@@ -384,7 +384,7 @@ const permissions = shield(
     },
   },
   {
-    fallback: 'To je napaka!', // meaning "This is a mistake" in Slovene.
+    fallbackError: 'To je napaka!', // meaning "This is a mistake" in Slovene.
   },
 )
 
@@ -395,7 +395,7 @@ const permissions = shield(
     },
   },
   {
-    fallback: new CustomError('You are something special!'),
+    fallbackError: new CustomError('You are something special!'),
   },
 )
 ```

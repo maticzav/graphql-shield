@@ -43,7 +43,7 @@ function generateFieldMiddlewareFromRule(
       if (res === true) {
         return resolve(parent, args, ctx, info)
       } else if (res === false) {
-        return options.fallback
+        return options.fallbackError
       } else {
         return res
       }
@@ -53,7 +53,7 @@ function generateFieldMiddlewareFromRule(
       } else if (options.allowExternalErrors) {
         return err
       } else {
-        return options.fallback
+        return options.fallbackError
       }
     }
   }
