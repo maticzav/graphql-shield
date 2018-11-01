@@ -48,7 +48,7 @@ test('Generator - whitelist permissions.', async t => {
       },
     },
     {
-      defaultRule: deny,
+      fallbackRule: deny,
       debug: true,
     },
   )
@@ -210,7 +210,7 @@ test('Generator - custom default permissions.', async t => {
       },
     },
     {
-      defaultRule: customRule,
+      fallbackRule: customRule,
       debug: true,
     },
   )

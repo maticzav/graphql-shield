@@ -28,7 +28,7 @@ test('GraphiQL introspection query works.', async t => {
   const permissions = shield(
     {},
     {
-      defaultRule: deny,
+      fallbackRule: deny,
       graphiql: true,
     },
   )
@@ -68,7 +68,7 @@ test('GraphiQL normal query works.', async t => {
       },
     },
     {
-      defaultRule: deny,
+      fallbackRule: deny,
       graphiql: true,
     },
   )

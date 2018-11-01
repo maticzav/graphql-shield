@@ -125,7 +125,7 @@ function applyRuleToType(
         return {
           ...middleware,
           [field]: generateFieldMiddlewareFromRule(
-            options.defaultRule,
+            options.fallbackRule,
             options,
           ),
         }
@@ -146,7 +146,7 @@ function applyRuleToType(
         return {
           ...middleware,
           [field]: generateFieldMiddlewareFromRule(
-            options.defaultRule,
+            options.fallbackRule,
             options,
           ),
         }

@@ -204,7 +204,7 @@ function shield(rules?: IRules, options?: IOptions): IMiddleware
 export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
-  defaultRule?: ShieldRule
+  fallbackRule?: ShieldRule
   graphiql?: boolean
   fallback?: string | Error
 }
@@ -316,8 +316,8 @@ const server = GraphQLServer({
 | ------------------- | -------- | ----------------------- | ----------------------------------------------------------- |
 | allowExternalErrors | false    | false                   | Toggle catching internal errors.                            |
 | debug               | false    | false                   | Toggle debug mode.                                          |
-| defaultRule           | false    | allow                   | The default rule for every "rule-undefined" field.               |
-| graphiql            | false    | false                   | Allow introspection query regardless of `defaultRule` option. |
+| fallbackRule           | false    | allow                   | The default rule for every "rule-undefined" field.               |
+| graphiql            | false    | false                   | Allow introspection query regardless of `fallbackRule` option. |
 | fallback            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
@@ -427,7 +427,7 @@ const permissions = shield(
     },
   },
   {
-    defaultRule: deny,
+    fallbackRule: deny,
   },
 )
 
@@ -465,7 +465,7 @@ const { schema, fragmentReplacements } = applyMiddleware(schema, permissions)
 
 ### `Whitelisting vs Blacklisting`
 
-Shield allows you to lock-in your schema. This way, you can seamleslly develop and publish your work without worrying about exposing your data. To lock in your service simply set `defaultRule` to `deny` like this;
+Shield allows you to lock-in your schema. This way, you can seamleslly develop and publish your work without worrying about exposing your data. To lock in your service simply set `fallbackRule` to `deny` like this;
 
 ```ts
 const typeDefs = `
@@ -496,7 +496,7 @@ const permissions = shield({
     id: allow,
     name: allow,
   },
-}, {defaultRule: deny})
+}, {fallbackRule: deny})
 ```
 
 > You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.
