@@ -70,16 +70,20 @@ export interface IOptions {
   debug: boolean
   allowExternalErrors: boolean
   whitelist: boolean
+  fallbackRule: ShieldRule
   graphiql: boolean
   fallback: Error
+  fallbackError: Error
 }
 
 export interface IOptionsConstructor {
   debug?: boolean
   allowExternalErrors?: boolean
   whitelist?: boolean
+  fallbackRule?: ShieldRule
   graphiql?: boolean
   fallback?: string | Error
+  fallbackError?: string | Error
 }
 
 export declare function shield<TSource = any, TContext = any, TArgs = any>(

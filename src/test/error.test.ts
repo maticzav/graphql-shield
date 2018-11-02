@@ -102,6 +102,104 @@ test('Error in rule resolves in fallback.', async t => {
   t.is(res.errors[0].message, fallback.message)
 })
 
+test('Error in resolver resolves in fallback error.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => {
+        throw new Error()
+      },
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Fallback
+
+  const fallbackError = new Error('fallback')
+
+  // Permissions
+  const permissions = shield(
+    {
+      Query: allow,
+    },
+    {
+      fallbackError,
+    },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+  t.is(res.errors[0].message, fallbackError.message)
+})
+
+test('Error in rule resolves in fallback error.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => 'pass',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Fallback
+
+  const fallbackError = new Error('fallback')
+
+  // Permissions
+  const allow = rule()(() => {
+    throw new Error()
+  })
+
+  const permissions = shield(
+    {
+      Query: allow,
+    },
+    {
+      fallbackError,
+    },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+  t.is(res.errors[0].message, fallbackError.message)
+})
+
 test('Error in resolver with allowed external errors resolves in external error.', async t => {
   // Schema
   const typeDefs = `
@@ -375,4 +473,77 @@ test('Correctly converts string fallback to error fallback.', async t => {
 
   t.is(res.data, null)
   t.is(res.errors[0].message, fallbackMessage)
+})
+
+test('Correctly converts string fallbackError to error fallbackError.', async t => {
+  // Schema
+  const typeDefs = `
+    type Query {
+      test: String!
+    }
+  `
+  const resolvers = {
+    Query: {
+      test: () => {
+        throw new Error()
+      },
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  // Fallback
+
+  const fallbackMessage = 'fallback'
+
+  // Permissions
+  const permissions = shield(
+    {
+      Query: allow,
+    },
+    {
+      fallbackError: fallbackMessage,
+    },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  // Execution
+  const query = `
+    query {
+      test
+    }
+  `
+  const res = await graphql(schemaWithPermissions, query)
+
+  t.is(res.data, null)
+  t.is(res.errors[0].message, fallbackMessage)
+})
+
+test('Throws if both fallback and fallbackError are specified.', async t => {
+  // Fallback
+
+  const fallbackMessage = 'fallback'
+
+  // Permissions
+  t.throws(
+    () => {
+      shield(
+        {
+          Query: allow,
+        },
+        {
+          fallback: fallbackMessage,
+          fallbackError: new Error('fallbackError'),
+        },
+      )
+    },
+    {
+      message:
+        'You specified both `fallback` and `fallbackError`. Please use one or the other.',
+    },
+  )
 })

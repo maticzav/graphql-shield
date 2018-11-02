@@ -204,9 +204,9 @@ function shield(rules?: IRules, options?: IOptions): IMiddleware
 export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
-  whitelist?: boolean
+  fallbackRule?: ShieldRule
   graphiql?: boolean
-  fallback?: string | Error
+  fallbackError?: string | Error
 }
 ```
 
@@ -264,7 +264,7 @@ const admin = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
 
 Shield, by default, catches all errors thrown during resolver execution. This way we can be 100% sure none of your internal logic can be exposed to the client if it was not meant to be.
 
-To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision under control. 
+To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision under control.
 
 You can return custom error from resolver or from rule itself. Rules that return error are treated as failing, therefore not processing any further resolvers.
 
@@ -316,11 +316,11 @@ const server = GraphQLServer({
 | ------------------- | -------- | ----------------------- | ----------------------------------------------------------- |
 | allowExternalErrors | false    | false                   | Toggle catching internal errors.                            |
 | debug               | false    | false                   | Toggle debug mode.                                          |
-| whitelist           | false    | false                   | Whitelist rules instead of blacklisting them.               |
-| graphiql            | false    | false                   | Allow introspection query regardless of `whitelist` option. |
-| fallback            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
+| fallbackRule           | false    | allow                   | The default rule for every "rule-undefined" field.               |
+| graphiql            | false    | false                   | Allow introspection query regardless of `fallbackRule` option. |
+| fallbackError            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
 
-By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authenticated!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
+By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
 
 ### `allow`, `deny`
 
@@ -372,9 +372,9 @@ const permissions = shield({
 })
 ```
 
-### `Global Fallback`
+### `Global Fallback Error`
 
-GraphQL Shield allows you to set a globally defined fallback that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
+GraphQL Shield allows you to set a globally defined fallback error that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
 
 ```ts
 const permissions = shield(
@@ -384,7 +384,7 @@ const permissions = shield(
     },
   },
   {
-    fallback: 'To je napaka!', // meaning "This is a mistake" in Slovene.
+    fallbackError: 'To je napaka!', // meaning "This is a mistake" in Slovene.
   },
 )
 
@@ -395,7 +395,7 @@ const permissions = shield(
     },
   },
   {
-    fallback: new CustomError('You are something special!'),
+    fallbackError: new CustomError('You are something special!'),
   },
 )
 ```
@@ -427,7 +427,7 @@ const permissions = shield(
     },
   },
   {
-    whitelist: true,
+    fallbackRule: deny,
   },
 )
 
@@ -465,7 +465,7 @@ const { schema, fragmentReplacements } = applyMiddleware(schema, permissions)
 
 ### `Whitelisting vs Blacklisting`
 
-Shield allows you to lock-in your schema. This way, you can seamleslly develop and publish your work without worrying about exposing your data. To lock in your service simply set `whitelist` to `true` like this;
+Shield allows you to lock-in your schema. This way, you can seamleslly develop and publish your work without worrying about exposing your data. To lock in your service simply set `fallbackRule` to `deny` like this;
 
 ```ts
 const typeDefs = `
@@ -496,7 +496,7 @@ const permissions = shield({
     id: allow,
     name: allow,
   },
-})
+}, {fallbackRule: deny})
 ```
 
 > You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.
