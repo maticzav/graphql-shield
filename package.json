@@ -34,7 +34,7 @@
     "graphql-middleware": "2.0.2",
     "graphql-tools": "4.0.3",
     "nyc": "13.1.0",
-    "prettier": "1.14.3",
+    "prettier": "1.15.2",
     "prettier-check": "2.0.0",
     "rimraf": "2.6.2",
     "semantic-release": "15.12.0",
