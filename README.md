@@ -318,7 +318,7 @@ const server = GraphQLServer({
 | debug               | false    | false                   | Toggle debug mode.                                          |
 | fallbackRule           | false    | allow                   | The default rule for every "rule-undefined" field.               |
 | graphiql            | false    | false                   | Allow introspection query regardless of `fallbackRule` option. |
-| fallbackError            | false    | Error('Not Authorised') | Error Permission system fallbacks to.                       |
+| fallbackError            | false    | Error('Not Authorised!') | Error Permission system fallbacks to.                       |
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
 
@@ -503,7 +503,7 @@ const permissions = shield({
 
 ## Troubleshooting
 
-#### When a single field is "Not Authorized!" the entire parent object returns null.
+#### When a single field is "Not Authorised!" the entire parent object returns null.
 
 This occurs when a non-nullable field (specified in the schema) returns a null value (due to GraphQL Shield blocking the field's value). GraphQL is a strongly typed language - the schema serves as a contract between client and server - which requires that the server response follow the schema definition.
 
