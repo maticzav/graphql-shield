@@ -3,7 +3,7 @@
 # graphql-shield
 
 [![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master)
-[![Coverage Status](https://coveralls.io/repos/github/maticzav/graphql-shield/badge.svg?branch=master)](https://coveralls.io/github/maticzav/graphql-shield?branch=master)
+[![codecov](https://codecov.io/gh/maticzav/graphql-shield/branch/master/graph/badge.svg)](https://codecov.io/gh/maticzav/graphql-shield)
 [![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
 [![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers)[![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors)
 
