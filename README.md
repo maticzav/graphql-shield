@@ -162,7 +162,10 @@ schema = applyMiddleware(schema, permissions)
 
 ```ts
 // Rule
-function rule(name?: string, options?: IRuleOptions): (func: IRuleFunction) => Rule
+function rule(
+  name?: string,
+  options?: IRuleOptions,
+): (func: IRuleFunction) => Rule
 
 export type IFragment = string
 export type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
@@ -205,7 +208,6 @@ export interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
-  graphiql?: boolean
   fallbackError?: string | Error
 }
 ```
@@ -216,7 +218,7 @@ export interface IOptions {
 
 #### `rules`
 
-A rule map must match your schema definition. All rules must be created using the `rule` function to ensure caches are made correctly. You can apply your `rule` accross entire schema, Type scoped, or field specific.
+A rule map must match your schema definition. All rules must be created using the `rule` function to ensure caches are made correctly. You can apply your `rule` across entire schema, Type scoped, or field specific.
 
 ##### Limitations
 
@@ -235,7 +237,7 @@ const admin = bool =>
   )
 ```
 
-- Cache is enabled by default accross all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` or `{ cache: false }` when generating a rule.
+- Cache is enabled by default across all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` or `{ cache: false }` when generating a rule.
 - By default, no rule is executed more than once in complete query execution. This accounts for significantly better load times and quick responses.
 
 ##### Cache
@@ -285,7 +287,7 @@ const resolvers = {
       // Querying is stopped because rule returns an error
       console.log("This won't be logged.")
       return "you won't see me!"
-    }
+    },
   },
 }
 
@@ -295,8 +297,8 @@ const ruleWithCustomError = rule()(async (parent, args, ctx, info) => {
 
 const permissions = shield({
   Query: {
-    customErrorInRule: ruleWithCustomError
-  }
+    customErrorInRule: ruleWithCustomError,
+  },
 })
 
 const server = GraphQLServer({
@@ -312,13 +314,12 @@ const server = GraphQLServer({
 
 #### `options`
 
-| Property            | Required | Default                 | Description                                                 |
-| ------------------- | -------- | ----------------------- | ----------------------------------------------------------- |
-| allowExternalErrors | false    | false                   | Toggle catching internal errors.                            |
-| debug               | false    | false                   | Toggle debug mode.                                          |
-| fallbackRule           | false    | allow                   | The default rule for every "rule-undefined" field.               |
-| graphiql            | false    | false                   | Allow introspection query regardless of `fallbackRule` option. |
-| fallbackError            | false    | Error('Not Authorised!') | Error Permission system fallbacks to.                       |
+| Property            | Required | Default                  | Description                                        |
+| ------------------- | -------- | ------------------------ | -------------------------------------------------- |
+| allowExternalErrors | false    | false                    | Toggle catching internal errors.                   |
+| debug               | false    | false                    | Toggle debug mode.                                 |
+| fallbackRule        | false    | allow                    | The default rule for every "rule-undefined" field. |
+| fallbackError       | false    | Error('Not Authorised!') | Error Permission system fallbacks to.              |
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
 
@@ -374,7 +375,7 @@ const permissions = shield({
 
 ### `Global Fallback Error`
 
-GraphQL Shield allows you to set a globally defined fallback error that is used instead of `Not Authorised!` default response. This might be particularly useful for localisation. You can use `string` or even custom `Error` to define it.
+GraphQL Shield allows you to set a globally defined fallback error that is used instead of `Not Authorised!` default response. This might be particularly useful for localization. You can use `string` or even custom `Error` to define it.
 
 ```ts
 const permissions = shield(
@@ -465,7 +466,9 @@ const { schema, fragmentReplacements } = applyMiddleware(schema, permissions)
 
 ### `Whitelisting vs Blacklisting`
 
-Shield allows you to lock-in your schema. This way, you can seamleslly develop and publish your work without worrying about exposing your data. To lock in your service simply set `fallbackRule` to `deny` like this;
+> Whitelisting/Blacklisting is no longer available in versions after `3.x.x`, and has been replaced in favor of `fallbackRule`.
+
+Shield allows you to lock-in your schema. This way, you can seamlessly develop and publish your work without worrying about exposing your data. To lock in your service simply set `fallbackRule` to `deny` like this;
 
 ```ts
 const typeDefs = `
@@ -487,16 +490,19 @@ const typeDefs = `
   }
 `
 
-const permissions = shield({
-  Query: {
-    users: allow,
+const permissions = shield(
+  {
+    Query: {
+      users: allow,
+    },
+    User: allow,
+    Author: {
+      id: allow,
+      name: allow,
+    },
   },
-  User: allow,
-  Author: {
-    id: allow,
-    name: allow,
-  },
-}, {fallbackRule: deny})
+  { fallbackRule: deny },
+)
 ```
 
 > You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.
@@ -509,7 +515,7 @@ This occurs when a non-nullable field (specified in the schema) returns a null v
 
 See [#126](https://github.com/maticzav/graphql-shield/issues/126#issuecomment-416524581) and [#97](https://github.com/maticzav/graphql-shield/issues/97#issuecomment-404867307) for more detailed explanations.
 
-#### A rule is excuted only once even though the dataset contains multiple values (and thus should execute the rule multiple times)
+#### A rule is executed only once even though the dataset contains multiple values (and thus should execute the rule multiple times)
 
 This occurs because of caching. When the cache is set to "contextual" only the contextual variable of the rule is expected to be evaluated. Setting the cache to "strict" allows the rule to rely on parent and args parameters as well.
 

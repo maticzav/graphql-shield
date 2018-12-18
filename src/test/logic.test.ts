@@ -1,626 +1,280 @@
-import test from 'ava'
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule, allow, deny, and, or, not } from '../index'
 import { LogicRule } from '../rules'
 
-test('Logic Allow.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
+describe('logic rules', () => {
+  test('allow, deny work as expeted', async () => {
+    const typeDefs = `
+      type Query {
+        allow: String
+        deny: String
+      }
+    `
 
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: allow,
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res, {
-    data: {
-      test: 'pass',
-    },
-  })
-})
-
-test('Logic Deny.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: deny,
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-})
-
-test('Logic AND - all rules pass, allow.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: and(allow, allow, allow),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res, {
-    data: {
-      test: 'pass',
-    },
-  })
-})
-
-test('Logic AND - some rules pass, deny.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: and(allow, allow, deny),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-})
-
-test('Logic AND - some rules throw, deny.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const ruleError = rule()(() => {
-    throw new Error()
-  })
-
-  const permissions = shield(
-    {
+    const resolvers = {
       Query: {
-        test: and(allow, allow, ruleError),
+        allow: () => 'allow',
+        deny: () => 'deny',
       },
-    },
-    {
-      debug: true,
-    },
-  )
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
     }
-  `
-  const res = await graphql(schemaWithPermissions, query)
 
-  t.is(res.data, null)
-})
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
 
-test('Logic AND - some rules return error, deny', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const testError = new Error('test')
-  const ruleError = rule()(() => testError)
-
-  const permissions = shield(
-    {
+    // Permissions
+    const permissions = shield({
       Query: {
-        test: and(allow, allow, ruleError),
+        allow: allow,
+        deny: deny,
       },
-    },
-    {
-      debug: true,
-    },
-  )
+    })
 
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
 
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
+    /* Execution */
 
-  t.is(res.data, null)
-  t.is(res.errors[0].message, testError.message)
-})
+    const query = `
+      query {
+        allow
+        deny
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
 
-test('Logic OR - some rules pass, allow.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
+    /* Tests */
 
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
+    expect(res.data).toEqual({
+      allow: 'allow',
+      deny: null,
+    })
+    expect(res.errors.length).toBe(1)
   })
 
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: or(allow, allow, deny),
-    },
-  })
+  test('and works as expected', async () => {
+    const typeDefs = `
+      type Query {
+        allow: String
+        deny: String
+        ruleError: String
+      }
+    `
 
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res, {
-    data: {
-      test: 'pass',
-    },
-  })
-})
-
-test('Logic OR - no rule passes, deny', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: or(deny, deny, deny),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-})
-
-test('Logic OR - some rules return error, deny', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const testError = new Error('test')
-  const ruleError = rule()(() => testError)
-
-  const permissions = shield({
-    Query: {
-      test: or(deny, deny, ruleError),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-  t.is(res.errors[0].message, testError.message)
-})
-
-test('Logic NOT - true -> false, deny.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: not(allow),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.is(res.data, null)
-})
-
-test('Logic NOT - false -> true, allow.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      test: not(deny),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res, {
-    data: {
-      test: 'pass',
-    },
-  })
-})
-
-test('Logic NOT - fallback error -> true, allow.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const fail = rule()(async (parent, args, ctx, info) => {
-    throw new Error()
-  })
-
-  const permissions = shield({
-    Query: {
-      test: not(fail),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res, {
-    data: {
-      test: 'pass',
-    },
-  })
-})
-
-test('Logic NOT - custom error -> true, allow.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const fail = rule()(async (parent, args, ctx, info) => {
-    return false
-  })
-
-  const permissions = shield({
-    Query: {
-      test: not(fail),
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res, {
-    data: {
-      test: 'pass',
-    },
-  })
-})
-
-test('Logic NOT - rule error -> true, allow.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String!
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const fail = rule()(async (parent, args, ctx, info) => {
-    throw new Error()
-  })
-
-  const permissions = shield(
-    {
+    const resolvers = {
       Query: {
-        test: not(fail),
+        allow: () => 'allow',
+        deny: () => 'deny',
+        ruleError: () => 'ruleError',
       },
-    },
-    {
-      debug: true,
-    },
-  )
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
     }
-  `
-  const res = await graphql(schemaWithPermissions, query)
 
-  t.deepEqual(res, {
-    data: {
-      test: 'pass',
-    },
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const ruleWithError = rule()(async () => {
+      throw new Error()
+    })
+
+    const permissions = shield({
+      Query: {
+        allow: and(allow, allow),
+        deny: and(allow, deny),
+        ruleError: and(allow, ruleWithError),
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        allow
+        deny
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toEqual({
+      allow: 'allow',
+      deny: null,
+    })
+    expect(res.errors.length).toBe(1)
+  })
+
+  test('or works as expected', async () => {
+    const typeDefs = `
+      type Query {
+        allow: String
+        deny: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        allow: () => 'allow',
+        deny: () => 'deny',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const permissions = shield({
+      Query: {
+        allow: or(allow, deny),
+        deny: or(deny, deny),
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        allow
+        deny
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toEqual({
+      allow: 'allow',
+      deny: null,
+    })
+    expect(res.errors.length).toBe(1)
+  })
+
+  test('not works as expected', async () => {
+    const typeDefs = `
+      type Query {
+        allow: String
+        deny: String
+        ruleError: String
+        resolverError: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        allow: () => 'allow',
+        deny: () => 'deny',
+        ruleError: () => 'ruleError',
+        resolverError: () => {
+          throw new Error()
+        },
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const ruleWithError = rule()(async () => {
+      throw new Error()
+    })
+
+    const permissions = shield({
+      Query: {
+        allow: not(deny),
+        deny: not(allow),
+        ruleError: not(ruleWithError),
+        resolverError: not(allow),
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        allow
+        deny
+        ruleError
+        resolverError
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    expect(res.data).toEqual({
+      allow: 'allow',
+      deny: null,
+      ruleError: 'ruleError',
+      resolverError: null,
+    })
+    expect(res.errors.length).toBe(2)
   })
 })
 
-test('Logic rule by default resolves to false', async t => {
-  const rule = new LogicRule([])
-  const res = await rule.resolve(
-    {},
-    {},
-    {},
-    {},
-    {
-      allowExternalErrors: false,
-      debug: false,
-      whitelist: false,
-      fallbackRule: undefined,
-      graphiql: true,
-      fallback: new Error(),
-      fallbackError: new Error(),
-    },
-  )
+describe('internal execution', () => {
+  test('logic rule by default resolves to false', async () => {
+    const rule = new LogicRule([])
 
-  t.false(res)
+    const res = await rule.resolve(
+      {},
+      {},
+      {},
+      {},
+      {
+        allowExternalErrors: false,
+        debug: false,
+        fallbackRule: undefined,
+        fallbackError: new Error(),
+      },
+    )
+
+    expect(res).toBeFalsy()
+  })
+
+  test('rule prevents access when access not permited', async () => {
+    const typeDefs = `
+      type Query {
+        deny: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        deny: () => 'deny',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const ruleDeny = rule()(() => false)
+
+    const permissions = shield({
+      Query: {
+        deny: ruleDeny,
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        deny
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toEqual({
+      deny: null,
+    })
+    expect(res.errors.length).toBe(1)
+  })
 })

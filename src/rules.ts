@@ -21,7 +21,7 @@ export class Rule implements IRule {
   private fragment: IFragment
   private func: IRuleFunction
 
-  constructor(name, func, constructorOptions: IRuleConstructorOptions) {
+  constructor(name: string, func, constructorOptions: IRuleConstructorOptions) {
     const options = this.normalizeOptions(constructorOptions)
 
     this.name = name
@@ -224,16 +224,16 @@ export class LogicRule implements ILogicRule {
   }
 
   extractFragments(): IFragment[] {
-    const fragments = this.rules.reduce((fragments, rule) => {
+    const fragments = this.rules.reduce<IFragment[]>((fragments, rule) => {
       if (isLogicRule(rule)) {
         return fragments.concat(...rule.extractFragments())
-      } else {
-        if (rule.extractFragment()) {
-          return fragments.concat(rule.extractFragment())
-        } else {
-          return fragments
-        }
       }
+
+      if (rule.extractFragment()) {
+        return fragments.concat(rule.extractFragment())
+      }
+
+      return fragments
     }, [])
 
     return fragments
@@ -267,7 +267,7 @@ export class RuleOr extends LogicRule {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
     if (result.every(res => res !== true)) {
-      const customError = result.find(res => res instanceof Error);
+      const customError = result.find(res => res instanceof Error)
       return customError || false
     } else {
       return true
@@ -297,17 +297,13 @@ export class RuleAnd extends LogicRule {
     info,
     options: IOptions,
   ): Promise<IRuleResult> {
-    try {
-      const result = await this.evaluate(parent, args, ctx, info, options)
+    const result = await this.evaluate(parent, args, ctx, info, options)
 
-      if (result.some(res => res !== true)) {
-        const customError = result.find(res => res instanceof Error)
-        return customError || false
-      } else {
-        return true
-      }
-    } catch (err) {
-      return false
+    if (result.some(res => res !== true)) {
+      const customError = result.find(res => res instanceof Error)
+      return customError || false
+    } else {
+      return true
     }
   }
 }
@@ -334,16 +330,12 @@ export class RuleNot extends LogicRule {
     info,
     options: IOptions,
   ): Promise<IRuleResult> {
-    try {
-      const [res] = await this.evaluate(parent, args, ctx, info, options)
+    const [res] = await this.evaluate(parent, args, ctx, info, options)
 
-      if (res !== true) {
-        return true
-      } else {
-        return false
-      }
-    } catch (err) {
+    if (res !== true) {
       return true
+    } else {
+      return false
     }
   }
 }

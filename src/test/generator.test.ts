@@ -1,483 +1,181 @@
-import test from 'ava'
-import { graphql } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, allow, deny } from '../'
+import { applyMiddleware } from 'graphql-middleware'
+import { shield, rule } from '../index'
+import { graphql } from 'graphql'
 
-test('Generator - whitelist permissions.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      check: String
-      allow: Test
-      deny: Test
-    }
+describe('generates correct middleware', () => {
+  test('correctly applies schema rule to schema', async () => {
+    /* Schema */
 
-    type Test {
-      check: String
-      allow: String
-      deny: String
-    }
-  `
-  const resolvers = {
-    Query: {
-      check: () => 'pass',
-      allow: () => ({}),
-      deny: () => ({}),
-    },
-    Test: {
-      check: () => 'pass',
-      allow: () => 'pass',
-      deny: () => 'pass',
-    },
-  }
+    const typeDefs = `
+      type Query {
+        a: String
+        type: Type
+      }
+      type Type {
+        a: String
+      }
+    `
 
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield(
-    {
+    const resolvers = {
       Query: {
-        allow: allow,
+        a: () => 'a',
+        type: () => ({}),
       },
-      Test: {
-        allow: allow,
+      Type: {
+        a: () => 'a',
       },
-    },
-    {
-      whitelist: true,
-      debug: true,
-    },
-  )
+    }
 
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
 
-  // Execution
-  const query = `
-    query {
-      check
-      allow {
-        check
-        allow
-        deny
+    /* Permissions */
+
+    const allowMock = jest.fn().mockResolvedValue(true)
+    const permissions = shield(rule({ cache: 'no_cache' })(allowMock))
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+    const query = `
+      query {
+        a
+        type {
+          a
+        }
       }
-      deny {
-        check
-        allow
-        deny
-      }
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
+    `
 
-  t.deepEqual(res.data, {
-    check: null,
-    allow: {
-      check: null,
-      allow: 'pass',
-      deny: null,
-    },
-    deny: null,
-  })
-  t.not(res.errors.length, 0)
-})
+    const res = await graphql(schemaWithPermissions, query)
 
-test('Generator - blacklist permissions.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      check: String
-      allow: Test
-      deny: Test
-    }
+    /* Tests */
 
-    type Test {
-      check: String
-      allow: String
-      deny: String
-    }
-  `
-  const resolvers = {
-    Query: {
-      check: () => 'pass',
-      allow: () => ({}),
-      deny: () => ({}),
-    },
-    Test: {
-      check: () => 'pass',
-      allow: () => 'pass',
-      deny: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield({
-    Query: {
-      deny: deny,
-    },
-    Test: {
-      deny: deny,
-    },
-  })
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      check
-      allow {
-        check
-        allow
-        deny
-      }
-      deny {
-        check
-        allow
-        deny
-      }
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res.data, {
-    check: 'pass',
-    allow: {
-      check: 'pass',
-      allow: 'pass',
-      deny: null,
-    },
-    deny: null,
-  })
-  t.not(res.errors.length, 0)
-})
-
-test('Generator - fallbackRule deny permissions.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      check: String
-      allow: Test
-      deny: Test
-    }
-
-    type Test {
-      check: String
-      allow: String
-      deny: String
-    }
-  `
-  const resolvers = {
-    Query: {
-      check: () => 'pass',
-      allow: () => ({}),
-      deny: () => ({}),
-    },
-    Test: {
-      check: () => 'pass',
-      allow: () => 'pass',
-      deny: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield(
-    {
-      Query: {
-        allow: allow,
-      },
-      Test: {
-        allow: allow,
-      },
-    },
-    {
-      fallbackRule: deny,
-      debug: true,
-    },
-  )
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      check
-      allow {
-        check
-        allow
-        deny
-      }
-      deny {
-        check
-        allow
-        deny
-      }
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res.data, {
-    check: null,
-    allow: {
-      check: null,
-      allow: 'pass',
-      deny: null,
-    },
-    deny: null,
-  })
-  t.not(res.errors.length, 0)
-})
-
-test('Generator - fallbackRule allow permissions.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      check: String
-      allow: Test
-      deny: Test
-    }
-
-    type Test {
-      check: String
-      allow: String
-      deny: String
-    }
-  `
-  const resolvers = {
-    Query: {
-      check: () => 'pass',
-      allow: () => ({}),
-      deny: () => ({}),
-    },
-    Test: {
-      check: () => 'pass',
-      allow: () => 'pass',
-      deny: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-
-  // Permissions
-  const permissions = shield(
-    {
-      Query: {
-        deny: deny,
-      },
-      Test: {
-        deny: deny,
-      },
-    },
-    { fallbackRule: allow },
-  )
-
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      check
-      allow {
-        check
-        allow
-        deny
-      }
-      deny {
-        check
-        allow
-        deny
-      }
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
-
-  t.deepEqual(res.data, {
-    check: 'pass',
-    allow: {
-      check: 'pass',
-      allow: 'pass',
-      deny: null,
-    },
-    deny: null,
-  })
-  t.not(res.errors.length, 0)
-})
-
-test('Generator - fallbackRule custom permissions.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      check: String
-      allow: Test
-      deny: Test
-    }
-     type Test {
-      check: String
-      allow: String
-      deny: String
-    }
-  `
-  const resolvers = {
-    Query: {
-      check: () => 'pass',
-      allow: () => ({}),
-      deny: () => ({}),
-    },
-    Test: {
-      check: () => 'pass',
-      allow: () => 'pass',
-      deny: () => 'pass',
-    },
-  }
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
-  })
-  const customRule = rule()((parent, args, ctx) => {
-    return ctx.allow === true
-  })
-  // Permissions
-  const permissions = shield(
-    {
-      Query: {
-        allow: allow,
-        deny: deny,
-      },
-      Test: {
-        allow: allow,
-        deny: deny,
-      },
-    },
-    {
-      fallbackRule: customRule,
-      debug: true,
-    },
-  )
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-  // Execution
-  const query = `
-    query {
-      check
-      allow {
-        check
-        allow
-        deny
-      }
-      deny {
-        check
-        allow
-        deny
-      }
-    }
-  `
-  const ctx1 = { allow: true }
-  const res = await graphql(schemaWithPermissions, query, undefined, ctx1)
-  t.deepEqual(res.data, {
-    check: 'pass',
-    allow: {
-      check: 'pass',
-      allow: 'pass',
-      deny: null,
-    },
-    deny: null,
-  })
-  t.not(res.errors.length, 0)
-  const ctx2 = { allow: false }
-  const res2 = await graphql(schemaWithPermissions, query, undefined, ctx2)
-  t.deepEqual(res2.data, {
-    check: null,
-    allow: {
-      check: null,
-      allow: 'pass',
-      deny: null,
-    },
-    deny: null,
-  })
-  t.not(res2.errors.length, 0)
-})
-
-test('Generator - throws if both whitelist and fallbackRule are specified.', async t => {
-  t.throws(
-    () => {
-      shield(
-        {
-          Query: {
-            deny: deny,
-          },
-          Test: {
-            deny: deny,
-          },
+    expect(res).toEqual({
+      data: {
+        a: 'a',
+        type: {
+          a: 'a',
         },
-        { whitelist: true, fallbackRule: allow },
-      )
-    },
-    {
-      message:
-        'You specified both `whitelist` and `fallbackRule`. Please use one or the other.',
-    },
-  )
-})
-
-test('Generator generates schema wide middleware correctly.', async t => {
-  // Schema
-  const typeDefs = `
-    type Query {
-      test: String
-      type: Test
-    }
-
-    type Test {
-      typeTest: String
-    }
-  `
-  const resolvers = {
-    Query: {
-      test: () => 'pass',
-    },
-    Test: {
-      typeTest: () => 'pass',
-    },
-  }
-
-  const schema = makeExecutableSchema({
-    typeDefs,
-    resolvers,
+      },
+    })
+    expect(allowMock).toBeCalledTimes(3)
   })
 
-  const permissions = shield(deny)
+  test('correctly applies type rule to type', async () => {
+    /* Schema */
 
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
-
-  // Execution
-  const query = `
-    query {
-      test
-      type {
-        typeTest
+    const typeDefs = `
+      type Query {
+        a: String
+        type: Type
       }
-    }
-  `
-  const res = await graphql(schemaWithPermissions, query)
+      type Type {
+        a: String
+      }
+    `
 
-  t.deepEqual(res.data, {
-    test: null,
-    type: null,
+    const resolvers = {
+      Query: {
+        a: () => 'a',
+        type: () => ({}),
+      },
+      Type: {
+        a: () => 'a',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const allowMock = jest.fn().mockResolvedValue(true)
+    const permissions = shield({
+      Query: rule({ cache: 'no_cache' })(allowMock),
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+    const query = `
+      query {
+        a
+        type {
+          a
+        }
+      }
+    `
+
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res).toEqual({
+      data: {
+        a: 'a',
+        type: {
+          a: 'a',
+        },
+      },
+    })
+    expect(allowMock).toBeCalledTimes(2)
   })
-  t.not(res.errors.length, 0)
+
+  test('correctly applies field rule to field', async () => {
+    /* Schema */
+
+    const typeDefs = `
+      type Query {
+        a: String
+        type: Type
+      }
+      type Type {
+        a: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        a: () => 'a',
+        type: () => ({}),
+      },
+      Type: {
+        a: () => 'a',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const allowMock = jest.fn().mockResolvedValue(true)
+    const permissions = shield({
+      Query: { a: rule({ cache: 'no_cache' })(allowMock) },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+    const query = `
+      query {
+        a
+        type {
+          a
+        }
+      }
+    `
+
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res).toEqual({
+      data: {
+        a: 'a',
+        type: {
+          a: 'a',
+        },
+      },
+    })
+    expect(allowMock).toBeCalledTimes(1)
+  })
 })
