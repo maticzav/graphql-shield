@@ -8,7 +8,7 @@
     "outDir": "dist",
     "sourceMap": true,
     "lib": ["dom", "es2017", "esnext.asynciterable"],
-    "experimentalDecorators": true
+    "skipLibCheck": true
   },
   "exclude": ["node_modules", "examples", "dist"]
 }
