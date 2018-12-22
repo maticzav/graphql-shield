@@ -60,6 +60,8 @@ export class Rule implements IRule {
 
       if (res instanceof Error) {
         return res
+      } else if (typeof res === 'string') {
+        return new Error(res)
       } else if (res === true) {
         return true
       } else {

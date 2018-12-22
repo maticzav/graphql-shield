@@ -167,11 +167,11 @@ function rule(
   options?: IRuleOptions,
 ): (func: IRuleFunction) => Rule
 
-export type IFragment = string
-export type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
-export type IRuleResult = boolean | Error
+type IFragment = string
+type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
+type IRuleResult = boolean | string | Error
 
-export type IRuleFunction = (
+type IRuleFunction = (
   parent?: any,
   args?: any,
   context?: any,
@@ -190,7 +190,7 @@ function not(rule: IRule): LogicRule
 const allow: LogicRule
 const deny: LogicRule
 
-export type ShieldRule = IRule | ILogicRule
+type ShieldRule = IRule | ILogicRule
 
 interface IRuleFieldMap {
   [key: string]: IRule
@@ -200,11 +200,11 @@ interface IRuleTypeMap {
   [key: string]: IRule | IRuleFieldMap
 }
 
-export type IRules = ShieldRule | IRuleTypeMap
+type IRules = ShieldRule | IRuleTypeMap
 
 function shield(rules?: IRules, options?: IOptions): IMiddleware
 
-export interface IOptions {
+interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
@@ -266,7 +266,7 @@ const admin = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
 
 Shield, by default, catches all errors thrown during resolver execution. This way we can be 100% sure none of your internal logic can be exposed to the client if it was not meant to be.
 
-To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision under control.
+To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision under control. Besides returning an error you can also return a `string` representing a custom error message.
 
 You can return custom error from resolver or from rule itself. Rules that return error are treated as failing, therefore not processing any further resolvers.
 
@@ -283,6 +283,11 @@ const resolvers = {
     customErrorInResolver: () => {
       return new Error('Custom error message from resolver.')
     },
+    customErrorMessageInRule: () => {
+      // Querying is stopped because rule returns an error
+      console.log("This won't be logged.")
+      return "you won't see me!"
+    },
     customErrorInRule: () => {
       // Querying is stopped because rule returns an error
       console.log("This won't be logged.")
@@ -292,12 +297,17 @@ const resolvers = {
 }
 
 const ruleWithCustomError = rule()(async (parent, args, ctx, info) => {
-  return new Error('Custom error message from rule.')
+  return new Error('Custom error from rule.')
+})
+
+const ruleWithCustomErrorMessage = rule()(async (parent, args, ctx, info) => {
+  return 'Custom error message from rule.'
 })
 
 const permissions = shield({
   Query: {
     customErrorInRule: ruleWithCustomError,
+    customErrorMessageInRule: ruleWithCustomErrorMessage,
   },
 })
 

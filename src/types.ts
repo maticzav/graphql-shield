@@ -31,7 +31,7 @@ export declare class ILogicRule {
 
 export type IFragment = string
 export type ICache = 'strict' | 'contextual' | 'no_cache'
-export type IRuleResult = boolean | Error
+export type IRuleResult = boolean | string | Error
 export type IRuleFunction = (
   parent?: any,
   args?: any,
