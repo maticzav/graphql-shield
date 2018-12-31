@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@types/graphql": "14.0.4",
-    "@types/jest": "23.3.10",
+    "@types/jest": "23.3.11",
     "@types/node": "10.12.18",
     "@types/object-hash": "1.2.0",
     "@types/request-promise-native": "1.0.15",
