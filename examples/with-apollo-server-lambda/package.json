@@ -1,0 +1,32 @@
+{
+  "name": "example-shield-apollo-server-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/doitadrian/example-shield-apollo-server-lambda.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/doitadrian/example-shield-apollo-server-lambda/issues"
+  },
+  "homepage": "https://github.com/doitadrian/example-shield-apollo-server-lambda#readme",
+  "dependencies": {
+    "apollo-server-lambda": "^2.3.1",
+    "graphql": "^14.0.2",
+    "graphql-middleware": "^3.0.0",
+    "graphql-shield": "^5.1.0",
+    "graphql-tools": "^4.0.3"
+  },
+  "devDependencies": {
+    "prettier": "^1.15.3",
+    "serverless": "^1.35.1",
+    "serverless-offline": "^3.31.3"
+  },
+  "scripts": {
+    "start": "sls offline start"
+  }
+}
