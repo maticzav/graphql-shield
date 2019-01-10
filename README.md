@@ -190,19 +190,45 @@ function not(rule: IRule): LogicRule
 const allow: LogicRule
 const deny: LogicRule
 
-type ShieldRule = IRule | ILogicRule
+import { GraphQLResolveInfo } from 'graphql'
+import { IMiddlewareGenerator } from 'graphql-middleware'
+
+// Rule
+
+export type IFragment = string
+export type ICache = 'strict' | 'contextual' | 'no_cache'
+export type IRuleResult = boolean | string | Error
+export type IRuleFunction = (
+  parent?: any,
+  args?: any,
+  context?: any,
+  info?: GraphQLResolveInfo,
+) => IRuleResult | Promise<IRuleResult>
+
+// Rule Constructor Options
+
+type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
+
+interface IRuleOptions {
+  cache?: ICacheOptions
+  fragment?: IFragment
+}
+
+// Rules Definition Tree
+
+export type ShieldRule = IRule | ILogicRule
 
 interface IRuleFieldMap {
-  [key: string]: IRule
+  [key: string]: ShieldRule
 }
 
 interface IRuleTypeMap {
-  [key: string]: IRule | IRuleFieldMap
+  [key: string]: ShieldRule | IRuleFieldMap
 }
 
 type IRules = ShieldRule | IRuleTypeMap
 
-function shield(rules?: IRules, options?: IOptions): IMiddleware
+// Generator Options
 
 interface IOptions {
   debug?: boolean
@@ -210,6 +236,11 @@ interface IOptions {
   fallbackRule?: ShieldRule
   fallbackError?: string | Error
 }
+
+declare function shield(
+  ruleTree: IRules,
+  options: IOptions,
+): IMiddlewareGenerator
 ```
 
 ### `shield(rules?, options?)`
