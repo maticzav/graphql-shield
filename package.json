@@ -42,7 +42,7 @@
     "prettier-check": "2.0.0",
     "pretty-quick": "1.8.0",
     "rimraf": "2.6.3",
-    "semantic-release": "15.13.2",
+    "semantic-release": "15.13.3",
     "ts-jest": "23.10.5",
     "ts-node": "7.0.1",
     "tslint": "5.12.1",
