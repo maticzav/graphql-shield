@@ -23,7 +23,7 @@
     "opencollective": "1.0.3"
   },
   "devDependencies": {
-    "@types/graphql": "14.0.4",
+    "@types/graphql": "14.0.5",
     "@types/jest": "23.3.12",
     "@types/node": "10.12.18",
     "@types/object-hash": "1.2.0",
