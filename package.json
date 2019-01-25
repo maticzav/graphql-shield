@@ -28,7 +28,7 @@
     "@types/node": "10.12.18",
     "@types/object-hash": "1.2.0",
     "@types/request-promise-native": "1.0.15",
-    "apollo-server": "2.3.1",
+    "apollo-server": "2.3.2",
     "codecov": "3.1.0",
     "coveralls": "3.0.2",
     "graphql": "14.1.1",
