@@ -1,6 +1,7 @@
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule, and, not, or } from '../index'
+import { allow } from '../constructors'
 
 describe('Fragment extraction', () => {
   test('Extracts fragment from rule correctly.', async () => {
@@ -36,47 +37,49 @@ describe('Fragment application', () => {
     /* Schema */
     const typeDefs = `
       type Query {
-        a: String!
-        logicB: String!
+        user: User
+        events: [Event!]
       }
 
-      type Type {
-        typeA: String!
-        typeB: String!
+      type User {
+        id: ID!
+        name: String!
       }
 
-      type LogicType {
-        logicTypeA: String!
-        logicTypeB: String!
+      type Event {
+        id: ID!
+        location: String!
+        published: Boolean
       }
     `
 
-    // rule accross type, logic rule accross type, rule to specific field, logic rule to specific field
-
     /* Permissions */
 
-    const ruleWithFragment = rule({
-      fragment: 'fragment',
+    const isUserSelf = rule({
+      fragment: 'fragment UserId on User { id }',
     })(async (parent, args, ctx, info) => {
       return true
     })
 
-    const logicRuleWithFragment = and(
-      rule({
-        fragment: 'fragment-a',
-      })(async (parent, args, ctx, info) => true),
-      rule({
-        fragment: 'fragment-b',
-      })(async (parent, args, ctx, info) => true),
-    )
+    const isProfilePublic = rule({
+      fragment: 'fragment UserPublic on User { public }',
+    })(async (parent, args, ctx, info) => {
+      return true
+    })
+
+    const isEventPublished = rule({
+      fragment: '... on Event { published }',
+    })(async () => {
+      return true
+    })
 
     const permissions = shield({
       Query: {
-        a: ruleWithFragment,
-        logicB: logicRuleWithFragment,
+        user: allow,
+        events: allow,
       },
-      Type: ruleWithFragment,
-      LogicType: logicRuleWithFragment,
+      User: or(isUserSelf, isProfilePublic),
+      Event: isEventPublished,
     })
 
     const { fragmentReplacements } = applyMiddleware(
@@ -86,40 +89,24 @@ describe('Fragment application', () => {
 
     expect(fragmentReplacements).toEqual([
       {
-        field: 'a',
-        fragment: 'fragment',
+        field: 'id',
+        fragment: '... on User {\n  public\n}',
       },
       {
-        field: 'logicB',
-        fragment: 'fragment-a',
+        field: 'name',
+        fragment: '... on User {\n  id\n}',
       },
       {
-        field: 'logicB',
-        fragment: 'fragment-b',
+        field: 'name',
+        fragment: '... on User {\n  public\n}',
       },
       {
-        field: 'typeA',
-        fragment: 'fragment',
+        field: 'id',
+        fragment: '... on Event {\n  published\n}',
       },
       {
-        field: 'typeB',
-        fragment: 'fragment',
-      },
-      {
-        field: 'logicTypeA',
-        fragment: 'fragment-a',
-      },
-      {
-        field: 'logicTypeA',
-        fragment: 'fragment-b',
-      },
-      {
-        field: 'logicTypeB',
-        fragment: 'fragment-a',
-      },
-      {
-        field: 'logicTypeB',
-        fragment: 'fragment-b',
+        field: 'location',
+        fragment: '... on Event {\n  published\n}',
       },
     ])
   })
