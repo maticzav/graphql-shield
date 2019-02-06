@@ -1,7 +1,7 @@
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule } from '../index'
+import { shield, rule } from '../src/index'
 
 describe('Caching works as expected', () => {
   test('Strict cache - Rule is called multiple times, based on different parent.', async () => {

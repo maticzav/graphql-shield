@@ -4,7 +4,7 @@ import { gql, ApolloServer } from 'apollo-server'
 import * as request from 'request-promise-native'
 import { AddressInfo } from 'ws'
 import { applyMiddleware } from 'graphql-middleware'
-import { shield, allow, deny } from '../'
+import { shield, allow, deny } from '../src'
 
 describe('integration tests', () => {
   test('works with GraphQL Yoga', async () => {

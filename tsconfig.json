@@ -10,5 +10,6 @@
     "lib": ["dom", "es2017", "esnext.asynciterable"],
     "skipLibCheck": true
   },
+  "include": ["./src/**/*.ts"],
   "exclude": ["node_modules", "examples", "dist"]
 }

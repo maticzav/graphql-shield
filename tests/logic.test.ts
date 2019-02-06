@@ -1,8 +1,8 @@
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, allow, deny, and, or, not } from '../index'
-import { LogicRule } from '../rules'
+import { shield, rule, allow, deny, and, or, not } from '../src'
+import { LogicRule } from '../src/rules'
 
 describe('logic rules', () => {
   test('allow, deny work as expeted', async () => {

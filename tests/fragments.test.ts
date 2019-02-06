@@ -1,7 +1,7 @@
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, and, not, or } from '../index'
-import { allow } from '../constructors'
+import { shield, rule, and, not, or } from '../src/index'
+import { allow } from '../src/constructors'
 
 describe('Fragment extraction', () => {
   test('Extracts fragment from rule correctly.', async () => {

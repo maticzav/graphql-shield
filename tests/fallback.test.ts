@@ -1,7 +1,7 @@
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
-import { shield, rule, allow } from '../index'
+import { shield, rule, allow } from '../src/index'
 
 describe('fallbackError correctly handles errors', () => {
   test('error in resolver returns fallback error.', async () => {

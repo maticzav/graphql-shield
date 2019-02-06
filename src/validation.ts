@@ -21,7 +21,7 @@ export function validateRuleTree(
       if (!map.has(rule.name)) {
         return { map: map.set(rule.name, rule), duplicates }
       } else if (
-        !map.get(rule.name).equals(rule) &&
+        !map.get(rule.name)!.equals(rule) &&
         !duplicates.includes(rule.name)
       ) {
         return {

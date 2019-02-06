@@ -1,5 +1,12 @@
-import { rule, and, or, not, allow, deny } from '../constructors'
-import { RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse, Rule } from '../rules'
+import { rule, and, or, not, allow, deny } from '../src/constructors'
+import {
+  RuleAnd,
+  RuleOr,
+  RuleNot,
+  RuleTrue,
+  RuleFalse,
+  Rule,
+} from '../src/rules'
 
 describe('rule constructor', () => {
   beforeEach(() => {
@@ -8,15 +15,15 @@ describe('rule constructor', () => {
 
   test('correctly constructs from no arguments', async () => {
     /* Mocks */
-    jest.spyOn(Math, 'random').mockImplementation(() => ({
-      toString: () => 'name',
-    }))
+
+    const n = Math.random()
+    jest.spyOn(Math, 'random').mockReturnValue(n)
 
     /* Tests */
 
     const func = () => true
 
-    expect(rule()(func)).toEqual(new Rule('name', func, {}))
+    expect(rule()(func)).toEqual(new Rule(n.toString(), func, {}))
   })
 
   test('correctly constructs with name and options', async () => {
@@ -40,9 +47,8 @@ describe('rule constructor', () => {
 
   test('correctly constructs with options', async () => {
     /* Mocks */
-    jest.spyOn(Math, 'random').mockImplementation(() => ({
-      toString: () => 'name',
-    }))
+    const n = Math.random()
+    jest.spyOn(Math, 'random').mockReturnValue(n)
 
     /* Tests */
 
@@ -54,7 +60,10 @@ describe('rule constructor', () => {
         fragment: 'fragment',
       })(func),
     ).toEqual(
-      new Rule('name', func, { cache: 'contextual', fragment: 'fragment' }),
+      new Rule(n.toString(), func, {
+        cache: 'contextual',
+        fragment: 'fragment',
+      }),
     )
   })
 })

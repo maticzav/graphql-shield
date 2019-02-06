@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from 'graphql-tools'
 import { applyMiddleware } from 'graphql-middleware'
-import { shield, rule } from '../index'
+import { shield, rule } from '../src'
 import { graphql } from 'graphql'
 
 describe('generates correct middleware', () => {

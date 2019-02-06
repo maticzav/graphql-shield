@@ -4,8 +4,8 @@ import {
   isRuleFieldMap,
   isRuleFunction,
   withDefault,
-} from '../utils'
-import { rule, and } from '../constructors'
+} from '../src/utils'
+import { rule, and } from '../src/constructors'
 
 describe('type identifiers', () => {
   test('isRuleFunction finds rule function.', async () => {
