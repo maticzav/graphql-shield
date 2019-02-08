@@ -1,19 +1,18 @@
 import * as hash from 'object-hash'
 import {
-  RuleFunction,
-  Rule,
-  RuleOptions,
-  Cache,
-  Fragment,
-  CacheContructorOptions,
-  RuleConstructorOptions,
-  LogicRule,
+  IRuleFunction,
+  IRule,
+  IRuleOptions,
+  ICache,
+  IFragment,
+  ICacheContructorOptions,
+  IRuleConstructorOptions,
+  ILogicRule,
   ShieldRule,
-  RuleResult,
-  Options,
+  IRuleResult,
+  IOptions,
 } from './types'
 import { isLogicRule } from './utils'
-import { GraphQLResolveInfo } from 'graphql'
 
 export class Rule implements IRule {
   readonly name: string
@@ -22,11 +21,7 @@ export class Rule implements IRule {
   private fragment: IFragment
   private func: IRuleFunction
 
-  constructor(
-    name: string,
-    func: IRuleFunction,
-    constructorOptions: IRuleConstructorOptions,
-  ) {
+  constructor(name: string, func, constructorOptions: IRuleConstructorOptions) {
     const options = this.normalizeOptions(constructorOptions)
 
     this.name = name
@@ -45,11 +40,11 @@ export class Rule implements IRule {
    * Resolves rule and writes to cache its result.
    *
    */
-  async resolve<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
     options: IOptions,
   ): Promise<IRuleResult> {
     try {
@@ -150,12 +145,7 @@ export class Rule implements IRule {
    * Generates cache key based on cache option.
    *
    */
-  private generateCacheKey<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
-  ): string {
+  private generateCacheKey(parent, args, ctx, info): string {
     switch (this.cache) {
       case 'strict': {
         const key = hash({
@@ -191,11 +181,11 @@ export class LogicRule implements ILogicRule {
    * By default logic rule resolves to false.
    *
    */
-  async resolve<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
     options: IOptions,
   ): Promise<IRuleResult> {
     return false
@@ -211,11 +201,11 @@ export class LogicRule implements ILogicRule {
    * Evaluates all the rules.
    *
    */
-  async evaluate<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
+  async evaluate(
+    parent,
+    args,
+    ctx,
+    info,
     options: IOptions,
   ): Promise<IRuleResult[]> {
     const rules = this.getRules()
@@ -269,11 +259,11 @@ export class RuleOr extends LogicRule {
    * Makes sure that at least one of them has evaluated to true.
    *
    */
-  async resolve<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
     options: IOptions,
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
@@ -302,11 +292,11 @@ export class RuleAnd extends LogicRule {
    * Makes sure that all of them have resolved to true.
    *
    */
-  async resolve<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
     options: IOptions,
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
@@ -335,11 +325,11 @@ export class RuleNot extends LogicRule {
    * Negates the result.
    *
    */
-  async resolve<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
     options: IOptions,
   ): Promise<IRuleResult> {
     const [res] = await this.evaluate(parent, args, ctx, info, options)

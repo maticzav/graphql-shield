@@ -3,59 +3,41 @@ import { IMiddlewareGenerator } from 'graphql-middleware'
 
 // Rule
 
-export type ShieldRule = Rule | LogicRule
+export type ShieldRule = IRule | ILogicRule
 
-export declare class Rule {
+export declare class IRule {
   readonly name: string
 
   constructor(options: IRuleOptions)
 
-  equals(rule: Rule): boolean
-  extractFragment(): Fragment
-  resolve<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
-    options: IOptions,
-  ): Promise<RuleResult>
+  equals(rule: IRule): boolean
+  extractFragment(): IFragment
+  resolve(parent, args, ctx, info, options: IOptions): Promise<IRuleResult>
 }
 
 export interface IRuleOptions {
-  cache: Cache
-  fragment: Fragment
+  cache: ICache
+  fragment: IFragment
 }
 
-export declare class LogicRule {
+export declare class ILogicRule {
   constructor(rules: ShieldRule[])
 
   getRules(): ShieldRule[]
-  extractFragments(): Fragment[]
-  evaluate<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
-    options: IOptions,
-  ): Promise<RuleResult[]>
-  resolve<TSource, TContext, TArgs>(
-    parent: TSource,
-    args: TArgs,
-    ctx: TContext,
-    info: GraphQLResolveInfo,
-    options: IOptions,
-  ): Promise<RuleResult>
+  extractFragments(): IFragment[]
+  evaluate(parent, args, ctx, info, options: IOptions): Promise<IRuleResult[]>
+  resolve(parent, args, ctx, info, options: IOptions): Promise<IRuleResult>
 }
 
-export type Fragment = string
-export type Cache = 'strict' | 'contextual' | 'no_cache'
-export type RuleResult = boolean | string | Error
-export type RuleFunction = (
+export type IFragment = string
+export type ICache = 'strict' | 'contextual' | 'no_cache'
+export type IRuleResult = boolean | string | Error
+export type IRuleFunction = (
   parent?: any,
   args?: any,
   context?: any,
   info?: GraphQLResolveInfo,
-) => RuleResult | Promise<RuleResult>
+) => IRuleResult | Promise<IRuleResult>
 
 // Rule Constructor Options
 
@@ -67,20 +49,20 @@ export type ICacheContructorOptions =
 
 export interface IRuleConstructorOptions {
   cache?: ICacheContructorOptions
-  fragment?: Fragment
+  fragment?: IFragment
 }
 
 // Rules Definition Tree
 
-export interface RuleTypeMap {
-  [key: string]: ShieldRule | RuleFieldMap
+export interface IRuleTypeMap {
+  [key: string]: ShieldRule | IRuleFieldMap
 }
 
-export interface RuleFieldMap {
+export interface IRuleFieldMap {
   [key: string]: ShieldRule
 }
 
-export type Rules = ShieldRule | RuleTypeMap
+export type IRules = ShieldRule | IRuleTypeMap
 
 // Generator Options
 
@@ -99,6 +81,6 @@ export interface IOptionsConstructor {
 }
 
 export declare function shield<TSource = any, TContext = any, TArgs = any>(
-  ruleTree: Rules,
+  ruleTree: IRules,
   options: IOptions,
 ): IMiddlewareGenerator<TSource, TContext, TArgs>

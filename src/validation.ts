@@ -56,7 +56,7 @@ export function validateRuleTree(
   function extractRules(ruleTree: IRules): Rule[] {
     const resolvers = flattenObjectOf<ShieldRule>(ruleTree, isRuleFunction)
 
-    const rules = resolvers.reduce<Rule[]>((rules, rule) => {
+    const rules = resolvers.reduce((rules, rule) => {
       if (isLogicRule(rule)) {
         return [...rules, ...extractLogicRules(rule)]
       } else {
