@@ -25,7 +25,7 @@
   "devDependencies": {
     "@types/graphql": "14.0.5",
     "@types/jest": "23.3.13",
-    "@types/node": "10.12.23",
+    "@types/node": "10.12.24",
     "@types/object-hash": "1.2.0",
     "@types/request-promise-native": "1.0.15",
     "apollo-server": "2.4.0",
