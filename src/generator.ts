@@ -28,15 +28,20 @@ import { ValidationError } from './validation'
  * initializes the cache object in context.
  *
  */
-function generateFieldMiddlewareFromRule(
+function generateFieldMiddlewareFromRule<TSource, TContext = any, TArgs>(
   rule: ShieldRule,
   options: IOptions,
 ): IMiddlewareFunction {
   async function middleware(
-    resolve: (parent, args, ctx, info) => any,
-    parent: { [key: string]: any },
-    args: { [key: string]: any },
-    ctx: any,
+    resolve: (
+      parent: TSource,
+      args: TArgs,
+      ctx: TContext,
+      info: GraphQLResolveInfo,
+    ) => any,
+    parent: TSource,
+    args: TArgs,
+    ctx: TContext,
     info: GraphQLResolveInfo,
   ) {
     // Cache

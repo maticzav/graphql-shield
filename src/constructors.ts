@@ -1,4 +1,4 @@
-import { IRuleFunction, IRuleConstructorOptions, ShieldRule } from './types'
+import { RuleFunction, IRuleConstructorOptions, ShieldRule } from './types'
 import { Rule, RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse } from './rules'
 
 /**
@@ -32,7 +32,7 @@ import { Rule, RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse } from './rules'
 export const rule = (
   name?: string | IRuleConstructorOptions,
   options?: IRuleConstructorOptions,
-) => (func: IRuleFunction): Rule => {
+) => (func: RuleFunction): Rule => {
   if (typeof name === 'object') {
     options = name
     name = Math.random().toString()
