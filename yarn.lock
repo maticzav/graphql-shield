@@ -301,10 +301,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.21.tgz#7e8a0c34cf29f4e17a36e9bd0ea72d45ba03908e"
   integrity sha512-CBgLNk4o3XMnqMc0rhb6lc77IwShMEglz05deDcn2lQxyXEZivfwgYJu7SMha9V5XcrP6qZuevTHV/QrN2vjKQ==
 
-"@types/node@10.12.25":
-  version "10.12.25"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.25.tgz#0d01a7dd6127de60d861ece4a650963042abb538"
-  integrity sha512-IcvnGLGSQFDvC07Bz2I8SX+QKErDZbUdiQq7S2u3XyzTyJfUmT0sWJMbeQkMzpTAkO7/N7sZpW/arUM2jfKsbQ==
+"@types/node@10.12.26":
+  version "10.12.26"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-10.12.26.tgz#2dec19f1f7981c95cb54bab8f618ecb5dc983d0e"
+  integrity sha512-nMRqS+mL1TOnIJrL6LKJcNZPB8V3eTfRo9FQA2b5gDvrHurC8XbSA86KNe0dShlEL7ReWJv/OU9NL7Z0dnqWTg==
 
 "@types/object-hash@1.2.0":
   version "1.2.0"
