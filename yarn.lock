@@ -271,10 +271,10 @@
   resolved "https://registry.yarnpkg.com/@types/graphql-deduplicator/-/graphql-deduplicator-2.0.0.tgz#9e577b8f3feb3d067b0ca756f4a1fb356d533922"
   integrity sha512-swUwj5hWF1yFzbUXStLJrUa0ksAt11B8+SwhsAjQAX0LYJ1LLioAyuDcJ9bovWbsNzIXJYXLvljSPQw8nR728w==
 
-"@types/graphql@14.0.6":
-  version "14.0.6"
-  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.0.6.tgz#bf9a4e7faab6b694cb98833b5b6ef018d966df06"
-  integrity sha512-k1kD7AC0PVmcwY6eWLbNElBVcYS/9JYwr6iUPEULydO/Qe22bDuUJKBK3dTGiUXYqUPb3Ws0mIKaSvelvxUTww==
+"@types/graphql@14.0.7":
+  version "14.0.7"
+  resolved "https://registry.yarnpkg.com/@types/graphql/-/graphql-14.0.7.tgz#daa09397220a68ce1cbb3f76a315ff3cd92312f6"
+  integrity sha512-BoLDjdvLQsXPZLJux3lEZANwGr3Xag56Ngy0U3y8uoRSDdeLcn43H3oBcgZlnd++iOQElBpaRVDHPzEDekyvXQ==
 
 "@types/graphql@^14.0.0":
   version "14.0.5"
