@@ -23,7 +23,7 @@
     "lightercollective": "^0.2.0"
   },
   "devDependencies": {
-    "@types/graphql": "14.0.6",
+    "@types/graphql": "14.0.7",
     "@types/jest": "23.3.13",
     "@types/node": "10.12.26",
     "@types/object-hash": "1.2.0",
