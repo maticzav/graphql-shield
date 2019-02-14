@@ -353,6 +353,30 @@ const server = GraphQLServer({
 
 > If you wish to see errors thrown inside resolvers, you can set `allowExternalErrors` option to `true`. This way, Shield won't hide custom errors thrown during query resolving.
 
+#### per type wildcard rule
+
+There is an option to specify a rule that will be applied to all fields of a type (`Query`, `Mutatation`, ...) that do not specify a rule.
+It is similar to the `options.fallbackRule` but allows you to specify a `fallbackRule` per type.
+
+```ts
+// this will only allow query1 and query2.
+// query3 for instance will be denied
+// it will also deny every mutation
+// (you can still use `fallbackRule` option with it)
+const permissions = shield({
+  Query: {
+    "*": deny
+    query1: allow,
+    query2: allow,
+  },
+  Mutation: {
+    "*": deny
+  },
+}, {
+  fallbackRule: allow
+})
+```
+
 #### `options`
 
 | Property            | Required | Default                  | Description                                        |

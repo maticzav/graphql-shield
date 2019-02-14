@@ -139,7 +139,6 @@ function applyRuleToType(
 
     /* Generation */
 
-    // fieldMap= [ query1, query2, ... ]
     const middleware = Object.keys(fieldMap).reduce(
       (middleware, field) => ({
         ...middleware,
