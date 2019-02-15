@@ -121,6 +121,9 @@ function applyRuleToType(
     /* Apply rules assigned to each field to each field */
     const fieldMap = type.getFields()
 
+    /* Extract default type wildcard if any and remove it for validation */
+    const defaultTypeRule = rules['*']
+    delete rules['*']
     /* Validation */
 
     const fieldErrors = Object.keys(rules)
@@ -140,7 +143,7 @@ function applyRuleToType(
       (middleware, field) => ({
         ...middleware,
         [field]: generateFieldMiddlewareFromRule(
-          withDefault(options.fallbackRule)(rules[field]),
+          withDefault(defaultTypeRule || options.fallbackRule)(rules[field]),
           options,
         ),
       }),
