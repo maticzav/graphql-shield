@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`input rule schema validation works as expected 1`] = `
+Array [
+  [GraphQLError: It has to be an email!],
+]
+`;

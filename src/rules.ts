@@ -1,4 +1,5 @@
 import * as hash from 'object-hash'
+import * as Yup from 'yup'
 import {
   IRuleFunction,
   IRule,
@@ -161,6 +162,18 @@ export class Rule implements IRule {
         return `${this.name}-${Math.random()}`
       }
     }
+  }
+}
+
+export class InputRule<Schema> extends Rule {
+  constructor(name: string, schema: Yup.Schema<Schema>) {
+    const validationFunction = (parent, args) =>
+      schema
+        .validate(args)
+        .then(() => true)
+        .catch(err => err)
+
+    super(name, validationFunction, { cache: 'strict', fragment: undefined })
   }
 }
 

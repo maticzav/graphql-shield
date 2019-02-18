@@ -1,5 +1,14 @@
+import * as Yup from 'yup'
 import { IRuleFunction, IRuleConstructorOptions, ShieldRule } from './types'
-import { Rule, RuleAnd, RuleOr, RuleNot, RuleTrue, RuleFalse } from './rules'
+import {
+  Rule,
+  RuleAnd,
+  RuleOr,
+  RuleNot,
+  RuleTrue,
+  RuleFalse,
+  InputRule,
+} from './rules'
 
 /**
  *
@@ -47,6 +56,23 @@ export const rule = (
     fragment: options.fragment,
     cache: options.cache,
   })
+}
+
+/**
+ *
+ * Constructs a new InputRule based on the schema.
+ *
+ * @param schema
+ */
+export const inputRule = <T>(
+  name: string | ((yup: typeof Yup) => Yup.Schema<T>),
+  schema?: (yup: typeof Yup) => Yup.Schema<T>,
+) => {
+  if (typeof name === 'string') {
+    return new InputRule(name, schema(Yup))
+  } else {
+    return new InputRule(Math.random().toString(), name(Yup))
+  }
 }
 
 /**

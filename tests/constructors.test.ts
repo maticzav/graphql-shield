@@ -1,4 +1,5 @@
-import { rule, and, or, not, allow, deny } from '../src/constructors'
+import * as Yup from 'yup'
+import { rule, and, or, not, allow, deny, inputRule } from '../src/constructors'
 import {
   RuleAnd,
   RuleOr,
@@ -6,6 +7,7 @@ import {
   RuleTrue,
   RuleFalse,
   Rule,
+  InputRule,
 } from '../src/rules'
 
 describe('rule constructor', () => {
@@ -64,6 +66,36 @@ describe('rule constructor', () => {
         cache: 'contextual',
         fragment: 'fragment',
       }),
+    )
+  })
+})
+
+describe('input rules constructor', () => {
+  test('correnctly constructs an input rule with name', async () => {
+    const name = Math.random().toString()
+    let schema: Yup.ObjectSchema<{}>
+
+    const rule = inputRule(name, yup => {
+      schema = yup.object().shape({})
+      return schema
+    })
+    expect(JSON.stringify(rule)).toEqual(
+      JSON.stringify(new InputRule(name, schema)),
+    )
+  })
+
+  test('correnctly constructs an input rule', async () => {
+    const n = Math.random()
+    jest.spyOn(Math, 'random').mockReturnValue(n)
+
+    let schema: Yup.ObjectSchema<{}>
+
+    const rule = inputRule(yup => {
+      schema = yup.object().shape({})
+      return schema
+    })
+    expect(JSON.stringify(rule)).toEqual(
+      JSON.stringify(new InputRule(n.toString(), schema)),
     )
   })
 })

@@ -19,8 +19,9 @@
     "postinstall": "lightercollective postinstall"
   },
   "dependencies": {
+    "lightercollective": "^0.2.0",
     "object-hash": "^1.3.1",
-    "lightercollective": "^0.2.0"
+    "yup": "^0.26.10"
   },
   "devDependencies": {
     "@types/graphql": "14.0.7",
@@ -28,6 +29,7 @@
     "@types/node": "10.12.26",
     "@types/object-hash": "1.2.0",
     "@types/request-promise-native": "1.0.15",
+    "@types/yup": "^0.26.9",
     "apollo-server": "2.4.2",
     "codecov": "3.2.0",
     "coveralls": "3.0.2",

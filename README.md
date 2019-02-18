@@ -161,7 +161,7 @@ schema = applyMiddleware(schema, permissions)
 ### Types
 
 ```ts
-// Rule
+/* Rule */
 function rule(
   name?: string,
   options?: IRuleOptions,
@@ -183,7 +183,10 @@ interface IRuleOptions {
   fragment?: IFragment
 }
 
-// Logic
+/* Input */
+function inputRule(yup: Yup => Yup.Schema): Rule
+
+/* Logic */
 function and(...rules: IRule[]): LogicRule
 function or(...rules: IRule[]): LogicRule
 function not(rule: IRule): LogicRule
@@ -353,7 +356,18 @@ const server = GraphQLServer({
 
 > If you wish to see errors thrown inside resolvers, you can set `allowExternalErrors` option to `true`. This way, Shield won't hide custom errors thrown during query resolving.
 
-#### per type wildcard rule
+#### `options`
+
+| Property            | Required | Default                  | Description                                        |
+| ------------------- | -------- | ------------------------ | -------------------------------------------------- |
+| allowExternalErrors | false    | false                    | Toggle catching internal errors.                   |
+| debug               | false    | false                    | Toggle debug mode.                                 |
+| fallbackRule        | false    | allow                    | The default rule for every "rule-undefined" field. |
+| fallbackError       | false    | Error('Not Authorised!') | Error Permission system fallbacks to.              |
+
+By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
+
+### Per Type Wildcard Rule
 
 There is an option to specify a rule that will be applied to all fields of a type (`Query`, `Mutatation`, ...) that do not specify a rule.
 It is similar to the `options.fallbackRule` but allows you to specify a `fallbackRule` per type.
@@ -377,36 +391,59 @@ const permissions = shield({
 })
 ```
 
-#### `options`
+### Basic rules
 
-| Property            | Required | Default                  | Description                                        |
-| ------------------- | -------- | ------------------------ | -------------------------------------------------- |
-| allowExternalErrors | false    | false                    | Toggle catching internal errors.                   |
-| debug               | false    | false                    | Toggle debug mode.                                 |
-| fallbackRule        | false    | allow                    | The default rule for every "rule-undefined" field. |
-| fallbackError       | false    | Error('Not Authorised!') | Error Permission system fallbacks to.              |
-
-By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
-
-### `allow`, `deny`
-
-> GraphQL Shield predefined rules.
+> `allow`, `deny` are GraphQL Shield predefined rules.
 
 `allow` and `deny` rules do exactly what their names describe.
 
-### `and`, `or`, `not`
+### Rules on Input Types or Arguments
+
+> Validate arguments using [Yup](https://github.com/jquense/yup).
+
+```ts
+function inputRule(name?: string, yup: Yup => Yup.Schema): Rule
+```
+
+Input rule works exactly as any other rule would work. Instead of providing a complex validation rule you can simply provide a Yup validation schema which will be mached against provided arguments.
+This can be especially useful when limiting optional fields such as `create` and `connect` with Prisma, for example.
+
+**Example:**
+
+```graphql
+type Mutation {
+  login(email: String): LoginPayload
+}
+```
+
+Note that Yup receives entire `args` object, therefore, you should start composing schema with an object.
+
+```ts
+const isEmailEmail = inputRule(yup =>
+  yup.object({
+    email: yup
+      .string()
+      .email('It has to be an email!')
+      .required(),
+  }),
+)
+```
+
+### Logic Rules
+
+#### `and`, `or`, `not`
 
 > `and`, `or` and `not` allow you to nest rules in logic operations.
 
-#### And Rule
+##### `and` rule
 
 `And` rule allows access only if all sub rules used return `true`.
 
-#### Or Rule
+##### `or` rule
 
 `Or` rule allows access if at least one sub rule returns `true` and no rule throws an error.
 
-#### Not
+##### not
 
 `Not` works as usual not in code works.
 
@@ -438,7 +475,7 @@ const permissions = shield({
 })
 ```
 
-### `Global Fallback Error`
+### Global Fallback Error
 
 GraphQL Shield allows you to set a globally defined fallback error that is used instead of `Not Authorised!` default response. This might be particularly useful for localization. You can use `string` or even custom `Error` to define it.
 
@@ -466,7 +503,7 @@ const permissions = shield(
 )
 ```
 
-### `Fragments`
+### Fragments
 
 Fragments allow you to define which fields your rule requires to work correctly. This comes in extremely handy when your rules rely on data from database. You can use fragments to define which data your rule relies on.
 
@@ -529,7 +566,7 @@ const server = new GraphQLServer({
 const { schema, fragmentReplacements } = applyMiddleware(schema, permissions)
 ```
 
-### `Whitelisting vs Blacklisting`
+### Whitelisting vs Blacklisting
 
 > Whitelisting/Blacklisting is no longer available in versions after `3.x.x`, and has been replaced in favor of `fallbackRule`.
 
