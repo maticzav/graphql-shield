@@ -1,0 +1,12 @@
+{
+  "docs": {
+    "Getting Started": [
+      "installation",
+      "with-apollo-server",
+      "with-graphql-yoga",
+      "rules"
+    ],
+    "Receipes": ["developing", "debugging", "advanced-rules"],
+    "API": ["rule", "input-rule", "logic-rule", "options"]
+  }
+}
