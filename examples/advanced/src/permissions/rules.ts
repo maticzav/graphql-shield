@@ -1,7 +1,7 @@
 import { rule, and, or, not } from 'graphql-shield'
 import { Context, getUserEmail } from '../utils'
 
-// Uncomment the comments bellow to see the number of executions of each rule.
+// Uncomment the comments below to see the number of executions of each rule.
 // Magic, right!
 
 // To see the effect with no cache, set { cache: false } in isCustomer rule.
