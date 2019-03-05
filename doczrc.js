@@ -9,7 +9,7 @@ export default {
   },
   public: './media',
   htmlContext: {
-    favicon: 'public/favicon.ico',
+    favicon: 'public/favicon.png',
   },
   mdPlugins: [emoji],
 }
