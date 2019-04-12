@@ -33,7 +33,7 @@
     "@types/object-hash": "1.2.0",
     "@types/request-promise-native": "1.0.15",
     "apollo-server": "2.4.8",
-    "codecov": "3.2.0",
+    "codecov": "3.3.0",
     "coveralls": "3.0.3",
     "docz": "0.13.7",
     "docz-theme-default": "0.13.7",
