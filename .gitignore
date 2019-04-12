@@ -8,3 +8,4 @@ coverage
 .history
 .nyc_output
 package-lock.json
+.docz
