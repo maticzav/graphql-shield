@@ -369,7 +369,7 @@ By default `shield` ensures no internal data is exposed to client if it was not 
 
 ### Per Type Wildcard Rule
 
-There is an option to specify a rule that will be applied to all fields of a type (`Query`, `Mutatation`, ...) that do not specify a rule.
+There is an option to specify a rule that will be applied to all fields of a type (`Query`, `Mutation`, ...) that do not specify a rule.
 It is similar to the `options.fallbackRule` but allows you to specify a `fallbackRule` per type.
 
 ```ts
