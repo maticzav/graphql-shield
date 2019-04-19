@@ -29,7 +29,7 @@
   "devDependencies": {
     "@types/graphql": "14.0.7",
     "@types/jest": "23.3.14",
-    "@types/node": "10.14.4",
+    "@types/node": "10.14.5",
     "@types/object-hash": "1.2.0",
     "@types/request-promise-native": "1.0.15",
     "apollo-server": "2.4.8",
