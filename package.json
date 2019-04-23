@@ -31,7 +31,7 @@
     "@types/jest": "23.3.14",
     "@types/node": "10.14.5",
     "@types/object-hash": "1.2.0",
-    "@types/request-promise-native": "1.0.15",
+    "@types/request-promise-native": "1.0.16",
     "apollo-server": "2.4.8",
     "codecov": "3.3.0",
     "coveralls": "3.0.3",
