@@ -10,7 +10,13 @@ import {
   isIntrospectionType,
   GraphQLResolveInfo,
 } from 'graphql'
-import { IRules, IOptions, ShieldRule, IRuleFieldMap } from './types'
+import {
+  IRules,
+  IOptions,
+  ShieldRule,
+  IRuleFieldMap,
+  IShieldContext,
+} from './types'
 import {
   isRuleFunction,
   isRuleFieldMap,
@@ -36,20 +42,19 @@ function generateFieldMiddlewareFromRule(
     resolve: (parent, args, ctx, info) => any,
     parent: { [key: string]: any },
     args: { [key: string]: any },
-    ctx: any,
+    ctx: IShieldContext,
     info: GraphQLResolveInfo,
   ) {
     // Cache
     if (!ctx) {
-      ctx = {}
+      ctx = {} as IShieldContext
     }
 
     if (!ctx._shield) {
-      ctx._shield = {}
-    }
-
-    if (!ctx._shield.cache) {
-      ctx._shield.cache = {}
+      ctx._shield = {
+        cache: {},
+        hashFunction: options.hashFunction,
+      }
     }
 
     // Execution
