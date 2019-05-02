@@ -261,6 +261,65 @@ describe('Caching works as expected', () => {
     })
     expect(allowMock).toBeCalledTimes(5)
   })
+
+  test('Custom cache key function - Rule is called based on custom cache key', async () => {
+    /* Schema */
+    const typeDefs = `
+      type Query {
+        a(arg: String): String!
+        b(arg: String): String!
+      }
+    `
+    const resolvers = {
+      Query: {
+        a: () => 'a',
+        b: () => 'b',
+      },
+    }
+
+    const schema = makeExecutableSchema({
+      typeDefs,
+      resolvers,
+    })
+
+    /* Tests */
+
+    const allowMock = jest.fn().mockResolvedValue(true)
+
+    const permissions = shield({
+      Query: rule({
+        cache: (parent, args, ctx, info) => {
+          return JSON.stringify(args)
+        },
+      })(allowMock),
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        a(arg: "foo")
+        b(arg: "bar")
+        a2: a(arg: "foo")
+        a3: a(arg: "boo")
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query, undefined, {})
+
+    /* Tests */
+
+    expect(res).toEqual({
+      data: {
+        a: 'a',
+        b: 'b',
+        a2: 'a',
+        a3: 'a',
+      },
+    })
+    expect(allowMock).toBeCalledTimes(3)
+  })
 })
 
 describe('Legacy cache', () => {

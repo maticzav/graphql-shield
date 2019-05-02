@@ -147,6 +147,9 @@ export class Rule implements IRule {
    *
    */
   private generateCacheKey(parent, args, ctx, info): string {
+    if (typeof this.cache === 'function') {
+      return `${this.name}-${this.cache(parent, args, ctx, info)}`
+    }
     switch (this.cache) {
       case 'strict': {
         const key = hash({
