@@ -48,10 +48,10 @@ export class Rule implements IRule {
     info,
     options: IOptions,
   ): Promise<IRuleResult> {
-    try {
-      // Cache
-      const cacheKey = this.generateCacheKey(parent, args, ctx, info)
+    // Cache
+    const cacheKey = this.generateCacheKey(parent, args, ctx, info)
 
+    try {
       if (!ctx._shield.cache[cacheKey]) {
         ctx._shield.cache[cacheKey] = this.func(parent, args, ctx, info)
       }
