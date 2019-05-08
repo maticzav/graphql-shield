@@ -49,7 +49,7 @@
     "pretty-quick": "1.10.0",
     "remark-emoji": "2.0.2",
     "rimraf": "2.6.3",
-    "semantic-release": "15.13.3",
+    "semantic-release": "15.13.12",
     "ts-jest": "23.10.5",
     "ts-node": "8.1.0",
     "tslint": "5.16.0",
