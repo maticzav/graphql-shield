@@ -32,7 +32,7 @@
     "@types/node": "10.14.8",
     "@types/object-hash": "1.2.0",
     "@types/request-promise-native": "1.0.16",
-    "apollo-server": "2.6.0",
+    "apollo-server": "2.6.1",
     "codecov": "3.5.0",
     "coveralls": "3.0.3",
     "docz": "0.13.7",
