@@ -1518,10 +1518,10 @@
     "@types/events" "*"
     "@types/node" "*"
 
-"@types/yup@0.26.15":
-  version "0.26.15"
-  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.26.15.tgz#7ca57421bcd45bb0ce514a7a9eef82aa4b7b77b8"
-  integrity sha512-YFNqtrYC7/FUcD8OLiRaqGbMdwh/ctRRfWFm4k4dEYBliPP9vKJAttWvnhpEv+dSV/6K3MBkvIUHQUo+8dykcA==
+"@types/yup@0.26.16":
+  version "0.26.16"
+  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.26.16.tgz#75c428236207c48d9f8062dd1495cda8c5485a15"
+  integrity sha512-E2RNc7DSeQ+2EIJ1H3+yFjYu6YiyQBUJ7yNpIxomrYJ3oFizLZ5yDS3T1JTUNBC2OCRkgnhLS0smob5UuCHfNA==
 
 "@types/zen-observable@^0.5.3":
   version "0.5.4"
