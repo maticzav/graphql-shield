@@ -64,6 +64,8 @@ export interface IRuleFieldMap {
 
 export type IRules = ShieldRule | IRuleTypeMap
 
+export type IHashFunction = (arg: { parent: any; args: any }) => string
+
 // Generator Options
 
 export interface IOptions {
@@ -71,6 +73,7 @@ export interface IOptions {
   allowExternalErrors: boolean
   fallbackRule: ShieldRule
   fallbackError: Error
+  hashFunction: IHashFunction
 }
 
 export interface IOptionsConstructor {
@@ -78,9 +81,17 @@ export interface IOptionsConstructor {
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
   fallbackError?: string | Error
+  hashFunction?: IHashFunction
 }
 
 export declare function shield<TSource = any, TContext = any, TArgs = any>(
   ruleTree: IRules,
   options: IOptions,
 ): IMiddlewareGenerator<TSource, TContext, TArgs>
+
+export interface IShieldContext {
+  _shield: {
+    cache: { [key: string]: IRuleResult | Promise<IRuleResult> }
+    hashFunction: IHashFunction
+  }
+}

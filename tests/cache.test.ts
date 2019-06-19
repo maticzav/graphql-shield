@@ -2,6 +2,7 @@ import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule } from '../src/index'
+import { IHashFunction } from '../src/types'
 
 describe('Caching works as expected', () => {
   test('Strict cache - Rule is called multiple times, based on different parent.', async () => {
@@ -260,6 +261,73 @@ describe('Caching works as expected', () => {
       },
     })
     expect(allowMock).toBeCalledTimes(5)
+  })
+})
+
+test('Customize hash function', async () => {
+  /* Schema */
+  const typeDefs = `
+      type Query {
+        a(arg: String): String!
+        b(arg: String): String!
+      }
+    `
+  const resolvers = {
+    Query: {
+      a: () => 'a',
+      b: () => 'b',
+    },
+  }
+
+  const schema = makeExecutableSchema({
+    typeDefs,
+    resolvers,
+  })
+
+  /* Tests */
+
+  const allowMock = jest.fn().mockResolvedValue(true)
+
+  const hashFunction: IHashFunction = jest.fn(opts => JSON.stringify(opts))
+
+  const permissions = shield(
+    {
+      Query: rule({ cache: 'strict' })(allowMock),
+    },
+    {
+      hashFunction,
+    },
+  )
+
+  const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+  /* Execution */
+
+  const query = `
+      query {
+        a(arg: "foo")
+        b(arg: "bar")
+      }
+    `
+  const res = await graphql(schemaWithPermissions, query, undefined, {})
+
+  /* Tests */
+
+  expect(res).toEqual({
+    data: {
+      a: 'a',
+      b: 'b',
+    },
+  })
+  expect(allowMock).toBeCalledTimes(2)
+  expect(hashFunction).toHaveBeenCalledTimes(2)
+  expect(hashFunction).toHaveBeenCalledWith({
+    parent: undefined,
+    args: { arg: 'foo' },
+  })
+  expect(hashFunction).toHaveBeenCalledWith({
+    parent: undefined,
+    args: { arg: 'bar' },
   })
 })
 
