@@ -1,4 +1,3 @@
-import * as hash from 'object-hash'
 import * as Yup from 'yup'
 import {
   IRuleFunction,
@@ -12,6 +11,7 @@ import {
   ShieldRule,
   IRuleResult,
   IOptions,
+  IShieldContext,
 } from './types'
 import { isLogicRule } from './utils'
 
@@ -44,7 +44,7 @@ export class Rule implements IRule {
   async resolve(
     parent,
     args,
-    ctx,
+    ctx: IShieldContext,
     info,
     options: IOptions,
   ): Promise<IRuleResult> {
@@ -146,13 +146,15 @@ export class Rule implements IRule {
    * Generates cache key based on cache option.
    *
    */
-  private generateCacheKey(parent, args, ctx, info): string {
+  private generateCacheKey(parent, args, ctx: IShieldContext, info): string {
+    if (typeof this.cache === 'function') {
+      return `${this.name}-${this.cache(parent, args, ctx, info)}`
+    }
+
     switch (this.cache) {
       case 'strict': {
-        const key = hash({
-          parent,
-          args,
-        })
+        const key = ctx._shield.hashFunction({ parent, args })
+
         return `${this.name}-${key}`
       }
       case 'contextual': {
@@ -320,6 +322,74 @@ export class RuleAnd extends LogicRule {
     } else {
       return true
     }
+  }
+}
+
+export class RuleChain extends LogicRule {
+  constructor(rules: ShieldRule[]) {
+    super(rules)
+  }
+
+  /**
+   *
+   * @param parent
+   * @param args
+   * @param ctx
+   * @param info
+   *
+   * Makes sure that all of them have resolved to true.
+   *
+   */
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult> {
+    const result = await this.evaluate(parent, args, ctx, info, options)
+
+    if (result.some(res => res !== true)) {
+      const customError = result.find(res => res instanceof Error)
+      return customError || false
+    } else {
+      return true
+    }
+  }
+
+  /**
+   *
+   * @param parent
+   * @param args
+   * @param ctx
+   * @param info
+   *
+   * Evaluates all the rules.
+   *
+   */
+  async evaluate(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult[]> {
+    const rules = this.getRules()
+    const tasks = rules.reduce<Promise<IRuleResult[]>>(
+      (acc, rule) =>
+        acc.then(res => {
+          if (res.some(r => r !== true)) {
+            return res
+          } else {
+            return rule
+              .resolve(parent, args, ctx, info, options)
+              .then(task => res.concat(task))
+          }
+        }),
+      Promise.resolve([]),
+    )
+
+    return tasks
   }
 }
 

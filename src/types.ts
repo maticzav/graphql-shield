@@ -30,7 +30,8 @@ export declare class ILogicRule {
 }
 
 export type IFragment = string
-export type ICache = 'strict' | 'contextual' | 'no_cache'
+export type ICache = 'strict' | 'contextual' | 'no_cache' | ICacheKeyFn
+export type ICacheKeyFn = (parent, args, ctx, info) => string
 export type IRuleResult = boolean | string | Error
 export type IRuleFunction = (
   parent: object,
@@ -41,11 +42,7 @@ export type IRuleFunction = (
 
 // Rule Constructor Options
 
-export type ICacheContructorOptions =
-  | 'strict'
-  | 'contextual'
-  | 'no_cache'
-  | boolean
+export type ICacheContructorOptions = ICache | boolean
 
 export interface IRuleConstructorOptions {
   cache?: ICacheContructorOptions
@@ -64,6 +61,8 @@ export interface IRuleFieldMap {
 
 export type IRules = ShieldRule | IRuleTypeMap
 
+export type IHashFunction = (arg: { parent: any; args: any }) => string
+
 // Generator Options
 
 export interface IOptions {
@@ -71,6 +70,7 @@ export interface IOptions {
   allowExternalErrors: boolean
   fallbackRule: ShieldRule
   fallbackError: Error
+  hashFunction: IHashFunction
 }
 
 export interface IOptionsConstructor {
@@ -78,9 +78,17 @@ export interface IOptionsConstructor {
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
   fallbackError?: string | Error
+  hashFunction?: IHashFunction
 }
 
 export declare function shield<TSource = any, TContext = any, TArgs = any>(
   ruleTree: IRules,
   options: IOptions,
 ): IMiddlewareGenerator<TSource, TContext, TArgs>
+
+export interface IShieldContext {
+  _shield: {
+    cache: { [key: string]: IRuleResult | Promise<IRuleResult> }
+    hashFunction: IHashFunction
+  }
+}

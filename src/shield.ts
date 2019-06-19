@@ -1,6 +1,13 @@
+import * as hash from 'object-hash'
 import { middleware, IMiddlewareGenerator } from 'graphql-middleware'
 import { ValidationError, validateRuleTree } from './validation'
-import { IRules, IOptions, IOptionsConstructor, ShieldRule } from './types'
+import {
+  IRules,
+  IOptions,
+  IOptionsConstructor,
+  ShieldRule,
+  IHashFunction,
+} from './types'
 import { generateMiddlewareGeneratorFromRuleTree } from './generator'
 import { allow } from './constructors'
 import { withDefault } from './utils'
@@ -25,6 +32,7 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
     fallbackError: withDefault(new Error('Not Authorised!'))(
       options.fallbackError,
     ),
+    hashFunction: withDefault<IHashFunction>(hash)(options.hashFunction),
   }
 }
 
