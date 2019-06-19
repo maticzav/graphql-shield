@@ -325,6 +325,74 @@ export class RuleAnd extends LogicRule {
   }
 }
 
+export class RuleChain extends LogicRule {
+  constructor(rules: ShieldRule[]) {
+    super(rules)
+  }
+
+  /**
+   *
+   * @param parent
+   * @param args
+   * @param ctx
+   * @param info
+   *
+   * Makes sure that all of them have resolved to true.
+   *
+   */
+  async resolve(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult> {
+    const result = await this.evaluate(parent, args, ctx, info, options)
+
+    if (result.some(res => res !== true)) {
+      const customError = result.find(res => res instanceof Error)
+      return customError || false
+    } else {
+      return true
+    }
+  }
+
+  /**
+   *
+   * @param parent
+   * @param args
+   * @param ctx
+   * @param info
+   *
+   * Evaluates all the rules.
+   *
+   */
+  async evaluate(
+    parent,
+    args,
+    ctx,
+    info,
+    options: IOptions,
+  ): Promise<IRuleResult[]> {
+    const rules = this.getRules()
+    const tasks = rules.reduce<Promise<IRuleResult[]>>(
+      (acc, rule) =>
+        acc.then(res => {
+          if (res.some(r => r !== true)) {
+            return res
+          } else {
+            return rule
+              .resolve(parent, args, ctx, info, options)
+              .then(task => res.concat(task))
+          }
+        }),
+      Promise.resolve([]),
+    )
+
+    return tasks
+  }
+}
+
 export class RuleNot extends LogicRule {
   constructor(rule: ShieldRule) {
     super([rule])

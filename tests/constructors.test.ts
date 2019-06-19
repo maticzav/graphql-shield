@@ -1,5 +1,14 @@
 import * as Yup from 'yup'
-import { rule, and, or, not, allow, deny, inputRule } from '../src/constructors'
+import {
+  rule,
+  and,
+  or,
+  not,
+  allow,
+  deny,
+  inputRule,
+  chain,
+} from '../src/constructors'
 import {
   RuleAnd,
   RuleOr,
@@ -8,6 +17,7 @@ import {
   RuleFalse,
   Rule,
   InputRule,
+  RuleChain,
 } from '../src/rules'
 
 describe('rule constructor', () => {
@@ -105,6 +115,12 @@ describe('logic rules constructors', () => {
     const ruleA = rule()(() => true)
     const ruleB = rule()(() => true)
     expect(and(ruleA, ruleB)).toEqual(new RuleAnd([ruleA, ruleB]))
+  })
+
+  test('chain correctly constructs rule chain', async () => {
+    const ruleA = rule()(() => true)
+    const ruleB = rule()(() => true)
+    expect(chain(ruleA, ruleB)).toEqual(new RuleChain([ruleA, ruleB]))
   })
 
   test('or correctly constructs rule or', async () => {

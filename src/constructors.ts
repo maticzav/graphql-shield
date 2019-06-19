@@ -8,6 +8,7 @@ import {
   RuleTrue,
   RuleFalse,
   InputRule,
+  RuleChain,
 } from './rules'
 
 /**
@@ -84,6 +85,17 @@ export const inputRule = <T>(
  */
 export const and = (...rules: ShieldRule[]): RuleAnd => {
   return new RuleAnd(rules)
+}
+
+/**
+ *
+ * @param rules
+ *
+ * Logical operator and serves as a wrapper for and operation.
+ *
+ */
+export const chain = (...rules: ShieldRule[]): RuleChain => {
+  return new RuleChain(rules)
 }
 
 /**
