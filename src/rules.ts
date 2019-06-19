@@ -1,4 +1,3 @@
-import * as hash from 'object-hash'
 import * as Yup from 'yup'
 import {
   IRuleFunction,
@@ -12,6 +11,7 @@ import {
   ShieldRule,
   IRuleResult,
   IOptions,
+  IShieldContext,
 } from './types'
 import { isLogicRule } from './utils'
 
@@ -44,7 +44,7 @@ export class Rule implements IRule {
   async resolve(
     parent,
     args,
-    ctx,
+    ctx: IShieldContext,
     info,
     options: IOptions,
   ): Promise<IRuleResult> {
@@ -146,16 +146,15 @@ export class Rule implements IRule {
    * Generates cache key based on cache option.
    *
    */
-  private generateCacheKey(parent, args, ctx, info): string {
+  private generateCacheKey(parent, args, ctx: IShieldContext, info): string {
     if (typeof this.cache === 'function') {
       return `${this.name}-${this.cache(parent, args, ctx, info)}`
     }
+  
     switch (this.cache) {
       case 'strict': {
-        const key = hash({
-          parent,
-          args,
-        })
+        const key = ctx._shield.hashFunction({ parent, args })
+
         return `${this.name}-${key}`
       }
       case 'contextual': {
