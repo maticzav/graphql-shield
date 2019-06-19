@@ -30,7 +30,8 @@ export declare class ILogicRule {
 }
 
 export type IFragment = string
-export type ICache = 'strict' | 'contextual' | 'no_cache'
+export type ICache = 'strict' | 'contextual' | 'no_cache' | ICacheKeyFn
+export type ICacheKeyFn = (parent, args, ctx, info) => string
 export type IRuleResult = boolean | string | Error
 export type IRuleFunction = (
   parent?: any,
@@ -41,11 +42,7 @@ export type IRuleFunction = (
 
 // Rule Constructor Options
 
-export type ICacheContructorOptions =
-  | 'strict'
-  | 'contextual'
-  | 'no_cache'
-  | boolean
+export type ICacheContructorOptions = ICache | boolean
 
 export interface IRuleConstructorOptions {
   cache?: ICacheContructorOptions
