@@ -150,7 +150,7 @@ export class Rule implements IRule {
     if (typeof this.cache === 'function') {
       return `${this.name}-${this.cache(parent, args, ctx, info)}`
     }
-  
+
     switch (this.cache) {
       case 'strict': {
         const key = ctx._shield.hashFunction({ parent, args })
