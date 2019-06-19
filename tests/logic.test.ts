@@ -310,6 +310,7 @@ describe('internal execution', () => {
         debug: false,
         fallbackRule: undefined,
         fallbackError: new Error(),
+        hashFunction: () => `${Math.random()}`,
       },
     )
 

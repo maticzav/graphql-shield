@@ -231,6 +231,8 @@ interface IRuleTypeMap {
 
 type IRules = ShieldRule | IRuleTypeMap
 
+type IHashFunction = (arg: { parent: any; args: any }) => string
+
 // Generator Options
 
 interface IOptions {
@@ -238,6 +240,7 @@ interface IOptions {
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
   fallbackError?: string | Error
+  hashFunction?: IHashFunction
 }
 
 declare function shield(
@@ -358,12 +361,13 @@ const server = GraphQLServer({
 
 #### `options`
 
-| Property            | Required | Default                  | Description                                        |
-| ------------------- | -------- | ------------------------ | -------------------------------------------------- |
-| allowExternalErrors | false    | false                    | Toggle catching internal errors.                   |
-| debug               | false    | false                    | Toggle debug mode.                                 |
-| fallbackRule        | false    | allow                    | The default rule for every "rule-undefined" field. |
-| fallbackError       | false    | Error('Not Authorised!') | Error Permission system fallbacks to.              |
+| Property            | Required | Default                                              | Description                                        |
+| ------------------- | -------- | ---------------------------------------------------- | -------------------------------------------------- |
+| allowExternalErrors | false    | false                                                | Toggle catching internal errors.                   |
+| debug               | false    | false                                                | Toggle debug mode.                                 |
+| fallbackRule        | false    | allow                                                | The default rule for every "rule-undefined" field. |
+| fallbackError       | false    | Error('Not Authorised!')                             | Error Permission system fallbacks to.              |
+| hashFunction        | false    | [object-hash](https://github.com/puleos/object-hash) | Hashing function to use for `strict` cache         |
 
 By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
 
