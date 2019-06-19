@@ -147,6 +147,10 @@ export class Rule implements IRule {
    *
    */
   private generateCacheKey(parent, args, ctx: IShieldContext, info): string {
+    if (typeof this.cache === 'function') {
+      return `${this.name}-${this.cache(parent, args, ctx, info)}`
+    }
+
     switch (this.cache) {
       case 'strict': {
         const key = ctx._shield.hashFunction({ parent, args })
