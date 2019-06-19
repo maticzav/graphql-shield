@@ -431,13 +431,19 @@ const isEmailEmail = inputRule(yup =>
 
 ### Logic Rules
 
-#### `and`, `or`, `not`
+#### `and`, `or`, `not`, `chain`
 
 > `and`, `or` and `not` allow you to nest rules in logic operations.
 
 ##### `and` rule
 
 `And` rule allows access only if all sub rules used return `true`.
+
+##### `chain` rule
+
+`Chain` rule allows you to chain the rules, meaning that rules won't be executed all at once, but one by one until one fails or all pass.
+
+> The left-most rule is executed first.
 
 ##### `or` rule
 
