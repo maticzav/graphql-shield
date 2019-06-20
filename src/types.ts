@@ -34,10 +34,10 @@ export type ICache = 'strict' | 'contextual' | 'no_cache' | ICacheKeyFn
 export type ICacheKeyFn = (parent, args, ctx, info) => string
 export type IRuleResult = boolean | string | Error
 export type IRuleFunction = (
-  parent?: any,
-  args?: any,
-  context?: any,
-  info?: GraphQLResolveInfo,
+  parent: object,
+  args: any,
+  context: any,
+  info: GraphQLResolveInfo,
 ) => IRuleResult | Promise<IRuleResult>
 
 // Rule Constructor Options
