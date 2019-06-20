@@ -110,7 +110,7 @@ export class Rule implements IRule {
       cache:
         options.cache !== undefined
           ? this.normalizeCacheOption(options.cache)
-          : 'contextual',
+          : 'strict',
       fragment: options.fragment !== undefined ? options.fragment : undefined,
     }
   }
