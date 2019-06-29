@@ -31,12 +31,17 @@ export declare class ILogicRule {
 
 export type IFragment = string
 export type ICache = 'strict' | 'contextual' | 'no_cache' | ICacheKeyFn
-export type ICacheKeyFn = (parent, args, ctx, info) => string
+export type ICacheKeyFn = (
+  parent: any,
+  args: any,
+  ctx: any,
+  info: GraphQLResolveInfo,
+) => string
 export type IRuleResult = boolean | string | Error
 export type IRuleFunction = (
-  parent: object,
+  parent: any,
   args: any,
-  context: any,
+  ctx: any,
   info: GraphQLResolveInfo,
 ) => IRuleResult | Promise<IRuleResult>
 
