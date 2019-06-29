@@ -21,7 +21,7 @@
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {
-    "@types/yup": "0.26.17",
+    "@types/yup": "0.26.18",
     "lightercollective": "^0.3.0",
     "object-hash": "^1.3.1",
     "yup": "^0.27.0"
