@@ -99,7 +99,7 @@ const permissions = shield({
     addFruitToBasket: isAuthenticated,
   },
   Fruit: isAuthenticated,
-  Cusomer: isAdmin,
+  Customer: isAdmin,
 })
 
 const server = GraphQLServer({
