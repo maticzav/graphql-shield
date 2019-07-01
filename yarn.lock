@@ -1759,10 +1759,10 @@
   resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-12.0.12.tgz#45dd1d0638e8c8f153e87d296907659296873916"
   integrity sha512-SOhuU4wNBxhhTHxYaiG5NY4HBhDIDnJF60GU+2LqHAdKKer86//e4yg69aENCtQ04n0ovz+tq2YPME5t5yp4pw==
 
-"@types/yup@0.26.18":
-  version "0.26.18"
-  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.26.18.tgz#7f76ad65b385577fb89936ce26a7f830a9560a9c"
-  integrity sha512-bKGlHqe+SrvdZONwB+H7hihsvl4yAaOIhN6Sgnnuo6NQOJ0bBNc53Ztfe8ORZHBcPC/OVxhFrxnJIjsGsDbR8w==
+"@types/yup@0.26.19":
+  version "0.26.19"
+  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.26.19.tgz#e1ce9ecfb87615156b555b06d0243ec5b76daaba"
+  integrity sha512-cvcoZkIRq55k1qWwpM5+j0M5SJcFEc69dM97XkqGUFIfZfktBNdIqcaW866JkM/7MxO2qzK4cjXXTz72BltHwQ==
 
 "@types/zen-observable@^0.5.3":
   version "0.5.4"
