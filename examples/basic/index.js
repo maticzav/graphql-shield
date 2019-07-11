@@ -5,7 +5,7 @@ const typeDefs = `
   type Query {
     frontPage: [Fruit!]!
     fruits: [Fruit!]!
-    cusomers: [Customer!]!
+    customers: [Customer!]!
   }
 
   type Mutation {
