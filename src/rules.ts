@@ -153,6 +153,12 @@ export class Rule implements IRule {
 
     switch (this.cache) {
       case 'strict': {
+        const hasPromise = Object.keys(args).some(key => {
+          return args[key] instanceof Promise
+        })
+
+        if (hasPromise) return this.name
+
         const key = ctx._shield.hashFunction({ parent, args })
 
         return `${this.name}-${key}`
