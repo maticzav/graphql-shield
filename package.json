@@ -48,7 +48,7 @@
     "prettier-check": "2.0.0",
     "pretty-quick": "1.11.1",
     "remark-emoji": "2.0.2",
-    "rimraf": "2.6.3",
+    "rimraf": "2.7.0",
     "semantic-release": "15.13.21",
     "ts-jest": "24.0.2",
     "ts-node": "8.3.0",
