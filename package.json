@@ -38,7 +38,7 @@
     "docz": "0.13.7",
     "docz-theme-default": "0.13.7",
     "graphql": "14.3.1",
-    "graphql-middleware": "3.0.2",
+    "graphql-middleware": "4.0.1",
     "graphql-tools": "4.0.5",
     "graphql-yoga": "1.18.1",
     "husky": "3.0.4",
@@ -59,7 +59,7 @@
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0",
-    "graphql-middleware": "^2.0.0 || ^3.0.0"
+    "graphql-middleware": "^2.0.0 || ^3.0.0 || ^4.0.0"
   },
   "resolutions": {
     "graphql-yoga/graphql": "14.3.1"
