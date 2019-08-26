@@ -70,7 +70,7 @@ export const inputRule = <T>(
   schema?: (yup: typeof Yup) => Yup.Schema<T>,
 ) => {
   if (typeof name === 'string') {
-    return new InputRule(name, schema(Yup))
+    return new InputRule(name, schema!(Yup))
   } else {
     return new InputRule(Math.random().toString(), name(Yup))
   }

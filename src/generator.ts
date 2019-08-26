@@ -25,6 +25,7 @@ import {
   withDefault,
 } from './utils'
 import { ValidationError } from './validation'
+import { IMiddlewareWithOptions } from 'graphql-middleware/dist/types'
 
 /**
  *
@@ -37,9 +38,14 @@ import { ValidationError } from './validation'
 function generateFieldMiddlewareFromRule(
   rule: ShieldRule,
   options: IOptions,
-): IMiddlewareFunction {
+): IMiddlewareFunction<object, object, IShieldContext> {
   async function middleware(
-    resolve: (parent, args, ctx, info) => any,
+    resolve: (
+      parent: object,
+      args: object,
+      ctx: IShieldContext,
+      info: GraphQLResolveInfo,
+    ) => Promise<any>,
     parent: { [key: string]: any },
     args: { [key: string]: any },
     ctx: IShieldContext,
@@ -53,7 +59,6 @@ function generateFieldMiddlewareFromRule(
     if (!ctx._shield) {
       ctx._shield = {
         cache: {},
-        hashFunction: options.hashFunction,
       }
     }
 
@@ -83,17 +88,17 @@ function generateFieldMiddlewareFromRule(
     return {
       fragment: rule.extractFragment(),
       resolve: middleware,
-    }
+    } as IMiddlewareWithOptions<object, object, IShieldContext>
   }
 
   if (isLogicRule(rule)) {
     return {
       fragments: rule.extractFragments(),
       resolve: middleware,
-    }
+    } as IMiddlewareWithOptions<object, object, IShieldContext>
   }
 
-  return middleware
+  return middleware as IMiddlewareFunction<object, object, IShieldContext>
 }
 
 /**
