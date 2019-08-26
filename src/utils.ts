@@ -57,15 +57,16 @@ export function isRuleFieldMap(x: any): x is IRuleFieldMap {
  * evaluates to true from particular function.
  *
  */
-export function flattenObjectOf<edge>(
-  obj: object,
-  func: (x: any) => boolean,
-): edge[] {
-  const values = Object.keys(obj).reduce((acc, key) => {
-    if (func(obj[key])) {
-      return [...acc, obj[key]]
-    } else if (typeof obj[key] === 'object' && !func(obj[key])) {
-      return [...acc, ...flattenObjectOf(obj[key], func)]
+export function flattenObjectOf<T>(
+  obj: { [key: string]: any },
+  f: (x: any) => boolean,
+): T[] {
+  const values = Object.keys(obj).reduce<T[]>((acc, key) => {
+    const val = obj[key]
+    if (f(val)) {
+      return [...acc, val]
+    } else if (typeof val === 'object' && !f(val)) {
+      return [...acc, ...flattenObjectOf(val, f)]
     } else {
       return acc
     }

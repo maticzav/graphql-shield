@@ -103,17 +103,25 @@ function getUser(req) {
 
 // Rules
 
-const isAuthenticated = rule()(async (parent, args, ctx, info) => {
-  return ctx.user !== null
-})
+/* Read more about cache options down in the `rules/cache` section. */
 
-const isAdmin = rule()(async (parent, args, ctx, info) => {
-  return ctx.user.role === 'admin'
-})
+const isAuthenticated = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return ctx.user !== null
+  },
+)
 
-const isEditor = rule()(async (parent, args, ctx, info) => {
-  return ctx.user.role === 'editor'
-})
+const isAdmin = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return ctx.user.role === 'admin'
+  },
+)
+
+const isEditor = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return ctx.user.role === 'editor'
+  },
+)
 
 // Permissions
 
@@ -274,25 +282,34 @@ const admin = bool =>
   )
 ```
 
-- Cache is enabled by default across all rules. To prevent `cache` generation, set `{ cache: 'no_cache' }` or `{ cache: false }` when generating a rule.
-- By default, no rule is executed more than once in complete query execution. This accounts for significantly better load times and quick responses.
+- Cache is disabled by default. To enable `cache` generation, set cache option when generating a rule.
 
 ##### Cache
 
 You can choose from three different cache options.
 
 1.  `no_cache` - prevents rules from being cached.
-1.  `contextual` - use when rule only relies on `ctx` parameter.
-1.  `strict` - use when rule relies on `parent` or `args` parameter as well.
+1.  `contextual` - use when rule only relies on `context` parameter (useful for authentication).
+1.  `strict` - use when rule relies on `parent` or `args` parameter as well (field specific modifications).
 
 ```ts
 // Contextual
-const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
-  return ctx.user.isAdmin
-})
+const isAdmin = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return ctx.user.isAdmin
+  },
+)
 
 // Strict
-const admin = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
+const canSeeUserSensitiveData = rule({ cache: 'strict' })(
+  async (parent, args, ctx, info) => {
+    /* The id of observed User matches the id of authenticated viewer. */
+    return ctx.viewer.id === parent.id
+  },
+)
+
+// No-cache (defuault)
+const admin = rule({ cache: 'no_cache' })(async (parent, args, ctx, info) => {
   return ctx.user.isAdmin || args.code === 'secret' || parent.id === 'theone'
 })
 ```
@@ -629,7 +646,7 @@ See [#126](https://github.com/maticzav/graphql-shield/issues/126#issuecomment-41
 
 #### A rule is executed only once even though the dataset contains multiple values (and thus should execute the rule multiple times)
 
-This occurs because of caching. When the cache is set to "contextual" only the contextual variable of the rule is expected to be evaluated. Setting the cache to "strict" allows the rule to rely on parent and args parameters as well.
+This occurs because of caching. When the cache is set to `contextual` only the contextual variable of the rule is expected to be evaluated. Setting the cache to `strict` allows the rule to rely on parent and args parameters as well, while setting the cache to `no_cache` won't cache result at all.
 
 ## Contributors
 

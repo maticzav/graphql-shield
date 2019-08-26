@@ -75,17 +75,23 @@ function getUser(req) {
 
 // Rules
 
-const isAuthenticated = rule()(async (parent, args, ctx, info) => {
-  return ctx.user !== null
-})
+const isAuthenticated = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return ctx.user !== null
+  },
+)
 
-const isAdmin = rule()(async (parent, args, ctx, info) => {
-  return ctx.user.role === 'admin'
-})
+const isAdmin = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return ctx.user.role === 'admin'
+  },
+)
 
-const isEditor = rule()(async (parent, args, ctx, info) => {
-  return ctx.user.role === 'editor'
-})
+const isEditor = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    return ctx.user.role === 'editor'
+  },
+)
 
 // Permissions
 

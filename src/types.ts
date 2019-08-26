@@ -11,13 +11,19 @@ export declare class IRule {
   constructor(options: IRuleOptions)
 
   equals(rule: IRule): boolean
-  extractFragment(): IFragment
-  resolve(parent, args, ctx, info, options: IOptions): Promise<IRuleResult>
+  extractFragment(): IFragment | undefined
+  resolve(
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
+    options: IOptions,
+  ): Promise<IRuleResult>
 }
 
 export interface IRuleOptions {
   cache: ICache
-  fragment: IFragment
+  fragment?: IFragment
 }
 
 export declare class ILogicRule {
@@ -25,8 +31,20 @@ export declare class ILogicRule {
 
   getRules(): ShieldRule[]
   extractFragments(): IFragment[]
-  evaluate(parent, args, ctx, info, options: IOptions): Promise<IRuleResult[]>
-  resolve(parent, args, ctx, info, options: IOptions): Promise<IRuleResult>
+  evaluate(
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
+    options: IOptions,
+  ): Promise<IRuleResult[]>
+  resolve(
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
+    options: IOptions,
+  ): Promise<IRuleResult>
 }
 
 export type IFragment = string
@@ -94,6 +112,5 @@ export declare function shield<TSource = any, TContext = any, TArgs = any>(
 export interface IShieldContext {
   _shield: {
     cache: { [key: string]: IRuleResult | Promise<IRuleResult> }
-    hashFunction: IHashFunction
   }
 }
