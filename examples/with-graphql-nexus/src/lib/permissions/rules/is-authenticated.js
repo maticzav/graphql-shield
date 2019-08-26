@@ -1,9 +1,9 @@
-const {rule} = require('graphql-shield');
+const { rule } = require('graphql-shield')
 
-const isAuthenticated = rule()((parent, args, ctx) => {
-	return Boolean(ctx.request.userId);
-});
+const isAuthenticated = rule({ cache: 'contextual' })((parent, args, ctx) => {
+  return Boolean(ctx.request.userId)
+})
 
 module.exports = {
-	isAuthenticated
-};
+  isAuthenticated,
+}

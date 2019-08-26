@@ -6,14 +6,16 @@ import { Context, getUserEmail } from '../utils'
 
 // To see the effect with no cache, set { cache: false } in isCustomer rule.
 
-export const isGrocer = rule()(async (parent, args, ctx: Context, info) => {
-  // console.log('SHIELD: IsGrocer?')
+export const isGrocer = rule({ cache: 'contextual' })(
+  async (parent, args, ctx: Context, info) => {
+    // console.log('SHIELD: IsGrocer?')
 
-  const email = getUserEmail(ctx)
-  return ctx.db.exists.Grocer({ email })
-})
+    const email = getUserEmail(ctx)
+    return ctx.db.exists.Grocer({ email })
+  },
+)
 
-export const isCustomer = rule({ cache: true })(
+export const isCustomer = rule({ cache: 'contextual' })(
   async (parent, args, ctx: Context, info) => {
     // console.log('SHIELD: IsCustomer?')
 

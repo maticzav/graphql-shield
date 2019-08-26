@@ -14,15 +14,20 @@ import {
   IShieldContext,
 } from './types'
 import { isLogicRule } from './utils'
+import { GraphQLResolveInfo } from 'graphql'
 
 export class Rule implements IRule {
   readonly name: string
 
   private cache: ICache
-  private fragment: IFragment
+  private fragment?: IFragment
   private func: IRuleFunction
 
-  constructor(name: string, func, constructorOptions: IRuleConstructorOptions) {
+  constructor(
+    name: string,
+    func: IRuleFunction,
+    constructorOptions: IRuleConstructorOptions,
+  ) {
     const options = this.normalizeOptions(constructorOptions)
 
     this.name = name
@@ -42,22 +47,15 @@ export class Rule implements IRule {
    *
    */
   async resolve(
-    parent,
-    args,
+    parent: object,
+    args: object,
     ctx: IShieldContext,
-    info,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult> {
     try {
-      // Cache
-      const cacheKey = this.generateCacheKey(parent, args, ctx, info)
-
-      if (!ctx._shield.cache[cacheKey]) {
-        ctx._shield.cache[cacheKey] = this.func(parent, args, ctx, info)
-      }
-
-      // Resolve
-      const res = await ctx._shield.cache[cacheKey]
+      /* Resolve */
+      const res = await this.executeRule(parent, args, ctx, info, options)
 
       if (res instanceof Error) {
         return res
@@ -94,7 +92,7 @@ export class Rule implements IRule {
    * Extracts fragment from the rule.
    *
    */
-  extractFragment(): IFragment {
+  extractFragment(): IFragment | undefined {
     return this.fragment
   }
 
@@ -110,7 +108,7 @@ export class Rule implements IRule {
       cache:
         options.cache !== undefined
           ? this.normalizeCacheOption(options.cache)
-          : 'strict',
+          : 'no_cache',
       fragment: options.fragment !== undefined ? options.fragment : undefined,
     }
   }
@@ -137,39 +135,80 @@ export class Rule implements IRule {
   }
 
   /**
+   * Executes a rule and writes to cache if needed.
    *
    * @param parent
    * @param args
    * @param ctx
    * @param info
-   *
-   * Generates cache key based on cache option.
-   *
    */
-  private generateCacheKey(parent, args, ctx: IShieldContext, info): string {
-    if (typeof this.cache === 'function') {
-      return `${this.name}-${this.cache(parent, args, ctx, info)}`
+  private executeRule(
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
+    options: IOptions,
+  ): string | boolean | Error | Promise<IRuleResult> {
+    switch (typeof this.cache) {
+      case 'function': {
+        /* User defined cache function. */
+        const key = `${this.name}-${this.cache(parent, args, ctx, info)}`
+        return this.writeToCache(key)(parent, args, ctx, info)
+      }
+      case 'string': {
+        /* Standard cache option. */
+        switch (this.cache) {
+          case 'strict': {
+            const key = options.hashFunction({ parent, args })
+
+            return this.writeToCache(`${this.name}-${key}`)(
+              parent,
+              args,
+              ctx,
+              info,
+            )
+          }
+          case 'contextual': {
+            return this.writeToCache(this.name)(parent, args, ctx, info)
+          }
+          case 'no_cache': {
+            return this.func(parent, args, ctx, info)
+          }
+        }
+      }
+      /* istanbul ignore next */
+      default: {
+        throw new Error(`Unsupported cache format: ${typeof this.cache}`)
+      }
     }
+  }
 
-    switch (this.cache) {
-      case 'strict': {
-        const key = ctx._shield.hashFunction({ parent, args })
+  /**
+   * Writes or reads result from cache.
+   *
+   * @param key
+   */
 
-        return `${this.name}-${key}`
+  private writeToCache(
+    key: string,
+  ): (
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
+  ) => string | boolean | Error | Promise<IRuleResult> {
+    return (parent, args, ctx, info) => {
+      if (!ctx._shield.cache[key]) {
+        return (ctx._shield.cache[key] = this.func(parent, args, ctx, info))
       }
-      case 'contextual': {
-        return this.name
-      }
-      case 'no_cache': {
-        return `${this.name}-${Math.random()}`
-      }
+      return ctx._shield.cache[key]
     }
   }
 }
 
 export class InputRule<Schema> extends Rule {
   constructor(name: string, schema: Yup.Schema<Schema>) {
-    const validationFunction = (parent, args) =>
+    const validationFunction = (parent: object, args: object) =>
       schema
         .validate(args)
         .then(() => true)
@@ -197,10 +236,10 @@ export class LogicRule implements ILogicRule {
    *
    */
   async resolve(
-    parent,
-    args,
-    ctx,
-    info,
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult> {
     return false
@@ -217,10 +256,10 @@ export class LogicRule implements ILogicRule {
    *
    */
   async evaluate(
-    parent,
-    args,
-    ctx,
-    info,
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult[]> {
     const rules = this.getRules()
@@ -246,9 +285,8 @@ export class LogicRule implements ILogicRule {
         return fragments.concat(...rule.extractFragments())
       }
 
-      if (rule.extractFragment()) {
-        return fragments.concat(rule.extractFragment())
-      }
+      const fragment = rule.extractFragment()
+      if (fragment) return fragments.concat(fragment)
 
       return fragments
     }, [])
@@ -275,10 +313,10 @@ export class RuleOr extends LogicRule {
    *
    */
   async resolve(
-    parent,
-    args,
-    ctx,
-    info,
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
@@ -308,10 +346,10 @@ export class RuleAnd extends LogicRule {
    *
    */
   async resolve(
-    parent,
-    args,
-    ctx,
-    info,
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
@@ -341,10 +379,10 @@ export class RuleChain extends LogicRule {
    *
    */
   async resolve(
-    parent,
-    args,
-    ctx,
-    info,
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
@@ -368,10 +406,10 @@ export class RuleChain extends LogicRule {
    *
    */
   async evaluate(
-    parent,
-    args,
-    ctx,
-    info,
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult[]> {
     const rules = this.getRules()
@@ -409,10 +447,10 @@ export class RuleNot extends LogicRule {
    *
    */
   async resolve(
-    parent,
-    args,
-    ctx,
-    info,
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
     options: IOptions,
   ): Promise<IRuleResult> {
     const [res] = await this.evaluate(parent, args, ctx, info, options)

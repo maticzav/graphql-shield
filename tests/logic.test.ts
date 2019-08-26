@@ -1,4 +1,4 @@
-import { graphql } from 'graphql'
+import { graphql, GraphQLResolveInfo } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule, allow, deny, and, or, not } from '../src'
@@ -303,8 +303,8 @@ describe('internal execution', () => {
     const res = await rule.resolve(
       {},
       {},
-      {},
-      {},
+      { _shield: { cache: {} } },
+      {} as GraphQLResolveInfo,
       {
         allowExternalErrors: false,
         debug: false,
