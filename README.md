@@ -650,7 +650,7 @@ This occurs because of caching. When the cache is set to `contextual` only the c
 
 ## Contributors
 
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+This project exists thanks to all the people who contribute. [[Contribute](https://github.com/maticzav/graphql-shield/graphs/contributors)].
 <a href="https://github.com/maticzav/graphql-shield/graphs/contributors"><img src="https://opencollective.com/graphql-shield/contributors.svg?width=890&button=false" /></a>
 
 ## Backers
