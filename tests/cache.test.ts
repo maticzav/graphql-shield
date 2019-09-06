@@ -4,7 +4,7 @@ import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule } from '../src/index'
 import { IHashFunction } from '../src/types'
 
-describe('Caching works as expected', () => {
+describe('caching:', () => {
   test('Strict cache - Rule is called multiple times, based on different parent.', async () => {
     /* Schema */
 
@@ -106,6 +106,7 @@ describe('Caching works as expected', () => {
         c(arg: "foo")
         d(arg: "bar")
         e
+        f: c(arg: "foo")
       }
     `
     const res = await graphql(schemaWithPermissions, query, undefined, {})
@@ -119,6 +120,7 @@ describe('Caching works as expected', () => {
         c: 'c',
         d: 'd',
         e: 'e',
+        f: 'c',
       },
     })
     expect(allowMock).toBeCalledTimes(3)
@@ -390,7 +392,7 @@ test('Customize hash function', async () => {
   })
 })
 
-describe('Legacy cache', () => {
+describe('legacy cache:', () => {
   test('Strict cache - Rule is called multiple times, based on different parent.', async () => {
     /* Schema */
 

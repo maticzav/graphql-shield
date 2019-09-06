@@ -199,7 +199,7 @@ export class Rule implements IRule {
   ) => string | boolean | Error | Promise<IRuleResult> {
     return (parent, args, ctx, info) => {
       if (!ctx._shield.cache[key]) {
-        return (ctx._shield.cache[key] = this.func(parent, args, ctx, info))
+        ctx._shield.cache[key] = this.func(parent, args, ctx, info)
       }
       return ctx._shield.cache[key]
     }
