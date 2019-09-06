@@ -52,8 +52,6 @@ describe('input rule', () => {
     `
     const res = await graphql(schemaWithPermissions, query)
 
-    console.log(res)
-
     /* Tests */
 
     expect(res.data).toEqual({
