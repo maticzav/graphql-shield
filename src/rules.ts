@@ -455,7 +455,9 @@ export class RuleNot extends LogicRule {
   ): Promise<IRuleResult> {
     const [res] = await this.evaluate(parent, args, ctx, info, options)
 
-    if (res !== true) {
+    if (res instanceof Error) {
+      return res
+    } else if (res !== true) {
       return true
     } else {
       return false

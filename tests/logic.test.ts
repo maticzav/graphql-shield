@@ -241,6 +241,8 @@ describe('logic rules', () => {
         deny: String
         ruleError: String
         resolverError: String
+        customRuleError: String
+        customRuleErrorString: String
       }
     `
 
@@ -252,6 +254,8 @@ describe('logic rules', () => {
         resolverError: () => {
           throw new Error()
         },
+        customRuleError: () => 'customRuleError',
+        customRuleErrorString: () => 'customRuleErrorString',
       },
     }
 
@@ -263,12 +267,22 @@ describe('logic rules', () => {
       throw new Error()
     })
 
+    const ruleWithCustomError = rule()(async () => {
+      return new Error('error_pass')
+    })
+
+    const ruleWithCustomErrorString = rule()(async () => {
+      return 'error_string_pass'
+    })
+
     const permissions = shield({
       Query: {
         allow: not(deny),
         deny: not(allow),
         ruleError: not(ruleWithError),
         resolverError: not(allow),
+        customRuleError: not(ruleWithCustomError),
+        customRuleErrorString: not(ruleWithCustomErrorString),
       },
     })
 
@@ -282,6 +296,8 @@ describe('logic rules', () => {
         deny
         ruleError
         resolverError
+        customRuleError
+        customRuleErrorString
       }
     `
     const res = await graphql(schemaWithPermissions, query)
@@ -291,8 +307,15 @@ describe('logic rules', () => {
       deny: null,
       ruleError: 'ruleError',
       resolverError: null,
+      customRuleError: null,
+      customRuleErrorString: null,
     })
-    expect(res.errors.length).toBe(2)
+    expect(res.errors.map(err => err.message)).toEqual([
+      'Not Authorised!',
+      'Not Authorised!',
+      'error_pass',
+      'error_string_pass',
+    ])
   })
 })
 
