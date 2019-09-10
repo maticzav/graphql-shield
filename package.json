@@ -52,7 +52,7 @@
     "semantic-release": "15.13.24",
     "ts-jest": "24.0.2",
     "ts-node": "8.3.0",
-    "tslint": "5.19.0",
+    "tslint": "5.20.0",
     "tslint-config-prettier": "1.18.0",
     "tslint-config-standard": "8.0.1",
     "typescript": "3.6.3"
