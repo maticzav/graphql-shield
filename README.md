@@ -96,9 +96,8 @@ function getUser(req) {
   const auth = req.get('Authorization')
   if (users[auth]) {
     return users[auth]
-  } else {
-    return null
   }
+  return null
 }
 
 // Rules
