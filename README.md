@@ -308,7 +308,7 @@ const canSeeUserSensitiveData = rule({ cache: 'strict' })(
   },
 )
 
-// No-cache (defuault)
+// No-cache (default)
 const admin = rule({ cache: 'no_cache' })(async (parent, args, ctx, info) => {
   return ctx.user.isAdmin || args.code === 'secret' || parent.id === 'theone'
 })
