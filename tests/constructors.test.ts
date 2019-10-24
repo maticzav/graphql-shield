@@ -85,7 +85,7 @@ describe('input rules constructor', () => {
     const name = Math.random().toString()
     let schema: Yup.ObjectSchema<{}>
 
-    const rule = inputRule(name, yup => {
+    const rule = inputRule(name)(yup => {
       schema = yup.object().shape({})
       return schema
     })
@@ -100,12 +100,28 @@ describe('input rules constructor', () => {
 
     let schema: Yup.ObjectSchema<{}>
 
-    const rule = inputRule(yup => {
+    const rule = inputRule()(yup => {
       schema = yup.object().shape({})
       return schema
     })
     expect(JSON.stringify(rule)).toEqual(
       JSON.stringify(new InputRule(n.toString(), schema)),
+    )
+  })
+
+  test('correctly contructs an input rule with validation options', async () => {
+    const n = Math.random()
+    jest.spyOn(Math, 'random').mockReturnValue(n)
+
+    let schema: Yup.ObjectSchema<{}>
+    let options = { abortEarly: false }
+
+    const rule = inputRule()(yup => {
+      schema = yup.object().shape({})
+      return schema
+    }, options)
+    expect(JSON.stringify(rule)).toEqual(
+      JSON.stringify(new InputRule(n.toString(), schema, options)),
     )
   })
 })

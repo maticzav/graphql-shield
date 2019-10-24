@@ -29,7 +29,7 @@ describe('input rule', () => {
     // Permissions
     const permissions = shield({
       Mutation: {
-        login: inputRule(yup =>
+        login: inputRule()(yup =>
           yup.object({
             email: yup
               .string()
