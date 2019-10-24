@@ -207,10 +207,14 @@ export class Rule implements IRule {
 }
 
 export class InputRule<Schema> extends Rule {
-  constructor(name: string, schema: Yup.Schema<Schema>) {
+  constructor(
+    name: string,
+    schema: Yup.Schema<Schema>,
+    options?: Yup.ValidateOptions,
+  ) {
     const validationFunction = (parent: object, args: object) =>
       schema
-        .validate(args)
+        .validate(args, options)
         .then(() => true)
         .catch(err => err)
 
