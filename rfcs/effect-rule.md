@@ -15,4 +15,4 @@ A new rule type, called `effect` would make it possible for developers to change
 
 ## Relavant Issues
 
-#335
+#335 #436
