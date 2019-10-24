@@ -7,12 +7,12 @@
     "start": "babel-node index.js"
   },
   "dependencies": {
-    "graphql-shield": "2.0.4",
-    "graphql-yoga": "1.14.4"
+    "graphql-shield": "6.1.0",
+    "graphql-yoga": "1.18.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.0.0-beta.49",
-    "@babel/node": "^7.0.0-beta.49",
-    "@babel/preset-env": "^7.0.0-beta.49"
+    "@babel/core": "^7.6.4",
+    "@babel/node": "^7.6.3",
+    "@babel/preset-env": "^7.6.3"
   }
 }

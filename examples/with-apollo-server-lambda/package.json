@@ -17,14 +17,14 @@
   "dependencies": {
     "apollo-server-lambda": "^2.3.1",
     "graphql": "^14.0.2",
-    "graphql-middleware": "^3.0.0",
-    "graphql-shield": "^5.1.0",
+    "graphql-middleware": "^4.0.1",
+    "graphql-shield": "^6.1.0",
     "graphql-tools": "^4.0.3"
   },
   "devDependencies": {
     "prettier": "^1.15.3",
     "serverless": "^1.35.1",
-    "serverless-offline": "^3.31.3"
+    "serverless-offline": "^5.12.0"
   },
   "scripts": {
     "start": "sls offline start"
