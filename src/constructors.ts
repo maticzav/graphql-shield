@@ -65,14 +65,14 @@ export const rule = (
  *
  * @param schema
  */
-export const inputRule = <T>(
-  name: string | ((yup: typeof Yup) => Yup.Schema<T>),
-  schema?: (yup: typeof Yup) => Yup.Schema<T>,
+export const inputRule = <T>(name?: string) => (
+  schema: (yup: typeof Yup) => Yup.Schema<T>,
+  options?: Yup.ValidateOptions,
 ) => {
   if (typeof name === 'string') {
-    return new InputRule(name, schema!(Yup))
+    return new InputRule(name, schema(Yup), options)
   } else {
-    return new InputRule(Math.random().toString(), name(Yup))
+    return new InputRule(Math.random().toString(), schema(Yup), options)
   }
 }
 
