@@ -9,7 +9,9 @@ import { Rule, LogicRule } from './rules'
  *
  */
 export function isRule(x: any): x is IRule {
-  return x instanceof Rule
+  return (
+    x instanceof Rule || (x && x.constructor && x.constructor.name === 'Rule')
+  )
 }
 
 /**
