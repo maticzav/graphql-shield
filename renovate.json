@@ -8,6 +8,12 @@
       "automerge": true
     }
   ],
+  "packageRules": [
+    {
+      "packageNames": ["graphql-shield-rules"],
+      "automerge": false
+    }
+  ],
   "automerge": true,
   "major": {
     "automerge": false
