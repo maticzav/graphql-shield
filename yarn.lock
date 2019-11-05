@@ -6121,6 +6121,22 @@ graphql-playground-middleware-lambda@1.7.12:
   dependencies:
     graphql-playground-html "1.6.12"
 
+graphql-shield-rules@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/graphql-shield-rules/-/graphql-shield-rules-0.0.1.tgz#33b05b54085bf381069070f0ec9f3b74f3e54d71"
+  integrity sha512-kquuAVuKc0xSVbCF9Qsx4cEfm/t5Q+iE4s1i+i9MVNgCi3T1Ss4MtDubPA2JTB/biSwAdtBINvFwz1Vty1toIg==
+  dependencies:
+    graphql-shield "^7.0.1"
+
+graphql-shield@^7.0.1:
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/graphql-shield/-/graphql-shield-7.0.2.tgz#65d51528b4e36c4a5023276267abbd1abb57ce0b"
+  integrity sha512-ZgCQ9efzgehkIVMFoxaOubnvwHVqthtsIXA+xRu8B4ga2Ch/EHiswNCDKpTXTBQZmjeDCSHeAj4XDmbzR4Trxw==
+  dependencies:
+    "@types/yup" "0.26.24"
+    object-hash "^2.0.0"
+    yup "^0.27.0"
+
 graphql-subscriptions@^0.5.8:
   version "0.5.8"
   resolved "https://registry.yarnpkg.com/graphql-subscriptions/-/graphql-subscriptions-0.5.8.tgz#13a6143c546bce390404657dc73ca501def30aa7"
@@ -12836,10 +12852,10 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@3.6.4:
-  version "3.6.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.6.4.tgz#b18752bb3792bc1a0281335f7f6ebf1bbfc5b91d"
-  integrity sha512-unoCll1+l+YK4i4F8f22TaNVPRHcD9PA3yCuZ8g5e0qGqlVlJ/8FSateOLLSagn+Yg5+ZwuPkL8LFUc0Jcvksg==
+typescript@3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
+  integrity sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==
 
 ua-parser-js@^0.7.18:
   version "0.7.20"
