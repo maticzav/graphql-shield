@@ -22,7 +22,17 @@ export function isRule(x: any): x is IRule {
  *
  */
 export function isLogicRule(x: any): x is ILogicRule {
-  return x instanceof LogicRule
+  return (
+    x instanceof LogicRule ||
+    (x &&
+      x.constructor &&
+      (x.constructor.name === 'RuleOr' ||
+        x.constructor.name === 'RuleAnd' ||
+        x.constructor.name === 'RuleChain' ||
+        x.constructor.name === 'RuleNoe' ||
+        x.constructor.name === 'RuleTrue' ||
+        x.constructor.name === 'RuleFalse'))
+  )
 }
 
 /**
