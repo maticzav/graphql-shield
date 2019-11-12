@@ -440,7 +440,7 @@ type Mutation {
 Note that Yup receives entire `args` object, therefore, you should start composing schema with an object.
 
 ```ts
-const isEmailEmail = inputRule(
+const isEmailEmail = inputRule()(
   yup =>
     yup.object({
       email: yup
