@@ -283,15 +283,6 @@ export function generateMiddlewareGeneratorFromRuleTree<
   ruleTree: IRules,
   options: IOptions,
 ): IMiddlewareGeneratorConstructor<TSource, TContext, TArgs> {
-  const generator = (schema: GraphQLSchema) => {
-    const middleware = generateMiddlewareFromSchemaAndRuleTree(
-      schema,
-      ruleTree,
-      options,
-    )
-
-    return middleware
-  }
-
-  return generator
+  return (schema: GraphQLSchema) =>
+    generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, options)
 }
