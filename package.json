@@ -32,7 +32,7 @@
     "@types/request-promise-native": "1.0.17",
     "apollo-server": "2.9.11",
     "codecov": "3.6.1",
-    "coveralls": "3.0.7",
+    "coveralls": "3.0.8",
     "docz": "0.13.7",
     "docz-theme-default": "0.13.7",
     "graphql": "14.3.1",
