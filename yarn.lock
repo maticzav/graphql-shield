@@ -1892,6 +1892,11 @@
   resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.26.24.tgz#c24170b3a5c867b4fabd49fcc42fe45f780cb153"
   integrity sha512-x0bhHnYjH5mZit4HivUYbTMO4LouOTGwp/LLxSL1mbJYVwNJtHYESH0ed2bwM1lkI2yDmsoCDYJnWEgHeJDACg==
 
+"@types/yup@0.26.25":
+  version "0.26.25"
+  resolved "https://registry.yarnpkg.com/@types/yup/-/yup-0.26.25.tgz#a7316e4f1254783dc64c1bad6e803052e4d7a43b"
+  integrity sha512-7syTwjyRJKQhh5OjJRe3M4hiqcGQ9fpkVnCsSfST1p2eyGXTRL8dBZhhxJPKoVVFXDEbFqtWyN8k8ai5v5Yacg==
+
 "@types/zen-observable@^0.5.3":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@types/zen-observable/-/zen-observable-0.5.4.tgz#b863a4191e525206819e008097ebf0fb2e3a1cdc"
