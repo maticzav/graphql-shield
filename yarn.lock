@@ -11570,10 +11570,10 @@ selfsigned@^1.10.4:
   dependencies:
     node-forge "0.7.5"
 
-semantic-release@15.13.31:
-  version "15.13.31"
-  resolved "https://registry.yarnpkg.com/semantic-release/-/semantic-release-15.13.31.tgz#75560e61562b5b7aa3e66256fd3454683c6508a6"
-  integrity sha512-mrtYkH4p0FvXIRFCsr2r5il/A+Uj7oeeq+dgyojAbr4Tzywv9AlCYHeE3A8U3eE4bMJPiBV4YnQRsk1QS8yDDw==
+semantic-release@15.13.32:
+  version "15.13.32"
+  resolved "https://registry.yarnpkg.com/semantic-release/-/semantic-release-15.13.32.tgz#1951cffe2e8893814eb8d8aa38bf5afd231aa779"
+  integrity sha512-+K+GS50jBOJQvoByBM119a5ILqKC9mRYirjBWgfredhnORHjlhsPZZz1aRjEWlx6PzKWYLuLBg7F4e3/tm3v9Q==
   dependencies:
     "@semantic-release/commit-analyzer" "^6.1.0"
     "@semantic-release/error" "^2.2.0"
