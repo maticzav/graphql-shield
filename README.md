@@ -39,6 +39,7 @@ yarn add graphql-shield
 
 ```ts
 import { GraphQLServer } from 'graphql-yoga'
+import { ContextParameters } from 'graphql-yoga/dist/types'
 import { rule, shield, and, or, not } from 'graphql-shield'
 
 const typeDefs = `
@@ -92,8 +93,8 @@ const users = {
   },
 }
 
-function getUser(req) {
-  const auth = req.get('Authorization')
+function getUser(ctx: ContextParameters) {
+  const auth = ctx.request.get('Authorization')
   if (users[auth]) {
     return users[auth]
   } else {
