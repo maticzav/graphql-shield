@@ -301,8 +301,15 @@ export class LogicRule implements ILogicRule {
 
 // Extended Types
 
+const isRuleChain = (rule: ShieldRule): rule is RuleChain => {
+  return typeof (rule as RuleChain).isBreak === 'function'
+}
+
 export class RuleOr extends LogicRule {
   constructor(rules: ShieldRule[]) {
+    if (rules.length === 1 && isRuleChain(rules[0])) {
+      rules[0].isBreak = (res: any) => res === true
+    }
     super(rules)
   }
 
@@ -399,6 +406,9 @@ export class RuleChain extends LogicRule {
     }
   }
 
+  static isBreak = (res: any) => res !== true
+  public isBreak = RuleChain.isBreak
+
   /**
    *
    * @param parent
@@ -420,7 +430,7 @@ export class RuleChain extends LogicRule {
     const tasks = rules.reduce<Promise<IRuleResult[]>>(
       (acc, rule) =>
         acc.then(res => {
-          if (res.some(r => r !== true)) {
+          if (res.some(this.isBreak)) {
             return res
           } else {
             return rule

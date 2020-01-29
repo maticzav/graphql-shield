@@ -187,6 +187,85 @@ describe('logic rules', () => {
     expect(res.errors.length).toBe(2)
   })
 
+  test('or chain works as expected', async () => {
+    const typeDefs = `
+      type Query {
+        allow: String
+        deny: String
+        ruleError: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        allow: () => 'allow',
+        deny: () => 'deny',
+        ruleError: () => 'error',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    let allowRuleSequence = []
+    const allowRuleA = rule()(() => {
+      allowRuleSequence.push('A')
+      return true
+    })
+    const allowRuleB = rule()(() => {
+      allowRuleSequence.push('B')
+      return true
+    })
+    const allowRuleC = rule()(() => {
+      allowRuleSequence.push('C')
+      return true
+    })
+    let denyRuleCount = 0
+    const denyRule = rule({})(() => {
+      denyRuleCount += 1
+      return false
+    })
+    let ruleWithErrorCount = 0
+    const ruleWithError = rule()(() => {
+      ruleWithErrorCount += 1
+      throw new Error('error')
+    })
+
+    const permissions = shield({
+      Query: {
+        allow: or(chain(allowRuleA, allowRuleB, allowRuleC)),
+        deny: or(chain(denyRule, denyRule, denyRule)),
+        ruleError: or(chain(ruleWithError, ruleWithError, ruleWithError)),
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        allow
+        deny
+        ruleError
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toEqual({
+      allow: 'allow',
+      deny: null,
+      ruleError: null,
+    })
+    expect(allowRuleSequence.toString()).toEqual(['A'].toString())
+    expect(denyRuleCount).toEqual(3)
+    expect(ruleWithErrorCount).toEqual(3)
+    expect(res.errors.length).toBe(2)
+  })
+
   test('or works as expected', async () => {
     const typeDefs = `
       type Query {
