@@ -209,16 +209,20 @@ describe('logic rules', () => {
     /* Permissions */
 
     let allowRuleSequence = []
-    const allowRuleA = rule()(() => {
+    const denyRuleA = rule()(() => {
       allowRuleSequence.push('A')
-      return true
+      return false
     })
     const allowRuleB = rule()(() => {
       allowRuleSequence.push('B')
       return true
     })
-    const allowRuleC = rule()(() => {
+    const denyRuleC = rule()(() => {
       allowRuleSequence.push('C')
+      return true
+    })
+    const allowRuleD = rule()(() => {
+      allowRuleSequence.push('D')
       return true
     })
     let denyRuleCount = 0
@@ -234,7 +238,7 @@ describe('logic rules', () => {
 
     const permissions = shield({
       Query: {
-        allow: or(chain(allowRuleA, allowRuleB, allowRuleC)),
+        allow: or(chain(denyRuleA, allowRuleB, denyRuleC, allowRuleD)),
         deny: or(chain(denyRule, denyRule, denyRule)),
         ruleError: or(chain(ruleWithError, ruleWithError, ruleWithError)),
       },
@@ -260,7 +264,7 @@ describe('logic rules', () => {
       deny: null,
       ruleError: null,
     })
-    expect(allowRuleSequence.toString()).toEqual(['A'].toString())
+    expect(allowRuleSequence.toString()).toEqual(['A', 'B'].toString())
     expect(denyRuleCount).toEqual(3)
     expect(ruleWithErrorCount).toEqual(3)
     expect(res.errors.length).toBe(2)

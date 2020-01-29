@@ -398,7 +398,7 @@ export class RuleChain extends LogicRule {
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
-    if (result.some(res => res !== true)) {
+    if (result.slice(-1).some(res => res !== true)) {
       const customError = result.find(res => res instanceof Error)
       return customError || false
     } else {
