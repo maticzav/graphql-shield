@@ -238,9 +238,9 @@ describe('logic rules', () => {
 
     const permissions = shield({
       Query: {
-        allow: race(chain(denyRuleA, allowRuleB, denyRuleC, allowRuleD)),
-        deny: race(chain(denyRule, denyRule, denyRule)),
-        ruleError: race(chain(ruleWithError, ruleWithError, ruleWithError)),
+        allow: race(denyRuleA, allowRuleB, denyRuleC, allowRuleD),
+        deny: race(denyRule, denyRule, denyRule),
+        ruleError: race(ruleWithError, ruleWithError, ruleWithError),
       },
     })
 

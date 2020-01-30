@@ -400,7 +400,7 @@ export class RuleChain extends LogicRule {
   }
 
   static isBreak = (res: any) => res !== true
-  public isBreak = RuleChain.isBreak
+  protected isBreak = RuleChain.isBreak
 
   /**
    *
@@ -438,16 +438,9 @@ export class RuleChain extends LogicRule {
   }
 }
 
-export class RuleRaceChain extends RuleChain {
-  constructor(rule: RuleChain) {
-    if (0) {
-      super([])
-    }
-    rule.isBreak = RuleRaceChain.isBreak
-    return rule
-  }
-
+export class RuleRace extends RuleChain {
   static isBreak = (res: any) => res === true
+  protected isBreak = RuleRace.isBreak
 }
 
 export class RuleNot extends LogicRule {
