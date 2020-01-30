@@ -391,13 +391,16 @@ export class RuleChain extends LogicRule {
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
-    if (result.some(res => res !== true)) {
+    if (result.slice(-1).some(res => res !== true)) {
       const customError = result.find(res => res instanceof Error)
       return customError || false
     } else {
       return true
     }
   }
+
+  static isBreak = (res: any) => res !== true
+  public isBreak = RuleChain.isBreak
 
   /**
    *
@@ -420,7 +423,7 @@ export class RuleChain extends LogicRule {
     const tasks = rules.reduce<Promise<IRuleResult[]>>(
       (acc, rule) =>
         acc.then(res => {
-          if (res.some(r => r !== true)) {
+          if (res.some(this.isBreak)) {
             return res
           } else {
             return rule
@@ -433,6 +436,18 @@ export class RuleChain extends LogicRule {
 
     return tasks
   }
+}
+
+export class RuleRaceChain extends RuleChain {
+  constructor(rule: RuleChain) {
+    if (0) {
+      super([])
+    }
+    rule.isBreak = RuleRaceChain.isBreak
+    return rule
+  }
+
+  static isBreak = (res: any) => res === true
 }
 
 export class RuleNot extends LogicRule {

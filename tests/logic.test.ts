@@ -3,7 +3,7 @@ import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule, allow, deny, and, or, not } from '../src'
 import { LogicRule } from '../src/rules'
-import { chain } from '../src/constructors'
+import { chain, race } from '../src/constructors'
 
 describe('logic rules', () => {
   test('allow, deny work as expeted', async () => {
@@ -184,6 +184,89 @@ describe('logic rules', () => {
     expect(allowRuleSequence.toString()).toEqual(['A', 'B', 'C'].toString())
     expect(denyRuleCount).toEqual(1)
     expect(ruleWithErrorCount).toEqual(1)
+    expect(res.errors.length).toBe(2)
+  })
+
+  test('race chain works as expected', async () => {
+    const typeDefs = `
+      type Query {
+        allow: String
+        deny: String
+        ruleError: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        allow: () => 'allow',
+        deny: () => 'deny',
+        ruleError: () => 'error',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    let allowRuleSequence = []
+    const denyRuleA = rule()(() => {
+      allowRuleSequence.push('A')
+      return false
+    })
+    const allowRuleB = rule()(() => {
+      allowRuleSequence.push('B')
+      return true
+    })
+    const denyRuleC = rule()(() => {
+      allowRuleSequence.push('C')
+      return true
+    })
+    const allowRuleD = rule()(() => {
+      allowRuleSequence.push('D')
+      return true
+    })
+    let denyRuleCount = 0
+    const denyRule = rule({})(() => {
+      denyRuleCount += 1
+      return false
+    })
+    let ruleWithErrorCount = 0
+    const ruleWithError = rule()(() => {
+      ruleWithErrorCount += 1
+      throw new Error('error')
+    })
+
+    const permissions = shield({
+      Query: {
+        allow: race(chain(denyRuleA, allowRuleB, denyRuleC, allowRuleD)),
+        deny: race(chain(denyRule, denyRule, denyRule)),
+        ruleError: race(chain(ruleWithError, ruleWithError, ruleWithError)),
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        allow
+        deny
+        ruleError
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toEqual({
+      allow: 'allow',
+      deny: null,
+      ruleError: null,
+    })
+    expect(allowRuleSequence.toString()).toEqual(['A', 'B'].toString())
+    expect(denyRuleCount).toEqual(3)
+    expect(ruleWithErrorCount).toEqual(3)
     expect(res.errors.length).toBe(2)
   })
 

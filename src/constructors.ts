@@ -9,6 +9,7 @@ import {
   RuleFalse,
   InputRule,
   RuleChain,
+  RuleRaceChain,
 } from './rules'
 
 /**
@@ -96,6 +97,17 @@ export const and = (...rules: ShieldRule[]): RuleAnd => {
  */
 export const chain = (...rules: ShieldRule[]): RuleChain => {
   return new RuleChain(rules)
+}
+
+/**
+ *
+ * @param rule
+ *
+ * Logical operator and serves as a wrapper for and operation.
+ *
+ */
+export const race = (rule: RuleChain): RuleRaceChain => {
+  return new RuleRaceChain(rule)
 }
 
 /**
