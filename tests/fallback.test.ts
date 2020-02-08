@@ -14,7 +14,7 @@ describe('fallbackError correctly handles errors', () => {
     `
     const resolvers = {
       Query: {
-        test: () => {
+        test: async () => {
           throw new Error()
         },
       },
