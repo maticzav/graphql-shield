@@ -6211,6 +6211,13 @@ graphql-middleware@4.0.1:
   dependencies:
     graphql-tools "^4.0.5"
 
+graphql-middleware@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/graphql-middleware/-/graphql-middleware-4.0.2.tgz#eb589bf428e1795e48cd6a3cfeeba0807b996ebd"
+  integrity sha512-ESVDvMXeN00S1BNsjNS18uExcR16J8zbT31CuKcpyeBa7IMbidG0Pnqnu5P1wKkJLmPmKOfCljWlhXpD/Fawqg==
+  dependencies:
+    graphql-tools "^4.0.5"
+
 graphql-playground-html@1.6.12:
   version "1.6.12"
   resolved "https://registry.yarnpkg.com/graphql-playground-html/-/graphql-playground-html-1.6.12.tgz#8b3b34ab6013e2c877f0ceaae478fafc8ca91b85"
