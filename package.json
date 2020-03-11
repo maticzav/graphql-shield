@@ -34,7 +34,7 @@
     "coveralls": "3.0.9",
     "docz": "2.2.0",
     "docz-theme-default": "1.2.0",
-    "graphql": "14.5.0",
+    "graphql": "14.5.8",
     "graphql-middleware": "4.0.2",
     "graphql-shield-rules": "0.0.1",
     "graphql-tools": "4.0.6",
