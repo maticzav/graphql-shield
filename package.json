@@ -33,7 +33,7 @@
     "apollo-server": "2.11.0",
     "codecov": "3.6.5",
     "coveralls": "3.0.9",
-    "docz": "0.13.7",
+    "docz": "2.2.0",
     "docz-theme-default": "0.13.7",
     "graphql": "14.6.0",
     "graphql-middleware": "4.0.2",
