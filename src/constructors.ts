@@ -9,6 +9,7 @@ import {
   RuleFalse,
   InputRule,
   RuleChain,
+  RuleRace,
 } from './rules'
 
 /**
@@ -102,6 +103,17 @@ export const chain = (...rules: ShieldRule[]): RuleChain => {
  *
  * @param rules
  *
+ * Logical operator and serves as a wrapper for and operation.
+ *
+ */
+export const race = (...rules: ShieldRule[]): RuleRace => {
+  return new RuleRace(rules)
+}
+
+/**
+ *
+ * @param rules
+ *
  * Logical operator or serves as a wrapper for or operation.
  *
  */
@@ -116,8 +128,9 @@ export const or = (...rules: ShieldRule[]): RuleOr => {
  * Logical operator not serves as a wrapper for not operation.
  *
  */
-export const not = (rule: ShieldRule): RuleNot => {
-  return new RuleNot(rule)
+export const not = (rule: ShieldRule, error?: string | Error): RuleNot => {
+  if (typeof error === 'string') return new RuleNot(rule, new Error(error))
+  return new RuleNot(rule, error)
 }
 
 /**

@@ -15,6 +15,7 @@ import {
 } from './types'
 import { isLogicRule } from './utils'
 import { GraphQLResolveInfo } from 'graphql'
+import { isUndefined } from 'util'
 
 export class Rule implements IRule {
   readonly name: string
@@ -212,7 +213,11 @@ export class InputRule<Schema> extends Rule {
     schema: Yup.Schema<Schema>,
     options?: Yup.ValidateOptions,
   ) {
-    const validationFunction = (parent: object, args: object) =>
+    const validationFunction: IRuleFunction = (
+      parent: object,
+      args: object,
+      ctx: IShieldContext,
+    ) =>
       schema
         .validate(args, options)
         .then(() => true)
@@ -230,14 +235,7 @@ export class LogicRule implements ILogicRule {
   }
 
   /**
-   *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
    * By default logic rule resolves to false.
-   *
    */
   async resolve(
     parent: object,
@@ -250,14 +248,7 @@ export class LogicRule implements ILogicRule {
   }
 
   /**
-   *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
    * Evaluates all the rules.
-   *
    */
   async evaluate(
     parent: object,
@@ -275,14 +266,15 @@ export class LogicRule implements ILogicRule {
   }
 
   /**
-   *
    * Returns rules in a logic rule.
-   *
    */
   getRules() {
     return this.rules
   }
 
+  /**
+   * Extracts fragments from the defined rules.
+   */
   extractFragments(): IFragment[] {
     const fragments = this.rules.reduce<IFragment[]>((fragments, rule) => {
       if (isLogicRule(rule)) {
@@ -307,14 +299,7 @@ export class RuleOr extends LogicRule {
   }
 
   /**
-   *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
    * Makes sure that at least one of them has evaluated to true.
-   *
    */
   async resolve(
     parent: object,
@@ -340,14 +325,7 @@ export class RuleAnd extends LogicRule {
   }
 
   /**
-   *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
    * Makes sure that all of them have resolved to true.
-   *
    */
   async resolve(
     parent: object,
@@ -373,14 +351,7 @@ export class RuleChain extends LogicRule {
   }
 
   /**
-   *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
    * Makes sure that all of them have resolved to true.
-   *
    */
   async resolve(
     parent: object,
@@ -400,14 +371,7 @@ export class RuleChain extends LogicRule {
   }
 
   /**
-   *
-   * @param parent
-   * @param args
-   * @param ctx
-   * @param info
-   *
    * Evaluates all the rules.
-   *
    */
   async evaluate(
     parent: object,
@@ -417,27 +381,84 @@ export class RuleChain extends LogicRule {
     options: IOptions,
   ): Promise<IRuleResult[]> {
     const rules = this.getRules()
-    const tasks = rules.reduce<Promise<IRuleResult[]>>(
-      (acc, rule) =>
-        acc.then(res => {
-          if (res.some(r => r !== true)) {
-            return res
-          } else {
-            return rule
-              .resolve(parent, args, ctx, info, options)
-              .then(task => res.concat(task))
-          }
-        }),
-      Promise.resolve([]),
-    )
 
-    return tasks
+    return iterate(rules)
+
+    async function iterate([rule, ...otherRules]: ShieldRule[]): Promise<
+      IRuleResult[]
+    > {
+      if (isUndefined(rule)) return []
+      return rule.resolve(parent, args, ctx, info, options).then(res => {
+        if (res !== true) {
+          return [res]
+        } else {
+          return iterate(otherRules).then(ress => ress.concat(res))
+        }
+      })
+    }
+  }
+}
+
+export class RuleRace extends LogicRule {
+  constructor(rules: ShieldRule[]) {
+    super(rules)
+  }
+
+  /**
+   * Makes sure that at least one of them resolved to true.
+   */
+  async resolve(
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
+    options: IOptions,
+  ): Promise<IRuleResult> {
+    const result = await this.evaluate(parent, args, ctx, info, options)
+
+    if (result.some(res => res === true)) {
+      return true
+    } else {
+      const customError = result.find(res => res instanceof Error)
+      return customError || false
+    }
+  }
+
+  /**
+   * Evaluates all the rules.
+   */
+  async evaluate(
+    parent: object,
+    args: object,
+    ctx: IShieldContext,
+    info: GraphQLResolveInfo,
+    options: IOptions,
+  ): Promise<IRuleResult[]> {
+    const rules = this.getRules()
+
+    return iterate(rules)
+
+    async function iterate([rule, ...otherRules]: ShieldRule[]): Promise<
+      IRuleResult[]
+    > {
+      if (isUndefined(rule)) return []
+      return rule.resolve(parent, args, ctx, info, options).then(res => {
+        if (res === true) {
+          return [res]
+        } else {
+          return iterate(otherRules).then(ress => ress.concat(res))
+        }
+      })
+    }
   }
 }
 
 export class RuleNot extends LogicRule {
-  constructor(rule: ShieldRule) {
+  error?: Error
+
+  constructor(rule: ShieldRule, error?: Error) {
     super([rule])
+    this.error = error
   }
 
   /**
@@ -460,10 +481,11 @@ export class RuleNot extends LogicRule {
     const [res] = await this.evaluate(parent, args, ctx, info, options)
 
     if (res instanceof Error) {
-      return res
+      return true
     } else if (res !== true) {
       return true
     } else {
+      if (this.error) return this.error
       return false
     }
   }

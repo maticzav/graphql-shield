@@ -13,8 +13,6 @@
 
 GraphQL Shield helps you create a permission layer for your application. Using an intuitive rule-API, you'll gain the power of the shield engine on every request and reduce the load time of every request with smart caching. This way you can make sure your application will remain quick, and no internal data will be exposed.
 
-[![Sponsored By GraphCMS](https://github.com/maticzav/graphql-shield/raw/master/media/graphcms.svg?sanitize=true)](https://graphcms.com/?ref=maticzav)
-
 Try building a groceries shop to better understand the benefits of GraphQL Shield! [Banana &Co.](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) 🍏🍌🍓.
 
 Explore common receipts and learn about advanced GraphQL! [GraphQL Shield 3.0](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) ⚔️🛡🐴.
@@ -197,8 +195,10 @@ function inputRule(name?: string): (yup: Yup => Yup.Schema) => Rule
 
 /* Logic */
 function and(...rules: IRule[]): LogicRule
+function chain(...rules: IRule[]): LogicRule
 function or(...rules: IRule[]): LogicRule
-function not(rule: IRule): LogicRule
+function race(...rules: IRule[]): LogicRule
+function not(rule: IRule, error?: string | Error): LogicRule
 const allow: LogicRule
 const deny: LogicRule
 
@@ -457,27 +457,33 @@ const isEmailEmail = inputRule()(
 
 ### Logic Rules
 
-#### `and`, `or`, `not`, `chain`
+#### `and`, `or`, `not`, `chain`, `race`
 
 > `and`, `or` and `not` allow you to nest rules in logic operations.
 
 ##### `and` rule
 
-`And` rule allows access only if all sub rules used return `true`.
+`and` rule allows access only if all sub rules used return `true`.
 
 ##### `chain` rule
 
-`Chain` rule allows you to chain the rules, meaning that rules won't be executed all at once, but one by one until one fails or all pass.
+`chain` rule allows you to chain the rules, meaning that rules won't be executed all at once, but one by one until one fails or all pass.
 
 > The left-most rule is executed first.
 
 ##### `or` rule
 
-`Or` rule allows access if at least one sub rule returns `true` and no rule throws an error.
+`or` rule allows access if at least one sub rule returns `true` and no rule throws an error.
+
+##### `race` rule
+
+`race` rule allows you to chain the rules so that execution stops once one of them returns `true`.
 
 ##### not
 
-`Not` works as usual not in code works.
+`not` works as usual not in code works.
+
+> You may also add a custom error message as the second parameter `not(rule, error)`.
 
 ```tsx
 import { shield, rule, and, or } from 'graphql-shield'

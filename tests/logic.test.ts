@@ -3,7 +3,7 @@ import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from 'graphql-tools'
 import { shield, rule, allow, deny, and, or, not } from '../src'
 import { LogicRule } from '../src/rules'
-import { chain } from '../src/constructors'
+import { chain, race } from '../src/constructors'
 
 describe('logic rules', () => {
   test('allow, deny work as expeted', async () => {
@@ -187,6 +187,85 @@ describe('logic rules', () => {
     expect(res.errors.length).toBe(2)
   })
 
+  test('race chain works as expected', async () => {
+    const typeDefs = `
+      type Query {
+        allow: String
+        deny: String
+        ruleError: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        allow: () => 'allow',
+        deny: () => 'deny',
+        ruleError: () => 'error',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    let allowRuleSequence = []
+    const denyRuleA = rule()(() => {
+      allowRuleSequence.push('A')
+      return false
+    })
+    const allowRuleB = rule()(() => {
+      allowRuleSequence.push('B')
+      return true
+    })
+    const allowRuleC = rule()(() => {
+      allowRuleSequence.push('C')
+      return true
+    })
+    let denyRuleCount = 0
+    const denyRule = rule({})(() => {
+      denyRuleCount += 1
+      return false
+    })
+    let ruleWithErrorCount = 0
+    const ruleWithError = rule()(() => {
+      ruleWithErrorCount += 1
+      throw new Error('error')
+    })
+
+    const permissions = shield({
+      Query: {
+        allow: race(denyRuleA, allowRuleB, allowRuleC),
+        deny: race(denyRule, denyRule, denyRule),
+        ruleError: race(ruleWithError, ruleWithError, ruleWithError),
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        allow
+        deny
+        ruleError
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toEqual({
+      allow: 'allow',
+      deny: null,
+      ruleError: null,
+    })
+    expect(allowRuleSequence.toString()).toEqual(['A', 'B'].toString())
+    expect(denyRuleCount).toEqual(3)
+    expect(ruleWithErrorCount).toEqual(3)
+    expect(res.errors.length).toBe(2)
+  })
+
   test('or works as expected', async () => {
     const typeDefs = `
       type Query {
@@ -307,14 +386,54 @@ describe('logic rules', () => {
       deny: null,
       ruleError: 'ruleError',
       resolverError: null,
-      customRuleError: null,
-      customRuleErrorString: null,
+      customRuleError: 'customRuleError',
+      customRuleErrorString: 'customRuleErrorString',
     })
     expect(res.errors.map(err => err.message)).toEqual([
       'Not Authorised!',
       'Not Authorised!',
-      'error_pass',
-      'error_string_pass',
+    ])
+  })
+
+  test('not returns custom error', async () => {
+    const typeDefs = `
+      type Query {
+        not: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        not: () => 'not',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const permissions = shield({
+      Query: {
+        not: not(allow, 'This is a custom not message.'),
+      },
+    })
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        not
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    expect(res.data).toEqual({
+      not: null,
+    })
+    expect(res.errors.map(err => err.message)).toEqual([
+      'This is a custom not message.',
     ])
   })
 })
