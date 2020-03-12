@@ -7,6 +7,7 @@ import {
   IOptionsConstructor,
   ShieldRule,
   IHashFunction,
+  IFallbackErrorType,
 } from './types'
 import { generateMiddlewareGeneratorFromRuleTree } from './generator'
 import { allow } from './constructors'
@@ -29,9 +30,9 @@ function normalizeOptions(options: IOptionsConstructor): IOptions {
     debug: options.debug !== undefined ? options.debug : false,
     allowExternalErrors: withDefault(false)(options.allowExternalErrors),
     fallbackRule: withDefault<ShieldRule>(allow)(options.fallbackRule),
-    fallbackError: withDefault(new Error('Not Authorised!'))(
-      options.fallbackError,
-    ),
+    fallbackError: withDefault<IFallbackErrorType>(
+      new Error('Not Authorised!'),
+    )(options.fallbackError),
     hashFunction: withDefault<IHashFunction>(hash)(options.hashFunction),
   }
 }

@@ -69,6 +69,9 @@ function generateFieldMiddlewareFromRule(
       if (res === true) {
         return await resolve(parent, args, ctx, info)
       } else if (res === false) {
+        if (typeof options.fallbackError === 'function') {
+          return await options.fallbackError(null, parent, args, ctx, info)
+        }
         return options.fallbackError
       } else {
         return res
@@ -79,6 +82,9 @@ function generateFieldMiddlewareFromRule(
       } else if (options.allowExternalErrors) {
         return err
       } else {
+        if (typeof options.fallbackError === 'function') {
+          return await options.fallbackError(err, parent, args, ctx, info)
+        }
         return options.fallbackError
       }
     }
