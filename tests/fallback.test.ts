@@ -146,6 +146,102 @@ describe('fallbackError correctly handles errors', () => {
     expect(res.data).toBeNull()
     expect(res.errors[0].message).toBe(fallbackMessage)
   })
+
+  test('error in rule can be mapped.', async () => {
+    /* Schema */
+
+    const typeDefs = `
+      type Query {
+        test: String!
+      }
+    `
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers: {} })
+
+    /* Permissions */
+
+    const fallbackError = () => new Error('fallback')
+
+    const allow = rule()(() => {
+      throw new Error()
+    })
+
+    const permissions = shield(
+      {
+        Query: allow,
+      },
+      {
+        fallbackError,
+      },
+    )
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        test
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toBeNull()
+    expect(res.errors[0].message).toBe(fallbackError().message)
+  })
+
+  test('error in resolver can be mapped.', async () => {
+    /* Schema */
+
+    const typeDefs = `
+      type Query {
+        test: String!
+      }
+    `
+    const resolvers = {
+      Query: {
+        test: async () => {
+          throw new Error()
+        },
+      },
+    }
+
+    const schema = makeExecutableSchema({
+      typeDefs,
+      resolvers,
+    })
+
+    /* Permissions */
+
+    const fallbackError = () => new Error('fallback')
+
+    const permissions = shield(
+      {
+        Query: allow,
+      },
+      {
+        fallbackError,
+      },
+    )
+
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+
+    const query = `
+      query {
+        test
+      }
+    `
+    const res = await graphql(schemaWithPermissions, query)
+
+    /* Tests */
+
+    expect(res.data).toBeNull()
+    expect(res.errors[0].message).toBe(fallbackError().message)
+  })
 })
 
 describe('external errors can be controled correctly', () => {
