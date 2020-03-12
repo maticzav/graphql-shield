@@ -242,13 +242,23 @@ type IRules = ShieldRule | IRuleTypeMap
 
 type IHashFunction = (arg: { parent: any; args: any }) => string
 
+type IFallbackErrorMapperType = (
+  err: unknown,
+  parent: object,
+  args: object,
+  ctx: IShieldContext,
+  info: GraphQLResolveInfo,
+) => Promise<Error> | Error
+
+export type IFallbackErrorType = Error | IFallbackErrorMapperType
+
 // Generator Options
 
 interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
-  fallbackError?: string | Error
+  fallbackError?: string | IFallbackErrorType
   hashFunction?: IHashFunction
 }
 
