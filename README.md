@@ -242,13 +242,23 @@ type IRules = ShieldRule | IRuleTypeMap
 
 type IHashFunction = (arg: { parent: any; args: any }) => string
 
+type IFallbackErrorMapperType = (
+  err: unknown,
+  parent: object,
+  args: object,
+  ctx: IShieldContext,
+  info: GraphQLResolveInfo,
+) => Promise<Error> | Error
+
+export type IFallbackErrorType = Error | IFallbackErrorMapperType
+
 // Generator Options
 
 interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
   fallbackRule?: ShieldRule
-  fallbackError?: string | Error
+  fallbackError?: string | IFallbackErrorType
   hashFunction?: IHashFunction
 }
 
@@ -537,6 +547,32 @@ const permissions = shield(
   },
   {
     fallbackError: new CustomError('You are something special!'),
+  },
+)
+
+const permissions = shield(
+  {
+    Query: {
+      items: allow,
+    },
+  },
+  {
+    fallbackError: (err, parent, args, context, info) => {
+      if (thrownThing instanceof ApolloError) {
+        // expected errors
+        return thrownThing
+      } else if (thrownThing instanceof Error) {
+        // unexpected errors
+        console.error(thrownThing)
+        await Sentry.report(thrownThing)
+        return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
+      } else {
+        // what the hell got thrown
+        console.error('The resolver threw something that is not an error.')
+        console.error(thrownThing)
+        return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
+      }
+    },
   },
 )
 ```
