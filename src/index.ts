@@ -7,6 +7,7 @@ export {
   deny,
   and,
   chain,
+  race,
   or,
   not,
 } from './constructors'
