@@ -1,5 +1,5 @@
-const {LoginInput} = require('./login-input');
+const { LoginInput } = require('./login-input')
 
 module.exports = {
-	inputTypes: [LoginInput]
-};
+  inputTypes: [LoginInput],
+}

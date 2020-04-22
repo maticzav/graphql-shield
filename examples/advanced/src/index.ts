@@ -7,7 +7,7 @@ const server = new GraphQLServer({
   typeDefs: './src/schema.graphql',
   resolvers,
   middlewares: [permissions],
-  context: req => ({
+  context: (req) => ({
     ...req,
     db: new Prisma({
       endpoint: process.env.PRISMA_ENDPOINT,

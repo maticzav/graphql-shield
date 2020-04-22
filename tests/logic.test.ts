@@ -389,7 +389,7 @@ describe('logic rules', () => {
       customRuleError: 'customRuleError',
       customRuleErrorString: 'customRuleErrorString',
     })
-    expect(res.errors.map(err => err.message)).toEqual([
+    expect(res.errors.map((err) => err.message)).toEqual([
       'Not Authorised!',
       'Not Authorised!',
     ])
@@ -432,7 +432,7 @@ describe('logic rules', () => {
     expect(res.data).toEqual({
       not: null,
     })
-    expect(res.errors.map(err => err.message)).toEqual([
+    expect(res.errors.map((err) => err.message)).toEqual([
       'This is a custom not message.',
     ])
   })

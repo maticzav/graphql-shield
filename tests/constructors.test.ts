@@ -85,7 +85,7 @@ describe('input rules constructor', () => {
     const name = Math.random().toString()
     let schema: Yup.ObjectSchema<{}>
 
-    const rule = inputRule(name)(yup => {
+    const rule = inputRule(name)((yup) => {
       schema = yup.object().shape({})
       return schema
     })
@@ -100,7 +100,7 @@ describe('input rules constructor', () => {
 
     let schema: Yup.ObjectSchema<{}>
 
-    const rule = inputRule()(yup => {
+    const rule = inputRule()((yup) => {
       schema = yup.object().shape({})
       return schema
     })
@@ -116,7 +116,7 @@ describe('input rules constructor', () => {
     let schema: Yup.ObjectSchema<{}>
     let options = { abortEarly: false }
 
-    const rule = inputRule()(yup => {
+    const rule = inputRule()((yup) => {
       schema = yup.object().shape({})
       return schema
     }, options)

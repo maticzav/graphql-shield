@@ -4,34 +4,158 @@ import { Options } from 'graphql-binding'
 import { makePrismaBindingClass, BasePrismaOptions } from 'prisma-binding'
 
 export interface Query {
-    users: <T = User[]>(args: { where?: UserWhereInput, orderBy?: UserOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    posts: <T = Post[]>(args: { where?: PostWhereInput, orderBy?: PostOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    user: <T = User | null>(args: { where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    post: <T = Post | null>(args: { where: PostWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    usersConnection: <T = UserConnection>(args: { where?: UserWhereInput, orderBy?: UserOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    postsConnection: <T = PostConnection>(args: { where?: PostWhereInput, orderBy?: PostOrderByInput, skip?: Int, after?: String, before?: String, first?: Int, last?: Int }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    node: <T = Node | null>(args: { id: ID_Output }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> 
-  }
+  users: <T = User[]>(
+    args: {
+      where?: UserWhereInput
+      orderBy?: UserOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  posts: <T = Post[]>(
+    args: {
+      where?: PostWhereInput
+      orderBy?: PostOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  user: <T = User | null>(
+    args: { where: UserWhereUniqueInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  post: <T = Post | null>(
+    args: { where: PostWhereUniqueInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  usersConnection: <T = UserConnection>(
+    args: {
+      where?: UserWhereInput
+      orderBy?: UserOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  postsConnection: <T = PostConnection>(
+    args: {
+      where?: PostWhereInput
+      orderBy?: PostOrderByInput
+      skip?: Int
+      after?: String
+      before?: String
+      first?: Int
+      last?: Int
+    },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  node: <T = Node | null>(
+    args: { id: ID_Output },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+}
 
 export interface Mutation {
-    createUser: <T = User>(args: { data: UserCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    createPost: <T = Post>(args: { data: PostCreateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    updateUser: <T = User | null>(args: { data: UserUpdateInput, where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    updatePost: <T = Post | null>(args: { data: PostUpdateInput, where: PostWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    deleteUser: <T = User | null>(args: { where: UserWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    deletePost: <T = Post | null>(args: { where: PostWhereUniqueInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    upsertUser: <T = User>(args: { where: UserWhereUniqueInput, create: UserCreateInput, update: UserUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    upsertPost: <T = Post>(args: { where: PostWhereUniqueInput, create: PostCreateInput, update: PostUpdateInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    updateManyUsers: <T = BatchPayload>(args: { data: UserUpdateInput, where?: UserWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    updateManyPosts: <T = BatchPayload>(args: { data: PostUpdateInput, where?: PostWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    deleteManyUsers: <T = BatchPayload>(args: { where?: UserWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> ,
-    deleteManyPosts: <T = BatchPayload>(args: { where?: PostWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<T> 
-  }
+  createUser: <T = User>(
+    args: { data: UserCreateInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  createPost: <T = Post>(
+    args: { data: PostCreateInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  updateUser: <T = User | null>(
+    args: { data: UserUpdateInput; where: UserWhereUniqueInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  updatePost: <T = Post | null>(
+    args: { data: PostUpdateInput; where: PostWhereUniqueInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  deleteUser: <T = User | null>(
+    args: { where: UserWhereUniqueInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  deletePost: <T = Post | null>(
+    args: { where: PostWhereUniqueInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  upsertUser: <T = User>(
+    args: {
+      where: UserWhereUniqueInput
+      create: UserCreateInput
+      update: UserUpdateInput
+    },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  upsertPost: <T = Post>(
+    args: {
+      where: PostWhereUniqueInput
+      create: PostCreateInput
+      update: PostUpdateInput
+    },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  updateManyUsers: <T = BatchPayload>(
+    args: { data: UserUpdateInput; where?: UserWhereInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  updateManyPosts: <T = BatchPayload>(
+    args: { data: PostUpdateInput; where?: PostWhereInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  deleteManyUsers: <T = BatchPayload>(
+    args: { where?: UserWhereInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+  deleteManyPosts: <T = BatchPayload>(
+    args: { where?: PostWhereInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<T>
+}
 
 export interface Subscription {
-    user: <T = UserSubscriptionPayload | null>(args: { where?: UserSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> ,
-    post: <T = PostSubscriptionPayload | null>(args: { where?: PostSubscriptionWhereInput }, info?: GraphQLResolveInfo | string, options?: Options) => Promise<AsyncIterator<T>> 
-  }
+  user: <T = UserSubscriptionPayload | null>(
+    args: { where?: UserSubscriptionWhereInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<AsyncIterator<T>>
+  post: <T = PostSubscriptionPayload | null>(
+    args: { where?: PostSubscriptionWhereInput },
+    info?: GraphQLResolveInfo | string,
+    options?: Options,
+  ) => Promise<AsyncIterator<T>>
+}
 
 export interface Exists {
   User: (where?: UserWhereInput) => Promise<boolean>
@@ -43,22 +167,36 @@ export interface Prisma {
   mutation: Mutation
   subscription: Subscription
   exists: Exists
-  request: <T = any>(query: string, variables?: {[key: string]: any}) => Promise<T>
-  delegate(operation: 'query' | 'mutation', fieldName: string, args: {
-    [key: string]: any;
-}, infoOrQuery?: GraphQLResolveInfo | string, options?: Options): Promise<any>;
-delegateSubscription(fieldName: string, args?: {
-    [key: string]: any;
-}, infoOrQuery?: GraphQLResolveInfo | string, options?: Options): Promise<AsyncIterator<any>>;
-getAbstractResolvers(filterSchema?: GraphQLSchema | string): IResolvers;
+  request: <T = any>(
+    query: string,
+    variables?: { [key: string]: any },
+  ) => Promise<T>
+  delegate(
+    operation: 'query' | 'mutation',
+    fieldName: string,
+    args: {
+      [key: string]: any
+    },
+    infoOrQuery?: GraphQLResolveInfo | string,
+    options?: Options,
+  ): Promise<any>
+  delegateSubscription(
+    fieldName: string,
+    args?: {
+      [key: string]: any
+    },
+    infoOrQuery?: GraphQLResolveInfo | string,
+    options?: Options,
+  ): Promise<AsyncIterator<any>>
+  getAbstractResolvers(filterSchema?: GraphQLSchema | string): IResolvers
 }
 
 export interface BindingConstructor<T> {
-  new(options: BasePrismaOptions): T
+  new (options: BasePrismaOptions): T
 }
 /**
  * Type Defs
-*/
+ */
 
 const typeDefs = `type AggregatePost {
   count: Int!
@@ -660,43 +798,43 @@ input UserWhereUniqueInput {
 }
 `
 
-export const Prisma = makePrismaBindingClass<BindingConstructor<Prisma>>({typeDefs})
+export const Prisma = makePrismaBindingClass<BindingConstructor<Prisma>>({
+  typeDefs,
+})
 
 /**
  * Types
-*/
+ */
 
-export type UserOrderByInput =   'id_ASC' |
-  'id_DESC' |
-  'name_ASC' |
-  'name_DESC' |
-  'role_ASC' |
-  'role_DESC' |
-  'updatedAt_ASC' |
-  'updatedAt_DESC' |
-  'createdAt_ASC' |
-  'createdAt_DESC'
+export type UserOrderByInput =
+  | 'id_ASC'
+  | 'id_DESC'
+  | 'name_ASC'
+  | 'name_DESC'
+  | 'role_ASC'
+  | 'role_DESC'
+  | 'updatedAt_ASC'
+  | 'updatedAt_DESC'
+  | 'createdAt_ASC'
+  | 'createdAt_DESC'
 
-export type PostOrderByInput =   'id_ASC' |
-  'id_DESC' |
-  'isPublished_ASC' |
-  'isPublished_DESC' |
-  'title_ASC' |
-  'title_DESC' |
-  'text_ASC' |
-  'text_DESC' |
-  'updatedAt_ASC' |
-  'updatedAt_DESC' |
-  'createdAt_ASC' |
-  'createdAt_DESC'
+export type PostOrderByInput =
+  | 'id_ASC'
+  | 'id_DESC'
+  | 'isPublished_ASC'
+  | 'isPublished_DESC'
+  | 'title_ASC'
+  | 'title_DESC'
+  | 'text_ASC'
+  | 'text_DESC'
+  | 'updatedAt_ASC'
+  | 'updatedAt_DESC'
+  | 'createdAt_ASC'
+  | 'createdAt_DESC'
 
-export type Role =   'ADMIN' |
-  'EDITOR' |
-  'CUSTOMER'
+export type Role = 'ADMIN' | 'EDITOR' | 'CUSTOMER'
 
-export type MutationType =   'CREATED' |
-  'UPDATED' |
-  'DELETED'
+export type MutationType = 'CREATED' | 'UPDATED' | 'DELETED'
 
 export interface PostCreateManyWithoutOwnerInput {
   create?: PostCreateWithoutOwnerInput[] | PostCreateWithoutOwnerInput
@@ -828,8 +966,12 @@ export interface PostUpdateManyWithoutOwnerInput {
   connect?: PostWhereUniqueInput[] | PostWhereUniqueInput
   disconnect?: PostWhereUniqueInput[] | PostWhereUniqueInput
   delete?: PostWhereUniqueInput[] | PostWhereUniqueInput
-  update?: PostUpdateWithWhereUniqueWithoutOwnerInput[] | PostUpdateWithWhereUniqueWithoutOwnerInput
-  upsert?: PostUpsertWithWhereUniqueWithoutOwnerInput[] | PostUpsertWithWhereUniqueWithoutOwnerInput
+  update?:
+    | PostUpdateWithWhereUniqueWithoutOwnerInput[]
+    | PostUpdateWithWhereUniqueWithoutOwnerInput
+  upsert?:
+    | PostUpsertWithWhereUniqueWithoutOwnerInput[]
+    | PostUpsertWithWhereUniqueWithoutOwnerInput
 }
 
 export interface UserUpdateOneWithoutPostsInput {
