@@ -221,7 +221,7 @@ export class InputRule<Schema> extends Rule {
       schema
         .validate(args, options)
         .then(() => true)
-        .catch(err => err)
+        .catch((err) => err)
 
     super(name, validationFunction, { cache: 'strict', fragment: undefined })
   }
@@ -258,7 +258,7 @@ export class LogicRule implements ILogicRule {
     options: IOptions,
   ): Promise<IRuleResult[]> {
     const rules = this.getRules()
-    const tasks = rules.map(rule =>
+    const tasks = rules.map((rule) =>
       rule.resolve(parent, args, ctx, info, options),
     )
 
@@ -310,8 +310,8 @@ export class RuleOr extends LogicRule {
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
-    if (result.every(res => res !== true)) {
-      const customError = result.find(res => res instanceof Error)
+    if (result.every((res) => res !== true)) {
+      const customError = result.find((res) => res instanceof Error)
       return customError || false
     } else {
       return true
@@ -336,8 +336,8 @@ export class RuleAnd extends LogicRule {
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
-    if (result.some(res => res !== true)) {
-      const customError = result.find(res => res instanceof Error)
+    if (result.some((res) => res !== true)) {
+      const customError = result.find((res) => res instanceof Error)
       return customError || false
     } else {
       return true
@@ -362,8 +362,8 @@ export class RuleChain extends LogicRule {
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
-    if (result.some(res => res !== true)) {
-      const customError = result.find(res => res instanceof Error)
+    if (result.some((res) => res !== true)) {
+      const customError = result.find((res) => res instanceof Error)
       return customError || false
     } else {
       return true
@@ -388,11 +388,11 @@ export class RuleChain extends LogicRule {
       IRuleResult[]
     > {
       if (isUndefined(rule)) return []
-      return rule.resolve(parent, args, ctx, info, options).then(res => {
+      return rule.resolve(parent, args, ctx, info, options).then((res) => {
         if (res !== true) {
           return [res]
         } else {
-          return iterate(otherRules).then(ress => ress.concat(res))
+          return iterate(otherRules).then((ress) => ress.concat(res))
         }
       })
     }
@@ -416,10 +416,10 @@ export class RuleRace extends LogicRule {
   ): Promise<IRuleResult> {
     const result = await this.evaluate(parent, args, ctx, info, options)
 
-    if (result.some(res => res === true)) {
+    if (result.some((res) => res === true)) {
       return true
     } else {
-      const customError = result.find(res => res instanceof Error)
+      const customError = result.find((res) => res instanceof Error)
       return customError || false
     }
   }
@@ -442,11 +442,11 @@ export class RuleRace extends LogicRule {
       IRuleResult[]
     > {
       if (isUndefined(rule)) return []
-      return rule.resolve(parent, args, ctx, info, options).then(res => {
+      return rule.resolve(parent, args, ctx, info, options).then((res) => {
         if (res === true) {
           return [res]
         } else {
-          return iterate(otherRules).then(ress => ress.concat(res))
+          return iterate(otherRules).then((ress) => ress.concat(res))
         }
       })
     }

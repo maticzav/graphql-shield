@@ -22,7 +22,7 @@
   "dependencies": {
     "@types/yup": "0.26.37",
     "object-hash": "^2.0.3",
-    "yup": "^0.28.3"
+    "yup": "^0.28.4"
   },
   "devDependencies": {
     "@types/jest": "25.2.1",
@@ -41,7 +41,7 @@
     "husky": "4.2.5",
     "jest": "25.4.0",
     "npm-run-all": "4.1.5",
-    "prettier": "1.19.1",
+    "prettier": "2.0.5",
     "prettier-check": "2.0.0",
     "pretty-quick": "2.0.1",
     "remark-emoji": "2.1.0",

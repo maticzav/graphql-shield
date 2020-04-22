@@ -1,10 +1,10 @@
-const {prismaObjectType} = require('nexus-prisma');
+const { prismaObjectType } = require('nexus-prisma')
 
 const User = prismaObjectType({
-	name: 'User',
-	definition(t) {
-		t.prismaFields({filter: ['password']});
-	}
-});
+  name: 'User',
+  definition(t) {
+    t.prismaFields({ filter: ['password'] })
+  },
+})
 
-module.exports = {User};
+module.exports = { User }

@@ -349,7 +349,7 @@ test('Customize hash function', async () => {
 
   const allowMock = jest.fn().mockResolvedValue(true)
 
-  const hashFunction: IHashFunction = jest.fn(opts => JSON.stringify(opts))
+  const hashFunction: IHashFunction = jest.fn((opts) => JSON.stringify(opts))
 
   const permissions = shield(
     {
