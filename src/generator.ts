@@ -80,12 +80,12 @@ function generateFieldMiddlewareFromRule(
       if (options.debug) {
         throw err
       } else if (options.allowExternalErrors) {
-        return err
+        throw err
       } else {
         if (typeof options.fallbackError === 'function') {
-          return await options.fallbackError(err, parent, args, ctx, info)
+          throw await options.fallbackError(err, parent, args, ctx, info)
         }
-        return options.fallbackError
+        throw options.fallbackError
       }
     }
   }
