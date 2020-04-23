@@ -5352,16 +5352,16 @@ cosmiconfig@^6.0.0:
     path-type "^4.0.0"
     yaml "^1.7.2"
 
-coveralls@3.0.13:
-  version "3.0.13"
-  resolved "https://registry.yarnpkg.com/coveralls/-/coveralls-3.0.13.tgz#64d8c99af3b8a771a2e6e5bcdf556c3c5061d29d"
-  integrity sha512-Bch6FJI4ebK6Mwr+DjFCJbb/RayNwn5pscSDE4Ux6cgjNkAcjdgGZBRfQnuYTt5tY81MqGK8m2r+xc5FDF513A==
+coveralls@3.0.14:
+  version "3.0.14"
+  resolved "https://registry.yarnpkg.com/coveralls/-/coveralls-3.0.14.tgz#a13c4729308e8bd1a284d7a3974eff72ce6e40c6"
+  integrity sha512-nEQqCHzxiFfu1dEHYxe7xrbF5vFmx122mTWIM+BkiAOmsWbSAcucNk8stELnNk2lS1biTUjFOCIf8v8ZN225IA==
   dependencies:
     js-yaml "^3.13.1"
     lcov-parse "^1.0.0"
     log-driver "^1.2.7"
     minimist "^1.2.5"
-    request "^2.88.0"
+    request "^2.88.2"
 
 create-ecdh@^4.0.0:
   version "4.0.3"
@@ -15519,7 +15519,7 @@ request-promise-native@^1.0.7:
     stealthy-require "^1.1.1"
     tough-cookie "^2.3.3"
 
-request@^2.88.0:
+request@^2.88.0, request@^2.88.2:
   version "2.88.2"
   resolved "https://registry.yarnpkg.com/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
