@@ -329,6 +329,8 @@ const admin = rule({ cache: 'no_cache' })(async (parent, args, ctx, info) => {
 
 ##### Custom Errors
 
+**Important: Shield will always return errors, never throw them.**
+
 Shield, by default, catches all errors thrown during resolver execution. This way we can be 100% sure none of your internal logic can be exposed to the client if it was not meant to be.
 
 To return custom error messages to your client, you can return error instead of throwing it. This way, Shield knows it's not a bug but rather a design decision under control. Besides returning an error you can also return a `string` representing a custom error message.
