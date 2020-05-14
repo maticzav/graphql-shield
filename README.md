@@ -17,7 +17,7 @@ Try building a groceries shop to better understand the benefits of GraphQL Shiel
 
 Explore common receipts and learn about advanced GraphQL! [GraphQL Shield 3.0](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) ⚔️🛡🐴.
 
-[![Sponsored By LabelSync](https://github.com/maticzav/graphql-shield/raw/master/media/labelsync.svg?sanitize=true)](https://label-sync.com)
+[![Sponsored By LabelSync](https://github.com/maticzav/graphql-shield/raw/master/media/labelsync.png)](https://label-sync.com)
 
 ## Features
 
