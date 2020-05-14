@@ -56,7 +56,7 @@ export function isRuleFunction(x: any): x is ShieldRule {
 export function isRuleFieldMap(x: any): x is IRuleFieldMap {
   return (
     typeof x === 'object' &&
-    Object.values(x).every(rule => isRuleFunction(rule))
+    Object.values(x).every((rule) => isRuleFunction(rule))
   )
 }
 
@@ -93,7 +93,7 @@ export function flattenObjectOf<T>(
  * @param fallback
  */
 export function withDefault<T>(fallback: T): (value: T | undefined) => T {
-  return value => {
+  return (value) => {
     if (value === undefined) return fallback
     return value
   }

@@ -1,3 +1,3 @@
-const {me} = require('./me');
+const { me } = require('./me')
 
-module.exports = {me};
+module.exports = { me }

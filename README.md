@@ -557,7 +557,7 @@ const permissions = shield(
     },
   },
   {
-    fallbackError: (err, parent, args, context, info) => {
+    fallbackError: (thrownThing, parent, args, context, info) => {
       if (thrownThing instanceof ApolloError) {
         // expected errors
         return thrownThing

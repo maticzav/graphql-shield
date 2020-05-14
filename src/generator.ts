@@ -143,8 +143,8 @@ function applyRuleToType(
     /* Validation */
 
     const fieldErrors = Object.keys(rules)
-      .filter(type => !Object.prototype.hasOwnProperty.call(fieldMap, type))
-      .map(field => `${type.name}.${field}`)
+      .filter((type) => !Object.prototype.hasOwnProperty.call(fieldMap, type))
+      .map((field) => `${type.name}.${field}`)
       .join(', ')
 
     if (fieldErrors.length > 0) {
@@ -200,7 +200,7 @@ function applyRuleToSchema(
   const typeMap = schema.getTypeMap()
 
   const middleware = Object.keys(typeMap)
-    .filter(type => !isIntrospectionType(typeMap[type]))
+    .filter((type) => !isIntrospectionType(typeMap[type]))
     .reduce((middleware, typeName) => {
       const type = typeMap[typeName]
 
@@ -243,7 +243,7 @@ function generateMiddlewareFromSchemaAndRuleTree(
     /* Validation */
 
     const typeErrors = Object.keys(rules)
-      .filter(type => !Object.prototype.hasOwnProperty.call(typeMap, type))
+      .filter((type) => !Object.prototype.hasOwnProperty.call(typeMap, type))
       .join(', ')
 
     if (typeErrors.length > 0) {
@@ -255,7 +255,7 @@ function generateMiddlewareFromSchemaAndRuleTree(
     // Generation
 
     const middleware = Object.keys(typeMap)
-      .filter(type => !isIntrospectionType(typeMap[type]))
+      .filter((type) => !isIntrospectionType(typeMap[type]))
       .reduce<IMiddleware>((middleware, typeName) => {
         const type = typeMap[typeName]
 

@@ -112,7 +112,7 @@ const server = GraphQLServer({
   typeDefs,
   resolvers,
   middlewares: [permissions],
-  context: req => ({
+  context: (req) => ({
     ...req,
     user: getUser(req),
   }),

@@ -79,7 +79,7 @@ const server = new GraphQLServer({
   typeDefs: './src/generated/prisma.graphql',
   resolvers: {},
   middlewares: [permissions, forwardMiddleware],
-  context: req => ({
+  context: (req) => ({
     ...req,
     db: new Prisma({
       endpoint: process.env.PRISMA_ENDPOINT,

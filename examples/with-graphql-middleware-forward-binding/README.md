@@ -25,11 +25,13 @@ query AdminSeeAllPosts {
 }
 
 mutation CreatePost {
-  createPost(data: {
-    title: "Let's do some magic!"
-    text: "Dude, you ainn no Harry Potter!"
-    owner: { connect: { name: "anny" }}
-  }) {
+  createPost(
+    data: {
+      title: "Let's do some magic!"
+      text: "Dude, you ainn no Harry Potter!"
+      owner: { connect: { name: "anny" } }
+    }
+  ) {
     id
   }
 }
@@ -38,4 +40,3 @@ mutation CreatePost {
 ## License
 
 MIT @ Matic Zavadlal
-
