@@ -17,6 +17,8 @@ Try building a groceries shop to better understand the benefits of GraphQL Shiel
 
 Explore common receipts and learn about advanced GraphQL! [GraphQL Shield 3.0](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) ⚔️🛡🐴.
 
+[![Sponsored By LabelSync](https://github.com/maticzav/graphql-shield/raw/master/media/labelsync.svg?sanitize=true)](https://label-sync.com)
+
 ## Features
 
 - ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
@@ -141,7 +143,7 @@ const server = new GraphQLServer({
   typeDefs,
   resolvers,
   middlewares: [permissions],
-  context: req => ({
+  context: (req) => ({
     ...req,
     user: getUser(req),
   }),
@@ -287,7 +289,7 @@ const admin = rule({ cache: 'contextual' })(
 )
 
 // With external data
-const admin = bool =>
+const admin = (bool) =>
   rule(`name-${bool}`, { cache: 'contextual' })(
     async (parent, args, ctx, info) => bool,
   )
@@ -452,12 +454,9 @@ Note that Yup receives entire `args` object, therefore, you should start composi
 
 ```ts
 const isEmailEmail = inputRule()(
-  yup =>
+  (yup) =>
     yup.object({
-      email: yup
-        .string()
-        .email('It has to be an email!')
-        .required(),
+      email: yup.string().email('It has to be an email!').required(),
     }),
   {
     abortEarly: false,
@@ -507,7 +506,7 @@ const isEditor = rule()(async (parent, args, ctx, info) => {
 })
 
 const isOwner = rule()(async (parent, args, ctx, info) => {
-  return ctx.user.items.some(id => id === parent.id)
+  return ctx.user.items.some((id) => id === parent.id)
 })
 
 const permissions = shield({
