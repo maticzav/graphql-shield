@@ -27,7 +27,7 @@
   "devDependencies": {
     "@types/jest": "25.2.2",
     "@types/node": "13.13.6",
-    "@types/object-hash": "1.3.2",
+    "@types/object-hash": "1.3.3",
     "@types/request-promise-native": "1.0.17",
     "apollo-server": "2.13.1",
     "codecov": "3.6.5",
