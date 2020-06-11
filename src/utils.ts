@@ -29,7 +29,8 @@ export function isLogicRule(x: any): x is ILogicRule {
       (x.constructor.name === 'RuleOr' ||
         x.constructor.name === 'RuleAnd' ||
         x.constructor.name === 'RuleChain' ||
-        x.constructor.name === 'RuleNoe' ||
+        x.constructor.name === 'RuleRace' ||
+        x.constructor.name === 'RuleNot' ||
         x.constructor.name === 'RuleTrue' ||
         x.constructor.name === 'RuleFalse'))
   )
