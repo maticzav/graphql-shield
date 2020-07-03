@@ -15,7 +15,7 @@
   },
   "homepage": "https://github.com/doitadrian/example-shield-apollo-server-lambda#readme",
   "dependencies": {
-    "apollo-server-lambda": "^2.3.1",
+    "apollo-server-lambda": "^2.14.2",
     "graphql": "^14.0.2",
     "graphql-middleware": "^4.0.1",
     "graphql-shield": "^6.1.0",
