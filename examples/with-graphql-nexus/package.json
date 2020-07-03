@@ -11,7 +11,7 @@
     "prettier": true
   },
   "dependencies": {
-    "apollo-server-express": "^2.9.7",
+    "apollo-server-express": "^2.14.2",
     "bcrypt": "^3.0.6",
     "cookie-parser": "^1.4.4",
     "dotenv": "^8.2.0",
