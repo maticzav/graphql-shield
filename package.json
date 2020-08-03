@@ -20,7 +20,7 @@
     "test:types": "tsc --noEmit"
   },
   "dependencies": {
-    "@types/yup": "0.29.3",
+    "@types/yup": "0.29.4",
     "object-hash": "^2.0.3",
     "yup": "^0.29.0"
   },
