@@ -22,7 +22,7 @@ Explore common receipts and learn about advanced GraphQL! [GraphQL Shield 3.0](h
 ## Features
 
 - ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
-- 😌 **Easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
+- 😌 **Easy to use:** To use with [Nexus](https://nexus.js.org/), simply add the [nexus-graphql-shield plugin](https://github.com/lvauvillier/nexus-plugin-shield). To use with [Yoga](https://github.com/prismagraphql/graphql-yoga), just add permissions to the `middlewares` set, and you are ready to go! (NOTE: Yoga is [no longer maintained](https://github.com/prisma-labs/graphql-yoga/issues/449)).
 - 🤝 **Compatible:** Works with all GraphQL Servers.
 - 🚀 **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
 - 🎯 **Per-Type or Per-Field:** Write permissions for your schema, types or specific fields (check the example below).
@@ -34,6 +34,52 @@ yarn add graphql-shield
 ```
 
 ## Example
+
+### Nexus (with plugin)
+```ts
+// app.ts
+
+import { use } from 'nexus'
+import { shield, rule, deny, not, and, or } from 'nexus-plugin-shield'
+
+const isAuthenticated = rule({ cache: 'contextual' })(
+  async (parent, args, ctx: NexusContext, info) => {
+    return ctx.user !== null
+  }
+)
+
+const isAdmin = rule({ cache: 'contextual' })(
+  async (parent, args, ctx: NexusContext, info) => {
+    return ctx.user.role === 'admin'
+  }
+)
+
+const isEditor = rule({ cache: 'contextual' })(
+  async (parent, args, ctx: NexusContext, info) => {
+    return ctx.user.role === 'editor'
+  }
+)
+
+const permissions = shield({
+  rules: {
+    Query: {
+      frontPage: not(isAuthenticated),
+      fruits: and(isAuthenticated, or(isAdmin, isEditor)),
+      customers: and(isAuthenticated, isAdmin),
+    },
+    Mutations: {
+      addFruitToBasket: isAuthenticated,
+    },
+    Fruit: isAuthenticated,
+    Customer: isAdmin,
+  },
+  options: {
+    fallbackRule: deny,
+  },
+})
+
+use(permissions)
+```
 
 ### GraphQL Yoga
 
