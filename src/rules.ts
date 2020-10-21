@@ -70,8 +70,10 @@ export class Rule implements IRule {
     } catch (err) {
       if (options.debug) {
         throw err
-      } else {
+      } else if (err instanceof Error) {
         return err
+      } else {
+        return false
       }
     }
   }
