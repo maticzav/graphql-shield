@@ -71,7 +71,7 @@ export class Rule implements IRule {
       if (options.debug) {
         throw err
       } else {
-        return false
+        return err
       }
     }
   }
