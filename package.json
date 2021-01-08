@@ -35,7 +35,7 @@
     "docz": "2.3.1",
     "docz-theme-default": "1.2.0",
     "graphql": "15.4.0",
-    "graphql-middleware": "6.0.0",
+    "graphql-middleware": "6.0.1",
     "graphql-shield-rules": "0.0.1",
     "graphql-tools": "7.0.2",
     "husky": "4.3.7",
