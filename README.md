@@ -193,7 +193,7 @@ interface IRuleOptions {
 }
 
 /* Input */
-function inputRule(name?: string): (yup: Yup => Yup.Schema) => Rule
+function inputRule(name?: string): (yup: Yup => Yup.Schema, context: any) => Rule
 
 /* Logic */
 function and(...rules: IRule[]): LogicRule
@@ -436,7 +436,7 @@ const permissions = shield({
 > Validate arguments using [Yup](https://github.com/jquense/yup).
 
 ```ts
-function inputRule(name?: string)(yup: Yup => Yup.Schema, options?: Yup.ValidationOptions): Rule
+function inputRule(name?: string)((yup: Yup, ctx: any) => Yup.Schema, options?: Yup.ValidationOptions): Rule
 ```
 
 Input rule works exactly as any other rule would work. Instead of providing a complex validation rule you can simply provide a Yup validation schema which will be mached against provided arguments.

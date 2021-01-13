@@ -207,10 +207,10 @@ export class Rule implements IRule {
   }
 }
 
-export class InputRule<Schema> extends Rule {
+export class InputRule<T> extends Rule {
   constructor(
     name: string,
-    schema: Yup.Schema<Schema>,
+    schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.Schema<T>,
     options?: Yup.ValidateOptions,
   ) {
     const validationFunction: IRuleFunction = (
@@ -218,7 +218,7 @@ export class InputRule<Schema> extends Rule {
       args: object,
       ctx: IShieldContext,
     ) =>
-      schema
+      schema(Yup, ctx)
         .validate(args, options)
         .then(() => true)
         .catch((err) => err)

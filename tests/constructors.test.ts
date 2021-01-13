@@ -90,7 +90,7 @@ describe('input rules constructor', () => {
       return schema
     })
     expect(JSON.stringify(rule)).toEqual(
-      JSON.stringify(new InputRule(name, schema)),
+      JSON.stringify(new InputRule(name, () => schema)),
     )
   })
 
@@ -105,7 +105,7 @@ describe('input rules constructor', () => {
       return schema
     })
     expect(JSON.stringify(rule)).toEqual(
-      JSON.stringify(new InputRule(n.toString(), schema)),
+      JSON.stringify(new InputRule(n.toString(), () => schema)),
     )
   })
 
@@ -121,7 +121,7 @@ describe('input rules constructor', () => {
       return schema
     }, options)
     expect(JSON.stringify(rule)).toEqual(
-      JSON.stringify(new InputRule(n.toString(), schema, options)),
+      JSON.stringify(new InputRule(n.toString(), () => schema, options)),
     )
   })
 })
