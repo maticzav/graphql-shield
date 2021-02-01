@@ -24,7 +24,7 @@ Explore common receipts and learn about advanced GraphQL! [GraphQL Shield 3.0](h
 - ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
 - 😌 **Easy to use:** Just add permissions to your [Yoga](https://github.com/prismagraphql/graphql-yoga) `middlewares` set, and you are ready to go!
 - 🤝 **Compatible:** Works with all GraphQL Servers.
-- 🚀 **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
+- 🚀 **Smart:** Intelligent V8 Shield engine caches all your requests to prevent any unnecessary load.
 - 🎯 **Per-Type or Per-Field:** Write permissions for your schema, types or specific fields (check the example below).
 
 ## Install
