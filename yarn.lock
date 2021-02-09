@@ -12922,10 +12922,10 @@ marked@^0.3.12:
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.19.tgz#5d47f709c4c9fc3c216b6d46127280f40b39d790"
   integrity sha512-ea2eGWOqNxPcXv8dyERdSr/6FmzvWwzjMxpfGB/sbMccXoct+xY+YukPD+QTUZwyvK7BZwcr4m21WBOW41pAkg==
 
-marked@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-1.0.0.tgz#d35784245a04871e5988a491e28867362e941693"
-  integrity sha512-Wo+L1pWTVibfrSr+TTtMuiMfNzmZWiOPeO7rZsQUY5bgsxpHesBEcIWJloWVTFnrMXnf/TL30eTFSGJddmQAng==
+marked@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-2.0.0.tgz#9662bbcb77ebbded0662a7be66ff929a8611cee5"
+  integrity sha512-NqRSh2+LlN2NInpqTQnS614Y/3NkVMFFU6sJlRFEpxJ/LHuK/qJECH7/fXZjk4VZstPW/Pevjil/VtSONsLc7Q==
 
 marksy@^8.0.0:
   version "8.0.0"
@@ -17159,10 +17159,10 @@ selfsigned@^1.10.7:
   dependencies:
     node-forge "0.9.0"
 
-semantic-release@17.3.7:
-  version "17.3.7"
-  resolved "https://registry.yarnpkg.com/semantic-release/-/semantic-release-17.3.7.tgz#a54a8ccf443c7389706c9e3c52f2a9433e0581f7"
-  integrity sha512-mMWaxykq1+mZu7hvUjEdUhJXb+BvEJhcuy15hog3+8XWZqmxRfcdlW/aTBav8rWUZ16bEevWVc6qHwsq3aPGiQ==
+semantic-release@17.3.8:
+  version "17.3.8"
+  resolved "https://registry.yarnpkg.com/semantic-release/-/semantic-release-17.3.8.tgz#ae713d239f60a6ea9ca1c431318507d54b278c67"
+  integrity sha512-VOYRY/qm4ysTUbOTrMaVRd+boG0HQlHgSCvVgNqvG0l99RCIwuUkamD0D+T5l7XhMHc4XGxNRGrElcVyPPS86A==
   dependencies:
     "@semantic-release/commit-analyzer" "^8.0.0"
     "@semantic-release/error" "^2.2.0"
@@ -17181,7 +17181,7 @@ semantic-release@17.3.7:
     hook-std "^2.0.0"
     hosted-git-info "^3.0.0"
     lodash "^4.17.15"
-    marked "^1.0.0"
+    marked "^2.0.0"
     marked-terminal "^4.0.0"
     micromatch "^4.0.2"
     p-each-series "^2.1.0"
