@@ -46,7 +46,7 @@
     "pretty-quick": "3.1.0",
     "remark-emoji": "2.1.0",
     "rimraf": "3.0.2",
-    "semantic-release": "17.3.9",
+    "semantic-release": "17.4.0",
     "ts-jest": "26.5.2",
     "ts-node": "9.1.1",
     "tslint": "6.1.3",
