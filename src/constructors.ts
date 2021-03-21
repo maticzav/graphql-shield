@@ -1,5 +1,10 @@
 import * as Yup from 'yup'
-import { IRuleFunction, IRuleConstructorOptions, ShieldRule } from './types'
+import {
+  IRuleFunction,
+  IRuleConstructorOptions,
+  ShieldRule,
+  IShieldContext,
+} from './types'
 import {
   Rule,
   RuleAnd,
@@ -67,13 +72,13 @@ export const rule = (
  * @param schema
  */
 export const inputRule = <T>(name?: string) => (
-  schema: (yup: typeof Yup) => Yup.Schema<T>,
+  schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.Schema<T>,
   options?: Yup.ValidateOptions,
 ) => {
   if (typeof name === 'string') {
-    return new InputRule(name, schema(Yup), options)
+    return new InputRule(name, schema, options)
   } else {
-    return new InputRule(Math.random().toString(), schema(Yup), options)
+    return new InputRule(Math.random().toString(), schema, options)
   }
 }
 
