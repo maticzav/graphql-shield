@@ -1,4 +1,5 @@
 import * as Yup from 'yup'
+import { ValidateOptions } from 'yup/lib/types'
 import {
   IRuleFunction,
   IRuleConstructorOptions,
@@ -72,10 +73,11 @@ export const rule = (
  * @param schema
  */
 export const inputRule = <T>(name?: string) => (
-  schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.Schema<T>,
-  options?: Yup.ValidateOptions,
+  schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.SchemaOf<T>,
+  options?: ValidateOptions,
 ) => {
   if (typeof name === 'string') {
+    // @ts-expect-error
     return new InputRule(name, schema, options)
   } else {
     return new InputRule(Math.random().toString(), schema, options)
