@@ -160,10 +160,13 @@ describe('fallbackError correctly handles errors', () => {
 
     /* Permissions */
 
-    const fallbackError = () => new Error('fallback')
+    const fallbackError = (err) => {
+      if (err) return err
+      return new Error('fallback')
+    }
 
     const allow = rule()(() => {
-      throw new Error()
+      throw new Error('unexpected')
     })
 
     const permissions = shield(
@@ -189,7 +192,7 @@ describe('fallbackError correctly handles errors', () => {
     /* Tests */
 
     expect(res.data).toBeNull()
-    expect(res.errors[0].message).toBe(fallbackError().message)
+    expect(res.errors[0].message).toBe('unexpected')
   })
 
   test('error in resolver can be mapped.', async () => {
@@ -203,7 +206,7 @@ describe('fallbackError correctly handles errors', () => {
     const resolvers = {
       Query: {
         test: async () => {
-          throw new Error()
+          throw new Error('unexpected')
         },
       },
     }
@@ -215,7 +218,10 @@ describe('fallbackError correctly handles errors', () => {
 
     /* Permissions */
 
-    const fallbackError = () => new Error('fallback')
+    const fallbackError = (err) => {
+      if (err) return err
+      return new Error('fallback')
+    }
 
     const permissions = shield(
       {
@@ -240,7 +246,7 @@ describe('fallbackError correctly handles errors', () => {
     /* Tests */
 
     expect(res.data).toBeNull()
-    expect(res.errors[0].message).toBe(fallbackError().message)
+    expect(res.errors[0].message).toBe('unexpected')
   })
 })
 

@@ -99,3 +99,12 @@ export function withDefault<T>(fallback: T): (value: T | undefined) => T {
     return value
   }
 }
+
+export class RuleResolutionError extends Error {
+  cause: Error
+
+  constructor(cause: Error) {
+    super()
+    this.cause = cause
+  }
+}

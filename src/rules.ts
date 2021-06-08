@@ -13,7 +13,7 @@ import {
   IOptions,
   IShieldContext,
 } from './types'
-import { isLogicRule } from './utils'
+import { isLogicRule, RuleResolutionError } from './utils'
 import { GraphQLResolveInfo } from 'graphql'
 import { isUndefined } from 'util'
 
@@ -71,7 +71,7 @@ export class Rule implements IRule {
       if (options.debug) {
         throw err
       } else {
-        return false
+        return new RuleResolutionError(err)
       }
     }
   }
