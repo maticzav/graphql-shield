@@ -1,0 +1,48 @@
+---
+title: Whitelisting
+---
+
+# Whitelisting vs Blacklisting
+
+> ❗️ Whitelisting/Blacklisting is no longer available in versions after `3.x.x`, and has been replaced with `fallbackRule`.
+
+---
+
+Shield allows you to lock-in your schema. This way, you can seamlessly develop and publish your work without worrying about exposing your data. To lock in your service simply set `fallbackRule` to `deny` like this;
+
+```ts
+const typeDefs = `
+  type Query {
+    users: [User!]!
+    newFeatures: FeaturesConnection!
+  }
+
+  type User {
+    id: ID!
+    name: String!
+    author: Author!
+  }
+
+  type Author {
+    id: ID!
+    name: String!
+    secret: String
+  }
+`
+
+const permissions = shield(
+  {
+    Query: {
+      users: allow,
+    },
+    User: allow,
+    Author: {
+      id: allow,
+      name: allow,
+    },
+  },
+  { fallbackRule: deny },
+)
+```
+
+You can achieve same functionality by setting every "rule-undefined" field to `deny` the request.

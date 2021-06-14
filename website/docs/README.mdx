@@ -1,0 +1,58 @@
+---
+title: What is GraphQL Shield?
+---
+
+## What is Shield?
+
+Shield is a GraphQL library that helps you create a permission layer for your server.
+Its main focus is creating a meaningful, well-rounded and scalable API that will make you
+confident about your permission layer.
+
+Using an intuitive rule-first API, you'll be able to define the collection of rules
+that you can use across your permission system.
+
+## Features
+
+- **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
+- **Compatible:** Works with all GraphQL Servers.
+- **Smart:** Intelligent V8 Shield engine caches all your request to prevent any unnecessary load.
+- **Per-Type or Per-Field:** Write permissions for your schema, types or specific fields.
+
+## Installation
+
+Start by adding GraphQL Shield to your server:
+
+<PackageInstall packageName="graphql-shield" />
+
+## Example
+
+Here's an example of how you can define permissions using GraphQL Shield
+
+```ts
+const isAuthenticated = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+  return ctx.user !== null
+})
+
+const isAdmin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+  return ctx.user.role === 'admin'
+})
+
+const isEditor = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+  return ctx.user.role === 'editor'
+})
+
+// Permissions
+
+const permissions = shield({
+  Query: {
+    frontPage: not(isAuthenticated),
+    fruits: and(isAuthenticated, or(isAdmin, isEditor)),
+    customers: and(isAuthenticated, isAdmin),
+  },
+  Mutation: {
+    addFruitToBasket: isAuthenticated,
+  },
+  Fruit: isAuthenticated,
+  Customer: isAdmin,
+})
+```

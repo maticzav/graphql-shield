@@ -1,90 +1,40 @@
 {
-  "name": "graphql-shield",
-  "description": "GraphQL Server permissions as another layer of abstraction!",
-  "version": "0.0.0-semantic-release",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "private": true,
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
+  "license": "MIT",
+  "workspaces": [
+    "./website",
+    "./packages/*",
+    "./examples/*"
+  ],
   "scripts": {
-    "compile": "tsc -d",
-    "coverage": "codecov",
-    "clean": "rimraf dist",
-    "docz:dev": "docz dev",
-    "docz:build": "docz build",
-    "lint": "tslint --project tsconfig.json {src}/**/*.ts && prettier-check --ignore-path .gitignore src/**/*.ts",
-    "posttest": "npm-run-all lint",
-    "prepublishOnly": "npm-run-all compile",
-    "release": "semantic-release",
-    "test": "npm-run-all --parallel test:*",
-    "test:jest": "NODE_ENV=test jest",
-    "test:types": "tsc --noEmit"
-  },
-  "dependencies": {
-    "@types/yup": "0.29.11",
-    "object-hash": "^2.0.3",
-    "yup": "^0.31.0"
+    "prepare": "husky install",
+    "prebuild": "rimraf packages/*/dist",
+    "build": "node scripts/build.js",
+    "test": "jest",
+    "test:ci": "jest --coverage",
+    "prerelease": "yarn build",
+    "release": "changeset publish",
+    "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
+    "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\""
   },
   "devDependencies": {
+    "@changesets/cli": "2.16.0",
     "@types/jest": "26.0.23",
-    "@types/node": "14.17.3",
-    "@types/object-hash": "1.3.4",
-    "@types/request-promise-native": "1.0.17",
-    "apollo-server": "2.25.1",
+    "@types/node": "15.6.1",
     "codecov": "3.8.2",
-    "coveralls": "3.1.0",
-    "docz": "2.3.1",
-    "docz-theme-default": "1.2.0",
-    "graphql": "15.5.0",
-    "graphql-middleware": "6.0.10",
-    "graphql-shield-rules": "0.0.1",
-    "graphql-tools": "7.0.5",
-    "husky": "5.2.0",
-    "jest": "26.6.3",
-    "npm-run-all": "4.1.5",
-    "prettier": "2.2.1",
-    "prettier-check": "2.0.0",
+    "husky": "6.0.0",
+    "jest": "27.0.4",
+    "lint-staged": "11.0.0",
+    "prettier": "2.3.1",
     "pretty-quick": "3.1.0",
-    "remark-emoji": "2.2.0",
     "rimraf": "3.0.2",
-    "semantic-release": "17.4.3",
-    "ts-jest": "26.5.6",
-    "ts-node": "9.1.1",
-    "tslint": "6.1.3",
-    "tslint-config-prettier": "1.18.0",
-    "tslint-config-standard": "9.0.0",
+    "ts-jest": "27.0.3",
+    "ts-node": "10.0.0",
     "typescript": "4.3.2"
   },
-  "peerDependencies": {
-    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0",
-    "graphql-middleware": "^2.0.0 || ^3.0.0 || ^4.0.0 || ^6.0.0"
-  },
-  "files": [
-    "dist"
-  ],
-  "release": {
-    "branch": "master"
-  },
-  "homepage": "https://github.com/maticzav/graphql-shield",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/maticzav/graphql-shield.git"
-  },
-  "bugs": {
-    "url": "https://github.com/maticzav/graphql-shield/issues"
-  },
-  "keywords": [
-    "graphql",
-    "permissions",
-    "shield",
-    "server",
-    "authentication",
-    "authorization",
-    "rules"
-  ],
-  "license": "MIT",
-  "collective": {
-    "type": "opencollective",
-    "url": "https://opencollective.com/graphql-shield",
-    "logo": "https://opencollective.com/graphql-shield/logo.txt"
+  "resolutions": {
+    "@changesets/git": "1.1.1",
+    "prettier": "2.3.1"
   }
 }

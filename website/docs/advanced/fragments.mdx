@@ -1,0 +1,49 @@
+---
+title: Fragments
+---
+
+# Fragments
+
+If your GraphQL server connects to another GraphQL server, it might happen that your rules require additional data that user doesn't have to request by default. A common example of this is using an `id` field to perform authorization checks; an initial query might not request the `id` field, but your rule still needs it to check if the current user may access that data.
+
+To solve this we use _fragments_.
+
+## Example
+
+Fragments allow you to define which fields your rule requires to work correctly. This comes in extremely handy when your rules rely on data from database. You can use fragments to define which data your rule relies on.
+
+```ts
+const isItemOwner = rule({
+  cache: 'strict',
+  fragment: 'fragment ItemID on Item { id }',
+})(async ({ id }, args, ctx, info) => {
+  return ctx.db.exists.Item({
+    id,
+    owner: { id: ctx.user.id },
+  })
+})
+
+const permissions = shield(
+  {
+    Query: {
+      items: allow,
+    },
+    Item: {
+      id: allow,
+      name: allow,
+      secret: isItemOwner,
+    },
+  },
+  {
+    fallbackRule: deny,
+  },
+)
+```
+
+To extract fragments that you want to pass around, change the wrapping function to
+
+```ts
+const { schema, fragmentReplacements } = applyMiddleware(schema, permissions)
+```
+
+and pass `fragmentReplacements` to your server's communication library.

@@ -1,0 +1,32 @@
+---
+title: Getting Started
+sidebar_label: Getting Started
+---
+
+# Getting Started
+
+GraphQL Shield helps you create a permission layer for your application. Using an intuitive rule-API, you'll gain the power of the shield engine on every request and reduce the load time of every request with smart caching. This way you can make sure your application will remain quick, and no internal data will be exposed.
+
+## Installation
+
+Start by adding GraphQL Shield to your server:
+
+<PackageInstall packageName="graphql-shield graphql-middleware" />
+
+## Integrating Shield
+
+GraphQL Shield relies on GraphQL Middleware to work. We've already installed `graphql-middleware` in the installation step. What remains is that we write a permission tree and apply it to our schema.
+
+```ts
+import { applyMiddleware } from 'graphql-middleware'
+
+// your current schema definition...
+
+schema = applyMiddleware(schema, permissions)
+
+// use the new schema as before
+```
+
+## Real World Example
+
+You can find a more detailed example of how GraphQL Shield works by building a groceries shop to better understand the benefits of GraphQL Shield! [Banana &Co.](https://medium.com/@maticzavadlal/graphql-shield-9d1e02520e35) 🍏🍌🍓.

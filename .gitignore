@@ -4,8 +4,27 @@ coverage
 
 *.log*
 .DS_Store
-.vscode
+
 .history
 .nyc_output
+
 package-lock.json
-.docz
+
+.yarn/cache
+.yarn/install-state.gz
+.yarn/build-state.yml 
+
+tsconfig.tsbuildinfo
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variables file
+.env
+.env.test
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+
+# Next.js build output
+.next

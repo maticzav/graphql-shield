@@ -1,0 +1,14 @@
+code[class*='language-'],
+pre[class*='language-'] {
+  white-space: pre-wrap !important;
+  word-break: break-word !important;
+}
+
+code, code * {
+  overflow-x: auto; font-family: "SF Mono", Menlo, monospace;
+}
+
+article {
+  width: 100%;
+  overflow-x: auto;
+}

@@ -1,0 +1,68 @@
+---
+title: Shield
+---
+
+# Shield
+
+Shield generates GraphQL Middleware layer from your rules. You should generate permissions using `shield` when initialising a schema itself.
+
+```ts
+import { shield } from 'graphql-shield'
+
+const permissions = shield(map)
+```
+
+A rule map must match your schema definition. You should create a collection of rules that you use in your map to define permissions and access to your server. All rules must be created using the `rule` function to ensure caches are made correctly. You can apply your `rule` across entire schema, Type scoped, or field specific.
+
+Consider the following example:
+
+```ts
+const permissions = shield({
+  Query: {
+    frontPage: not(isAuthenticated),
+    fruits: and(isAuthenticated, or(isAdmin, isEditor)),
+    customers: and(isAuthenticated, isAdmin),
+  },
+  Mutation: {
+    addFruitToBasket: isAuthenticated,
+  },
+  Fruit: isAuthenticated,
+  Customer: isAdmin,
+})
+```
+
+### Per Type Wildcard Rule
+
+There is an option to specify a rule that will be applied to all fields of a type (`Query`, `Mutation`, ...) that do not specify a rule.
+It is similar to the `options.fallbackRule` but allows you to specify a `fallbackRule` per type.
+
+```ts
+// this will only allow query1 and query2.
+// query3 for instance will be denied
+// it will also deny every mutation
+// (you can still use `fallbackRule` option with it)
+const permissions = shield({
+  Query: {
+    "*": deny
+    query1: allow,
+    query2: allow,
+  },
+  Mutation: {
+    "*": deny
+  },
+}, {
+  fallbackRule: allow
+})
+```
+
+#### `options`
+
+| Property            | Required | Default                                              | Description                                        |
+| ------------------- | -------- | ---------------------------------------------------- | -------------------------------------------------- |
+| allowExternalErrors | false    | false                                                | Toggle catching internal errors.                   |
+| debug               | false    | false                                                | Toggle debug mode.                                 |
+| fallbackRule        | false    | allow                                                | The default rule for every "rule-undefined" field. |
+| fallbackError       | false    | Error('Not Authorised!')                             | Error Permission system fallbacks to.              |
+| hashFunction        | false    | [object-hash](https://github.com/puleos/object-hash) | Hashing function to use for `strict` cache         |
+
+By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.

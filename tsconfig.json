@@ -1,16 +1,38 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "noUnusedLocals": true,
-    "rootDir": "src",
+    "incremental": true,
+    "baseUrl": ".",
+
+    "rootDir": "packages",
     "outDir": "dist",
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "module": "esnext",
+    "target": "es2018",
+    "lib": ["es6", "esnext", "es2015", "dom"],
+    "suppressImplicitAnyIndexErrors": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
     "sourceMap": true,
-    "lib": ["dom", "es2017", "esnext.asynciterable"],
+    "declaration": true,
+    "noImplicitThis": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
-    "strict": true
+
+    "paths": {
+      "@graphqlshield/*": [
+        "packages/*/src/index.ts",
+        "packages/plugins/*/src/index.ts"
+      ]
+    }
   },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["node_modules", "examples", "dist"]
+  "include": ["packages"],
+  "exclude": ["**/dist", "**/temp"]
 }

@@ -1,5 +1,7 @@
 {
-  "extends": ["config:base", "docker:disable", ":automergePatch"],
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
+  "postUpdateOptions": ["yarnDedupeFewer"],
   "pathRules": [
     {
       "paths": ["examples/**"],
@@ -17,5 +19,6 @@
   "automerge": true,
   "major": {
     "automerge": false
-  }
+  },
+  "labels": ["dependencies"]
 }

@@ -1,0 +1,147 @@
+---
+title: Rules
+---
+
+# Rules
+
+Rules let you define reusable blocks of permissions that you use in [Shield](./shield). GraphQL Shield packs a collection of general rules that make your permissions easier to write and your rules more reusable. Each rule you create should be easily explicable in one sentantce and should check exactly one permission.
+
+For example, it's a good practice to have a rule that checks if someone is an admin and another one that checks if someone owns some data, and a bad practice to have both checks in one rule.
+
+## Basic rules
+
+> `allow`, `deny` are GraphQL Shield predefined rules.
+
+`allow` and `deny` rules do exactly what their names describe.
+
+## Creating your own rules
+
+To create a new rule, wrap your validation function in `rule` wrapper like in the example below. Your function can take use any parameter from the regular GraphQL resolver function and should return a boolean.
+
+```ts
+const isAdmin = rule()(async (parent, args, ctx, info) => {
+  return ctx.user.isAdmin
+})
+```
+
+## Input Rules
+
+> Validate arguments using [Yup](https://github.com/jquense/yup).
+
+```ts
+function inputRule(name?: string)((yup: Yup, ctx: any) => Yup.Schema, options?: Yup.ValidationOptions): Rule
+```
+
+Input rule works exactly as any other rule would work. Instead of providing a complex validation rule you can simply provide a Yup validation schema which will be mached against provided arguments.
+This can be especially useful when limiting optional fields such as `create` and `connect` with Prisma, for example.
+
+**Example:**
+
+```graphql
+type Mutation {
+  login(email: String): LoginPayload
+}
+```
+
+Note that Yup receives entire `args` object, therefore, you should start composing schema with an object.
+
+```ts
+const isEmailEmail = inputRule()(
+  (yup) =>
+    yup.object({
+      email: yup.string().email('It has to be an email!').required(),
+    }),
+  {
+    abortEarly: false,
+  },
+)
+```
+
+## Logic Rules
+
+Logic rules let you combine multiple rules into a composition. This should be your glue for making more complex permission requirements out of simple rules.
+
+- `and` - allows access only if all sub rules used return `true`,
+- `chain` - rule allows you to chain the rules, meaning that rules won't be executed all at once, but one by one until one fails or all pass,
+- `or` - resolves to true if at least one rule passes,
+- `race` - rule allows you to chain the rules so that execution stops once one of them returns `true`.
+
+Think of `race` and `chain` as lazy versions of `and` and `or`.
+
+- `not` works as usual not in code works.
+
+> You may also add a custom error message as the second parameter to `not(rule, error)`.
+
+Here's an example:
+
+```tsx
+import { shield, rule, and, or } from 'graphql-shield'
+
+const isAdmin = rule()(async (parent, args, ctx, info) => {
+  return ctx.user.role === 'admin'
+})
+
+const isEditor = rule()(async (parent, args, ctx, info) => {
+  return ctx.user.role === 'editor'
+})
+
+const isOwner = rule()(async (parent, args, ctx, info) => {
+  return ctx.user.items.some((id) => id === parent.id)
+})
+
+const permissions = shield({
+  Query: {
+    users: or(isAdmin, isEditor),
+  },
+  Mutation: {
+    createBlogPost: or(isAdmin, and(isOwner, isEditor)),
+  },
+  User: {
+    secret: isOwner,
+  },
+})
+```
+
+## Cache
+
+GraphQL Shield uses a caching mechanism to evaluate rules more efficiently. Since rules are evaluated on per-field basis, this is a crucial component that makes `graphql-shield` fast. You can choose from three different caching options:
+
+1.  `no_cache` - prevents rules from being cached.
+1.  `contextual` - use when rule only relies on `context` parameter (useful for authentication).
+1.  `strict` - use when rule relies on `parent` or `args` parameter as well (field specific modifications).
+
+```ts
+// Contextual
+const isAdmin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => {
+  return ctx.user.isAdmin
+})
+
+// Strict
+const canSeeUserSensitiveData = rule({ cache: 'strict' })(async (parent, args, ctx, info) => {
+  /* The id of observed User matches the id of authenticated viewer. */
+  return ctx.viewer.id === parent.id
+})
+
+// No-cache (default)
+const admin = rule({ cache: 'no_cache' })(async (parent, args, ctx, info) => {
+  return ctx.user.isAdmin || args.code === 'secret' || parent.id === 'theone'
+})
+```
+
+## Limitations
+
+Due to design decisions of how GraphQL Shield works, there are some limitations to rule names and functions:
+
+- All rules must have a distinct name. Usually, you won't have to care about this as all names are by default automatically generated to prevent such problems. In case your function needs additional variables from other parts of the code and is defined as a function, you'll set a specific name to your rule to avoid name generation.
+
+```jsx
+// Normal
+const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => true)
+
+// With external data
+const admin = (bool) => rule(`name-${bool}`, { cache: 'contextual' })(async (parent, args, ctx, info) => bool)
+```
+
+- Cache is disabled by default. To enable `cache` generation, set cache option when generating a rule.
+
+> Backward compatibility: `{ cache: false }` converts to `no_cache`, and `{ cache: true }` converts to `strict`.
