@@ -22,7 +22,7 @@ GraphQL Shield helps you create a permission layer for your application. Using a
 
 ## Documentation
 
-You can find extensive documentation at [graphql-shield.js.org](https://graphql-shield.js.org).
+You can find extensive documentation at [https://graphql-shield.vercel.app](https://graphql-shield.vercel.app).
 
 ## Contributors
 
