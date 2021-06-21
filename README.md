@@ -1,4 +1,4 @@
-<p align="center"><img src="https://imgur.com/DX1VKtn.png" width="150" /></p>
+<p align="center"><img src="media/shield.png" width="250"/></p>
 
 # graphql-shield
 

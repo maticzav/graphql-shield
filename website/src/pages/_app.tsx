@@ -99,7 +99,7 @@ function AppContent(appProps: AppProps) {
           title: 'GraphQL Shield',
           description: '',
           image: {
-            src: 'https://the-guild.dev/static/shared-logos/products/envelop.svg',
+            src: '/logo.png',
             alt: 'GraphQL Shield Logo',
           },
           onClick: (e) => handlePushRoute('/', e),
