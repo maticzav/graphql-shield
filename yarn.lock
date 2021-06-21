@@ -3283,7 +3283,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/utils@npm:1.8.0, @chakra-ui/utils@npm:^1.7.0, @chakra-ui/utils@npm:^1.8.0":
+"@chakra-ui/utils@npm:1.8.0, @chakra-ui/utils@npm:^1.7.0":
   version: 1.8.0
   resolution: "@chakra-ui/utils@npm:1.8.0"
   dependencies:
@@ -5650,7 +5650,7 @@ __metadata:
     "@chakra-ui/react": 1.6.3
     "@chakra-ui/system": 1.6.7
     "@chakra-ui/theme-tools": 1.1.7
-    "@chakra-ui/utils": ^1.8.0
+    "@chakra-ui/utils": 1.8.0
     "@emotion/react": 11.4.0
     "@emotion/styled": 11.3.0
     "@guild-docs/client": 0.2.10
