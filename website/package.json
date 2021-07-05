@@ -26,7 +26,7 @@
     "esbuild": "0.12.8",
     "framer-motion": "4.1.17",
     "fs-extra": "10.0.0",
-    "globby": "11.0.3",
+    "globby": "11.0.4",
     "next": "10.2.3",
     "next-i18next": "8.4.0",
     "next-remote-watch": "1.0.0",
