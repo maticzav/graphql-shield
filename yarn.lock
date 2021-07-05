@@ -5687,7 +5687,7 @@ __metadata:
     strict-npm-engines: 0.0.1
     tiny-lru: 7.0.6
     tsup: 4.11.2
-    typescript: 4.3.2
+    typescript: 4.3.5
     undici: 3.3.6
     use-http: 1.0.21
     valtio: 1.0.6
@@ -23927,7 +23927,7 @@ fsevents@^1.2.7:
     rimraf: 3.0.2
     ts-jest: 27.0.3
     ts-node: 10.0.0
-    typescript: 4.3.2
+    typescript: 4.3.5
   languageName: unknown
   linkType: soft
 
@@ -26874,13 +26874,13 @@ typescript@3.6.4:
   languageName: node
   linkType: hard
 
-typescript@4.3.2:
-  version: 4.3.2
-  resolution: "typescript@npm:4.3.2"
+typescript@4.3.5:
+  version: 4.3.5
+  resolution: "typescript@npm:4.3.5"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 21e1285402e32fd240f6ad3f97b6fea81b90d2591f412677d01b570a8bd93151d1e08460d58f43689fc758671a5baaebb16fa93d3c8260181612c8e619bd24f7
+  checksum: d9a8e78d72dd19896e6bfa73ab2a0fcea6eca2700d1d6e7c33f67a970af54a3e0fed8f715a8c4e6a0ff7fc0995067b394b2003518ab0aa84cd396377e54b760c
   languageName: node
   linkType: hard
 
@@ -26894,13 +26894,13 @@ typescript@4.3.2:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.3.2#builtin<compat/typescript>":
-  version: 4.3.2
-  resolution: "typescript@patch:typescript@npm%3A4.3.2#builtin<compat/typescript>::version=4.3.2&hash=ddfc1b"
+"typescript@patch:typescript@4.3.5#builtin<compat/typescript>":
+  version: 4.3.5
+  resolution: "typescript@patch:typescript@npm%3A4.3.5#builtin<compat/typescript>::version=4.3.5&hash=ddfc1b"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 68d48dc86dacfeab59a22414ff061c976c46b679a9717a3a710051ea7bab779fd23f4edb856434da8155e8e8646c90b3912e342cc0010dfd15ed321a42cb0578
+  checksum: 7f0b8343f71ecac18095be1476b398aca420ab60dc207cc1efe078f381eef5527b80a518297720257114cdbda65612f8839e4b63e85dc95e67ac5cbbade8bdf0
   languageName: node
   linkType: hard
 
