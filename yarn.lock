@@ -5667,7 +5667,7 @@ __metadata:
     concurrently: 6.2.0
     date-fns: 2.22.1
     esbuild: 0.12.8
-    esbuild-register: 2.5.0
+    esbuild-register: 2.6.0
     framer-motion: 4.1.17
     fs-extra: 10.0.0
     globby: 11.0.3
@@ -12018,13 +12018,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild-register@npm:2.5.0":
-  version: 2.5.0
-  resolution: "esbuild-register@npm:2.5.0"
+"esbuild-register@npm:2.6.0":
+  version: 2.6.0
+  resolution: "esbuild-register@npm:2.6.0"
   dependencies:
-    esbuild: ^0.11.5
+    esbuild: ^0.12.8
     jsonc-parser: ^3.0.0
-  checksum: 89b4348961381ee601a65c2fac1d7526dd8895e77d05ce554fe8ea6b8eedbcb65e873246c64307eb6054ae7e4ca95643c9a66db4576466c9a701298eb9542f46
+  checksum: 697d31415c85f96a67917c921e0dba9ced7c0c70ce18ebcdf0cec19b75811a786ef7f00720bea23f1e15feff8ec5bcfdecad9d35b8d33c07723c4df5eb4a1431
   languageName: node
   linkType: hard
 
@@ -12037,12 +12037,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.11.12, esbuild@npm:^0.11.5":
+"esbuild@npm:^0.11.12":
   version: 0.11.23
   resolution: "esbuild@npm:0.11.23"
   bin:
     esbuild: bin/esbuild
   checksum: 9226fc3d74f7555c96778c5d9204312c578e9c11b472deebfbab52c4ac58b9efc3a40be529368f6ccbe257d0059c6b8fd142c179824a3227d055d912c7b5a94a
+  languageName: node
+  linkType: hard
+
+"esbuild@npm:^0.12.8":
+  version: 0.12.14
+  resolution: "esbuild@npm:0.12.14"
+  bin:
+    esbuild: bin/esbuild
+  checksum: ac7ffaecb83eda6fb93eae18ad3b46a17bc0b78db9e4f6669a4470970e0288388ac4f5f0d1a0c7dbd283fe92492dfa3a6a9463111fdf940198865dc43da34c4c
   languageName: node
   linkType: hard
 
