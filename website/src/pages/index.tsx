@@ -8,9 +8,12 @@ export default function Index() {
       <Head>
         <title>GraphQL Shield</title>
       </Head>
+
+      <div style={{ paddingTop: '50px' }} />
+
       <HeroGradient
-        title="GraphQL permissions as another layer of abstraction."
-        description="Implement your server permissions in a clear and deterministic way."
+        title="GraphQL Permissions Framework For Complex Authorisation Systems"
+        description="Implement your server permissions in a clear and deterministic way and let it guard access to your schema."
         link={{
           href: '/docs',
           children: 'Get Started',
@@ -22,53 +25,48 @@ export default function Index() {
         //     <img src="https://badge.fury.io/js/%40envelop%2Fcore.svg" alt="npm version" height="18" />
         //   </a>
         // }
-        colors={['#FF34AE', '#1CC8EE']}
-        // image={{
-        //   src: '/assets/home-claw.png',
-        //   alt: 'Illustration',
-        // }}
+        colors={['#56C4FF', '#6B9CFF']}
+        image={{
+          src: '/assets/framework.png',
+          alt: 'Illustration',
+        }}
       />
-      <FeatureList
-        title="What's GraphQL Shield?"
-        items={[
-          {
-            image: {
-              alt: 'Pluggable',
-              src: '/assets/features-pluggable.png',
-            },
-            title: 'Pluggable',
-            description: 'Powerful plugin system that wraps the entire GraphQL execution pipeline.',
-          },
-          {
-            image: {
-              alt: 'Flexible',
-              src: '/assets/features-modern.png',
-            },
-            title: 'Flexible',
-            description: 'Use with any HTTP server, and any GraphQL schema libraries (code-first / schema-first).',
-          },
-          {
-            image: {
-              alt: 'Develop Faster',
-              src: '/assets/features-performant.png',
-            },
-            title: 'Develop Faster',
-            description: `You don't have to reinvent the wheel for every feature. You can write/use Envelop plugin for most workflows.`,
-          },
-        ]}
+
+      {/* Features */}
+
+      <HeroIllustration
+        title="Create a handful of rules and reuse them across your schema"
+        description={`Shield lets you create a handful of rules and compose them into meaningful structures using logical operators.`}
+        image={{
+          src: '/assets/composable.png',
+          alt: 'Composable',
+        }}
       />
 
       <HeroIllustration
-        title="How it works?"
-        description="GraphQL Shield wrapps your schema resolvers and inteligently manages access to fields."
+        title="Every rule is intelligently cached to prevent duplicated validation"
+        description={`To prevent recalculation of rules, every rule caches its result based on selected caching mechanism and speeds up query execution.`}
         image={{
-          src: '/assets/home-communication.png',
-          alt: 'Illustration',
+          src: '/assets/fast.png',
+          alt: 'Shield is Fast',
         }}
         flipped
       />
 
-      <InfoList
+      <HeroIllustration
+        title="Be confident that your rule is used at the right place"
+        description={`Shield generates a type-map from your schema to make sure you have assigned your rules to the right places.`}
+        image={{
+          src: '/assets/safe.png',
+          alt: 'Illustration',
+        }}
+      />
+
+      <div style={{ paddingBottom: '100px' }} />
+
+      {/* Info */}
+
+      {/* <InfoList
         title="Learn More"
         items={[
           {
@@ -92,7 +90,7 @@ export default function Index() {
             },
           },
         ]}
-      />
+      /> */}
     </>
   )
 }
