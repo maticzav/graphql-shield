@@ -4271,28 +4271,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/server@npm:0.2.5":
-  version: 0.2.5
-  resolution: "@guild-docs/server@npm:0.2.5"
+"@guild-docs/server@npm:0.2.18":
+  version: 0.2.18
+  resolution: "@guild-docs/server@npm:0.2.18"
   dependencies:
-    "@guild-docs/types": ^0.2.1
+    "@guild-docs/types": ^0.2.16
     github-slugger: ^1.3.0
-    globby: ^11.0.3
+    globby: ^11.0.4
     gray-matter: ^4.0.3
     next-mdx-remote: ^3.0.2
+    npms.io: ^2.0.6
+    remark-emoji: ^2.2.0
     remark-slug: ^6.0.0
+    tiny-lru: ^7.0.6
   peerDependencies:
-    next: ^10.2.0
-    next-i18next: ^8.2.0
+    next: ^11.0.1
+    next-i18next: ^8.5.1
     react: ^17.0.2
     react-dom: ^17.0.2
     remark-admonitions: ^1.2.1
     remark-prism: ^1.3.6
-  checksum: 47cc4faca77282bfcc77bd39df45321421a7974084ba83bc96cf7090060fe322ab723285bde02b368e9ac0491f746f797cebda9c133b58077e88fcef6b316890
+  checksum: c85de27f8d44bf0f162d3c0d6cdf1260aced31ee412d490820c2426dabcb9c8036b5a9d3dd14ff7facfeba5b7661536423410fa87522070d4e027f7ee3c535cd
   languageName: node
   linkType: hard
 
-"@guild-docs/types@npm:^0.2.1, @guild-docs/types@npm:^0.2.8":
+"@guild-docs/types@npm:^0.2.16":
+  version: 0.2.17
+  resolution: "@guild-docs/types@npm:0.2.17"
+  peerDependencies:
+    "@chakra-ui/react": ^1.6.4
+    "@types/react": ^17.0.13
+    next-i18next: ^8.5.1
+    next-mdx-remote: ^3.0.2
+  checksum: 52963cf91a5b60658dff73b91c493a0722921f441ba9e1fd67498a356cf68c90e60416472be4c7fb10b464952bd2b19b480e8754720435ce8f7695c65f1fb692
+  languageName: node
+  linkType: hard
+
+"@guild-docs/types@npm:^0.2.8":
   version: 0.2.8
   resolution: "@guild-docs/types@npm:0.2.8"
   peerDependencies:
@@ -5654,7 +5669,7 @@ __metadata:
     "@emotion/react": 11.4.0
     "@emotion/styled": 11.3.0
     "@guild-docs/client": 0.2.10
-    "@guild-docs/server": 0.2.5
+    "@guild-docs/server": 0.2.18
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.3.1
     "@types/concurrently": 6.2.0
@@ -11707,6 +11722,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"emoticon@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "emoticon@npm:3.2.0"
+  checksum: fc608314df036126955e4414e87a4a3e7e66793f7c085ed82a5f6278eee8576d89bbc5601326b7da9ca71d075e120d884517455ac3963aa2143e10d8a144ad4f
+  languageName: node
+  linkType: hard
+
 "enabled@npm:1.0.x":
   version: 1.0.2
   resolution: "enabled@npm:1.0.2"
@@ -14126,6 +14148,20 @@ fsevents@^1.2.7:
     merge2: ^1.3.0
     slash: ^3.0.0
   checksum: 623a19a4114ae7d040068293890eb1641d0ddef920aac346037d305c96745fc225cbb988921d908f2df2bd0a36f3aca4f3dc746c446d3724a60adf1b27fd7764
+  languageName: node
+  linkType: hard
+
+"globby@npm:^11.0.4":
+  version: 11.0.4
+  resolution: "globby@npm:11.0.4"
+  dependencies:
+    array-union: ^2.1.0
+    dir-glob: ^3.0.1
+    fast-glob: ^3.1.1
+    ignore: ^5.1.4
+    merge2: ^1.3.0
+    slash: ^3.0.0
+  checksum: 9f365b35b835c0235880e272fa2a2f5d9d78428e09af8dfc67536f1047953e7b0c66aab9bb6d41e6c0f4c3ec75a22840d9acb892f102daecaadd338b2c763219
   languageName: node
   linkType: hard
 
@@ -19901,7 +19937,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"node-emoji@npm:^1.4.1, node-emoji@npm:^1.8.1":
+"node-emoji@npm:^1.10.0, node-emoji@npm:^1.4.1, node-emoji@npm:^1.8.1":
   version: 1.10.0
   resolution: "node-emoji@npm:1.10.0"
   dependencies:
@@ -20358,7 +20394,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"npms.io@npm:2.0.6":
+"npms.io@npm:2.0.6, npms.io@npm:^2.0.6":
   version: 2.0.6
   resolution: "npms.io@npm:2.0.6"
   dependencies:
@@ -23461,6 +23497,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"remark-emoji@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "remark-emoji@npm:2.2.0"
+  dependencies:
+    emoticon: ^3.2.0
+    node-emoji: ^1.10.0
+    unist-util-visit: ^2.0.3
+  checksum: 7778e3327d4eac9ff656113145d35befe91d6215227ba8816a33a59abe4c0c765592321eb0037deefa597b9f290da146d25544b0d5efe64c2e8d32c8bbf83ed0
+  languageName: node
+  linkType: hard
+
 "remark-footnotes@npm:2.0.0":
   version: 2.0.0
   resolution: "remark-footnotes@npm:2.0.0"
@@ -26137,7 +26184,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"tiny-lru@npm:7.0.6":
+"tiny-lru@npm:7.0.6, tiny-lru@npm:^7.0.6":
   version: 7.0.6
   resolution: "tiny-lru@npm:7.0.6"
   checksum: 9fb221279eee2747e20511ce9d4cc080527b6c44f835b867d5f02e136fe0e34f0c10348af7e22c56420ffb69636ac042eb4ffead90dd8d80a7b6368be30f112a
@@ -27152,7 +27199,7 @@ typescript@4.3.2:
   languageName: node
   linkType: hard
 
-"unist-util-visit@npm:2.0.3, unist-util-visit@npm:^2.0.1":
+"unist-util-visit@npm:2.0.3, unist-util-visit@npm:^2.0.1, unist-util-visit@npm:^2.0.3":
   version: 2.0.3
   resolution: "unist-util-visit@npm:2.0.3"
   dependencies:
