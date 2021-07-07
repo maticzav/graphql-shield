@@ -6437,10 +6437,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/object-hash@npm:1.3.4":
-  version: 1.3.4
-  resolution: "@types/object-hash@npm:1.3.4"
-  checksum: 2ae12c7b341bcefb8f5e163527ab6afb911b3fdcdb2aeacac3231b13d5d5ddd4f75bde48268dd01727bac3488222b629808b20b6650364d011bb3c6692dd38e2
+"@types/object-hash@npm:2.1.1":
+  version: 2.1.1
+  resolution: "@types/object-hash@npm:2.1.1"
+  checksum: 60db8dd7eb3578f07e542260d7595046040e6f71a52a428ca39980dccf507a22bf59e3a889e4756f6a0dea037359798a4ef1fbbe0a29e87f06b8ff4ce3cefdf6
   languageName: node
   linkType: hard
 
@@ -14648,7 +14648,7 @@ fsevents@^1.2.7:
   resolution: "graphql-shield@workspace:packages/graphql-shield"
   dependencies:
     "@types/node": 14.17.3
-    "@types/object-hash": 1.3.4
+    "@types/object-hash": 2.1.1
     "@types/request-promise-native": 1.0.17
     "@types/yup": 0.29.11
     apollo-server: 2.25.1
