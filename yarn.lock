@@ -5662,7 +5662,7 @@ __metadata:
     "@types/mdx-js__react": 1.5.3
     "@types/node": 15.12.2
     "@types/react": 17.0.11
-    "@types/react-dom": 17.0.7
+    "@types/react-dom": 17.0.9
     "@types/wait-on": 5.3.0
     concurrently: 6.2.0
     date-fns: 2.22.1
@@ -6493,12 +6493,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:17.0.7":
-  version: 17.0.7
-  resolution: "@types/react-dom@npm:17.0.7"
+"@types/react-dom@npm:17.0.9":
+  version: 17.0.9
+  resolution: "@types/react-dom@npm:17.0.9"
   dependencies:
     "@types/react": "*"
-  checksum: 97df2088b5e1e1d3c6bf2ff6e4f8536bcd788cc7baeb49d912184923e4bee63d155d9821f15c4f36a6b89afe043f892d20015063a39a67aebf14dbc8998a1ccf
+  checksum: 82da85bcfba524fb83946df50e433b8cc942dd30f5f3f6e0756816960ce4b85db6faa2da9f2b83124087fbe0d124580edf7b1017628b78fb28fee057e91512cb
   languageName: node
   linkType: hard
 

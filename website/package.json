@@ -51,7 +51,7 @@
     "@types/mdx-js__react": "1.5.3",
     "@types/node": "15.12.2",
     "@types/react": "17.0.11",
-    "@types/react-dom": "17.0.7",
+    "@types/react-dom": "17.0.9",
     "@types/wait-on": "5.3.0",
     "concurrently": "6.2.0",
     "esbuild-register": "2.5.0",
