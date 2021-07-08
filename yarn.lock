@@ -4244,30 +4244,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/client@npm:0.2.10":
-  version: 0.2.10
-  resolution: "@guild-docs/client@npm:0.2.10"
+"@guild-docs/client@npm:0.2.20":
+  version: 0.2.20
+  resolution: "@guild-docs/client@npm:0.2.20"
   dependencies:
-    "@guild-docs/types": ^0.2.8
-    immer: ^9.0.3
+    "@guild-docs/types": ^0.2.17
+    immer: ^9.0.5
     next-mdx-remote: ^3.0.2
+    next-seo: ^4.26.0
     nprogress: ^0.2.0
+    react-icons: ^4.2.0
     react-intersection-observer: ^8.32.0
-    use-immer: ^0.5.2
+    react-use: ^17.2.4
+    use-immer: ^0.6.0
+    zustand: ^3.5.5
   peerDependencies:
     "@chakra-ui/icons": ^1.0.13
-    "@chakra-ui/react": ^1.6.3
+    "@chakra-ui/react": ^1.6.4
     "@chakra-ui/utils": ^1.8.0
     "@emotion/react": ^11.4.0
     "@mdx-js/react": ^1.6.22
-    "@theguild/components": ^1.3.0
+    "@theguild/components": ^1.4.3
     "@types/mdx-js__react": ^1.5.3
     framer-motion: ^4.1.17
-    next: ^10.2.3
-    next-i18next: ^8.4.0
+    next: ^11.0.1
+    next-i18next: ^8.5.3
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 0a7ad8916b04195ad28fbfdf4cc369dda0fb94d74507459b16e3784451cc613bbb2c928f8561fd70eb2ce0d129cd90149b27cabae1766cc9de6e49ec1f9d5023
+  checksum: eaadc36de48e307e2ec61bd95772fd4637d34d389db4033b1170d20152bd7c152148c29943cc4918b305ae175aa1e448f9221cab311142d462fe20507c368620
   languageName: node
   linkType: hard
 
@@ -4292,7 +4296,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/types@npm:^0.2.1, @guild-docs/types@npm:^0.2.8":
+"@guild-docs/types@npm:^0.2.1":
   version: 0.2.8
   resolution: "@guild-docs/types@npm:0.2.8"
   peerDependencies:
@@ -4301,6 +4305,18 @@ __metadata:
     next-i18next: ^8.4.0
     next-mdx-remote: ^3.0.2
   checksum: 02f683dfae8126eda9c75e425276f4e1832195a67a461b5968cedf3759ec7186cfc5f58261f5b8c508816298573a4b0f9e558b8f319473f41434ea32eb2b71ad
+  languageName: node
+  linkType: hard
+
+"@guild-docs/types@npm:^0.2.17":
+  version: 0.2.17
+  resolution: "@guild-docs/types@npm:0.2.17"
+  peerDependencies:
+    "@chakra-ui/react": ^1.6.4
+    "@types/react": ^17.0.13
+    next-i18next: ^8.5.1
+    next-mdx-remote: ^3.0.2
+  checksum: 52963cf91a5b60658dff73b91c493a0722921f441ba9e1fd67498a356cf68c90e60416472be4c7fb10b464952bd2b19b480e8754720435ce8f7695c65f1fb692
   languageName: node
   linkType: hard
 
@@ -5653,7 +5669,7 @@ __metadata:
     "@chakra-ui/utils": ^1.8.0
     "@emotion/react": 11.4.0
     "@emotion/styled": 11.3.0
-    "@guild-docs/client": 0.2.10
+    "@guild-docs/client": 0.2.20
     "@guild-docs/server": 0.2.5
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.3.1
@@ -15626,10 +15642,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"immer@npm:^9.0.3":
-  version: 9.0.3
-  resolution: "immer@npm:9.0.3"
-  checksum: 98e0dabde5361afe30fb72d6b662682af2cd9be82919d78955901dabb9851ce00e8655cf935f68f4b055f250f9f33a0f80f94f3e954e7887228ee6710c9d05b4
+"immer@npm:^9.0.5":
+  version: 9.0.5
+  resolution: "immer@npm:9.0.5"
+  checksum: a7fa984fa1887a33ce6d44a7a505fd5ac76009336d8b1c99d34f59aaefc28aadf93ab1e5db27513acd15be454a8a89d8151e915d9b0b6e86e72acbd28218410b
   languageName: node
   linkType: hard
 
@@ -19732,6 +19748,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"next-seo@npm:^4.26.0":
+  version: 4.26.0
+  resolution: "next-seo@npm:4.26.0"
+  peerDependencies:
+    next: ^8.1.1-canary.54 || >=9.0.0
+    react: ">=16.0.0"
+    react-dom: ">=16.0.0"
+  checksum: 5276a4a69ecc85c4ead7436d4df25b01380dfa23185f7e32c82f88b2d69191f4753eec0114bc9d7e2a97b1c724abc0501190c2d90213b8b79bc4884e550d41af
+  languageName: node
+  linkType: hard
+
 "next-tick@npm:1, next-tick@npm:^1.0.0, next-tick@npm:^1.1.0":
   version: 1.1.0
   resolution: "next-tick@npm:1.1.0"
@@ -22830,7 +22857,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-icons@npm:4.2.0":
+"react-icons@npm:4.2.0, react-icons@npm:^4.2.0":
   version: 4.2.0
   resolution: "react-icons@npm:4.2.0"
   peerDependencies:
@@ -23027,7 +23054,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-use@npm:17.2.4":
+"react-use@npm:17.2.4, react-use@npm:^17.2.4":
   version: 17.2.4
   resolution: "react-use@npm:17.2.4"
   dependencies:
@@ -27451,13 +27478,13 @@ typescript@4.3.2:
   languageName: node
   linkType: hard
 
-"use-immer@npm:^0.5.2":
-  version: 0.5.2
-  resolution: "use-immer@npm:0.5.2"
+"use-immer@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "use-immer@npm:0.6.0"
   peerDependencies:
     immer: ">=2.0.0"
     react: ^16.8.0 || ^17.0.1
-  checksum: 17f4d2905df2917df63b11e0cde408ce0d2897d881ebbe1f4004e6e358206b5686c533f2f25703b5f5aa746b6c2a56cf72e0bd0112b69fd58c81a488e5488cf2
+  checksum: 8c75cae861ddd0f7373c4eaab231351946b047774dead57377dc094e5be132547401438afc11b6441eb5104c386f869660e7bb8aad3b012746eb53388a37af31
   languageName: node
   linkType: hard
 
@@ -28820,6 +28847,18 @@ typescript@4.3.2:
     react:
       optional: true
   checksum: f5df58852571142d7448ba09b259843d38c5e6b2313d7a864a868bfb7e4e16182e80ffc381a2124958dfc625e710182ec917d849c3286c1c067c981a9095e2f5
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^3.5.5":
+  version: 3.5.5
+  resolution: "zustand@npm:3.5.5"
+  peerDependencies:
+    react: ">=16.8"
+  peerDependenciesMeta:
+    react:
+      optional: true
+  checksum: 9a1c264d10f29b68d3b12c1537e3fbde920c5170f0be08989057ad5268c52eee8fcd566db009304206085d3ddeb1e389f75c56a4f4ba01bb2c63a39b9cb7e4bf
   languageName: node
   linkType: hard
 
