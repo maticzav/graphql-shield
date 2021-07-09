@@ -6292,6 +6292,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.165":
+  version: 4.14.171
+  resolution: "@types/lodash@npm:4.14.171"
+  checksum: e48668fb030ad7d8c0c7751061bd332ad8704937d976bd4e24fd9e2128f80c17112be11e5c13d39f6a210336dc3549f7fb00eaebb56b94c2bfb89ad64c57d721
+  languageName: node
+  linkType: hard
+
 "@types/long@npm:^4.0.0, @types/long@npm:^4.0.1":
   version: 4.0.1
   resolution: "@types/long@npm:4.0.1"
@@ -6711,10 +6718,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yup@npm:0.29.11":
-  version: 0.29.11
-  resolution: "@types/yup@npm:0.29.11"
-  checksum: 2bc0528a6ae54b69e65d04a5af665bc68e9d0e65e19aa328c758e5f31e44e1f8373079d3ccfbdcc9cfb740fd8be73c13c6fc26c668af224be50deaf8e1881547
+"@types/yup@npm:0.29.13":
+  version: 0.29.13
+  resolution: "@types/yup@npm:0.29.13"
+  checksum: bb2c5e244951abb874d50c09761a6b5e34c9b376822d7c23643c4ef814d8baec739f239ec0fbd1d1a171e795cbedbe95055b832d84d1bf242fb0e659b98fb2b3
   languageName: node
   linkType: hard
 
@@ -14650,14 +14657,14 @@ fsevents@^1.2.7:
     "@types/node": 14.17.3
     "@types/object-hash": 1.3.4
     "@types/request-promise-native": 1.0.17
-    "@types/yup": 0.29.11
+    "@types/yup": 0.29.13
     apollo-server: 2.25.1
     graphql: 15.5.0
     graphql-middleware: 6.0.10
     graphql-shield-rules: 0.0.1
     graphql-tools: 7.0.5
     object-hash: ^2.0.3
-    yup: ^0.31.0
+    yup: ^0.32.0
   peerDependencies:
     graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
     graphql-middleware: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^6.0.0
@@ -18157,6 +18164,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"lodash-es@npm:^4.17.15":
+  version: 4.17.21
+  resolution: "lodash-es@npm:4.17.21"
+  checksum: ff0e7bb9595594d8b9c32fbe15912eaeefd83266f6e6872fbc498533cf8c2f039d12d37034b33965f1c04ef66ec1d6da83377c77e84e14c51a137901bb50865e
+  languageName: node
+  linkType: hard
+
 "lodash.ary@npm:^4.1.1":
   version: 4.1.1
   resolution: "lodash.ary@npm:4.1.1"
@@ -19587,6 +19601,13 @@ fsevents@^1.2.7:
     react: "*"
     react-dom: "*"
   checksum: b3c1817047093a145b02ed02792f952b44e6225d1e86c8d1fa62fde26a82c6b3885dd4215957afbf6079cb871b01f9bc126076560e63a146978c680bdfa28285
+  languageName: node
+  linkType: hard
+
+"nanoclone@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "nanoclone@npm:0.2.1"
+  checksum: f624fe519818ac2ab9fc2322d0bd8b54def4c0080123e7e4fa4a8d5fa331862e057a5c8fa1923cce6445d011a66718454750058a16c3a68b1912058288cd71a2
   languageName: node
   linkType: hard
 
@@ -28729,16 +28750,18 @@ typescript@4.3.2:
   languageName: node
   linkType: hard
 
-"yup@npm:^0.31.0":
-  version: 0.31.0
-  resolution: "yup@npm:0.31.0"
+"yup@npm:^0.32.0":
+  version: 0.32.9
+  resolution: "yup@npm:0.32.9"
   dependencies:
     "@babel/runtime": ^7.10.5
+    "@types/lodash": ^4.14.165
     lodash: ^4.17.20
-    lodash-es: ^4.17.11
+    lodash-es: ^4.17.15
+    nanoclone: ^0.2.1
     property-expr: ^2.0.4
     toposort: ^2.0.2
-  checksum: 87e099ccc253a275cf23bb0f41b1d342f7a98018ea43cbe52e1a208dbda41d4349d2606bfad56f37cf226103d4d83a61a0836adabe2824a0542c148baba148ae
+  checksum: 9da93a58fdd02562b676dc582125b4484d4f06b597498c83e249bdb604937669089e6d38d8a890fe83a256684e6386b389f65e9aef4b6efa5298a3ddb3084ba8
   languageName: node
   linkType: hard
 
