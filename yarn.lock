@@ -5688,7 +5688,7 @@ __metadata:
     tiny-lru: 7.0.6
     tsup: 4.11.2
     typescript: 4.3.2
-    undici: 3.3.6
+    undici: 4.1.1
     use-http: 1.0.21
     valtio: 1.0.6
     wait-on: 5.3.0
@@ -26942,10 +26942,10 @@ typescript@4.3.2:
   languageName: node
   linkType: hard
 
-"undici@npm:3.3.6":
-  version: 3.3.6
-  resolution: "undici@npm:3.3.6"
-  checksum: fc6aa922f2a6ecc8982f9ca1db9b8c29bf38ab8ae915b6c1bb4703fa98e0c0e70a25deb613c77044efc29f972e8b24b9366dc208435a54f8c54fcb5a9e4d7c36
+"undici@npm:4.1.1":
+  version: 4.1.1
+  resolution: "undici@npm:4.1.1"
+  checksum: 8f89f42881a69dcda09d827410248f21ef2e760dd1f4294013c9c9b24cd1e8ea54b234b0fd8fd0ee6c3f7f848ee9c88004488a70ab9e847005838b665aeeded3
   languageName: node
   linkType: hard
 
