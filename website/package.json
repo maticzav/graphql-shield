@@ -40,7 +40,7 @@
     "remark-admonitions": "1.2.1",
     "remark-prism": "1.3.6",
     "tiny-lru": "7.0.6",
-    "undici": "3.3.6",
+    "undici": "4.1.1",
     "use-http": "1.0.21",
     "valtio": "1.0.6",
     "zustand": "3.5.2"
