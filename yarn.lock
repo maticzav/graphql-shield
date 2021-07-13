@@ -5672,7 +5672,7 @@ __metadata:
     fs-extra: 10.0.0
     globby: 11.0.3
     next: 10.2.3
-    next-i18next: 8.4.0
+    next-i18next: 8.5.5
     next-remote-watch: 1.0.0
     npms.io: 2.0.6
     open-cli: 6.0.1
@@ -19683,9 +19683,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"next-i18next@npm:8.4.0":
-  version: 8.4.0
-  resolution: "next-i18next@npm:8.4.0"
+"next-i18next@npm:8.5.5":
+  version: 8.5.5
+  resolution: "next-i18next@npm:8.5.5"
   dependencies:
     "@babel/runtime": ^7.13.17
     "@types/hoist-non-react-statics": ^3.3.1
@@ -19698,7 +19698,7 @@ fsevents@^1.2.7:
   peerDependencies:
     next: ">= 10.0.0"
     react: ">= 16.8.0"
-  checksum: 1608fa74691d4394b5799a203d33ef83afb68b91f4f6e575dbe55927cb1da7de1a810d3235e0463f37ce30a7bfb2868545b9fd55983b775e2d64ce5023ce8b1a
+  checksum: dcd666f41162b3c229a888ff2ac1f59db56fa861863719cf4f3eee3d93a6bc9bfe2acf75a1a8705b3c34357aa5ad3c94964cc4c9a51df10acd32dd1ee9f15995
   languageName: node
   linkType: hard
 
