@@ -5670,14 +5670,14 @@ __metadata:
     "@guild-docs/server": 0.2.5
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.3.1
-    "@types/concurrently": 6.2.0
+    "@types/concurrently": 6.2.1
     "@types/fs-extra": 9.0.12
     "@types/mdx-js__react": 1.5.4
     "@types/node": 15.12.2
     "@types/react": 17.0.18
     "@types/react-dom": 17.0.9
     "@types/wait-on": 5.3.1
-    concurrently: 6.2.0
+    concurrently: 6.2.1
     date-fns: 2.22.1
     esbuild: 0.12.8
     esbuild-register: 2.5.0
@@ -5998,12 +5998,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/concurrently@npm:6.2.0":
-  version: 6.2.0
-  resolution: "@types/concurrently@npm:6.2.0"
+"@types/concurrently@npm:6.2.1":
+  version: 6.2.1
+  resolution: "@types/concurrently@npm:6.2.1"
   dependencies:
     "@types/node": "*"
-  checksum: 02b953f53a1b3681ce2426725fe1c3663bb945975a78ab123c43330041df749aa7134bb534989b8a493e7059f26dc5bb59d51b73f745997505e93f13d5630022
+  checksum: a348f1f09cbf8cff7b901682eb554a1d1bdc4729f22a2e2486125877c0fb56f6f56631fc743df2484d0836e510cbfa37cad5f550ac11028dac07d3bc02251168
   languageName: node
   linkType: hard
 
@@ -10218,9 +10218,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concurrently@npm:6.2.0":
-  version: 6.2.0
-  resolution: "concurrently@npm:6.2.0"
+"concurrently@npm:6.2.1":
+  version: 6.2.1
+  resolution: "concurrently@npm:6.2.1"
   dependencies:
     chalk: ^4.1.0
     date-fns: ^2.16.1
@@ -10233,7 +10233,7 @@ __metadata:
     yargs: ^16.2.0
   bin:
     concurrently: bin/concurrently.js
-  checksum: e75f311dc77ee1b486ebb65d513e1e719cc2b7589f08f2f6263b93d7d71c72609ce8c57ed3a0f791484be7e5b4435621c7d5e6d190d076c76d593bdcdb9aaf08
+  checksum: 673bf80f5acf136c0fb7725df362d4b03486204ca6d1898b69226cb60b6b1a7061c05db567d883860080162a2e0053fb133079f4ae8bf31c3ecad0818323e947
   languageName: node
   linkType: hard
 

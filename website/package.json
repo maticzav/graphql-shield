@@ -46,14 +46,14 @@
     "zustand": "3.5.2"
   },
   "devDependencies": {
-    "@types/concurrently": "6.2.0",
+    "@types/concurrently": "6.2.1",
     "@types/fs-extra": "9.0.12",
     "@types/mdx-js__react": "1.5.4",
     "@types/node": "15.12.2",
     "@types/react": "17.0.18",
     "@types/react-dom": "17.0.9",
     "@types/wait-on": "5.3.1",
-    "concurrently": "6.2.0",
+    "concurrently": "6.2.1",
     "esbuild-register": "2.5.0",
     "open-cli": "6.0.1",
     "strict-npm-engines": "0.0.1",
