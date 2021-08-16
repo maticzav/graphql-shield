@@ -5717,7 +5717,7 @@ __metadata:
     use-http: 1.0.21
     valtio: 1.0.6
     wait-on: 5.3.0
-    zustand: 3.5.2
+    zustand: 3.5.8
   languageName: unknown
   linkType: soft
 
@@ -28985,15 +28985,15 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"zustand@npm:3.5.2":
-  version: 3.5.2
-  resolution: "zustand@npm:3.5.2"
+"zustand@npm:3.5.8":
+  version: 3.5.8
+  resolution: "zustand@npm:3.5.8"
   peerDependencies:
     react: ">=16.8"
   peerDependenciesMeta:
     react:
       optional: true
-  checksum: f5df58852571142d7448ba09b259843d38c5e6b2313d7a864a868bfb7e4e16182e80ffc381a2124958dfc625e710182ec917d849c3286c1c067c981a9095e2f5
+  checksum: bdac699f071176f66f96dee5356b62d28b943d9c1bcf4d11d16c7b9782b4e7f41a2981dc34ca027f8ba71e34e80c4d215aa7e0837f6051563a81c3712b3eae65
   languageName: node
   linkType: hard
 
