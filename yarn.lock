@@ -5672,7 +5672,7 @@ __metadata:
     "@theguild/components": 1.3.1
     "@types/concurrently": 6.2.0
     "@types/fs-extra": 9.0.12
-    "@types/mdx-js__react": 1.5.3
+    "@types/mdx-js__react": 1.5.4
     "@types/node": 15.12.2
     "@types/react": 17.0.11
     "@types/react-dom": 17.0.7
@@ -6321,12 +6321,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mdx-js__react@npm:1.5.3":
-  version: 1.5.3
-  resolution: "@types/mdx-js__react@npm:1.5.3"
+"@types/mdx-js__react@npm:1.5.4":
+  version: 1.5.4
+  resolution: "@types/mdx-js__react@npm:1.5.4"
   dependencies:
     "@types/react": "*"
-  checksum: 5d7bc3b3d96e21f3d2d95e2ad2f043d92a9c99c1d205dd49f5b928eba1988b956f921574ea19cebdf7ca0e0bb21fb42e73f0bc298ea77f9cae8b4bb0232e9435
+  checksum: ff154007a80d669a14e8f202991c9e25998f0216649bcb9cfc2ec4fa4859259b6e6b3797ea07ed023b49bc3a15dfd31e26f9fef40bde1e62e1e6c93408be0a79
   languageName: node
   linkType: hard
 
