@@ -5676,7 +5676,7 @@ __metadata:
     "@types/node": 15.12.2
     "@types/react": 17.0.18
     "@types/react-dom": 17.0.9
-    "@types/wait-on": 5.3.0
+    "@types/wait-on": 5.3.1
     concurrently: 6.2.0
     date-fns: 2.22.1
     esbuild: 0.12.8
@@ -6671,12 +6671,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/wait-on@npm:5.3.0":
-  version: 5.3.0
-  resolution: "@types/wait-on@npm:5.3.0"
+"@types/wait-on@npm:5.3.1":
+  version: 5.3.1
+  resolution: "@types/wait-on@npm:5.3.1"
   dependencies:
     "@types/node": "*"
-  checksum: 5c2ed2cbc47fd75d28b05374d3055cf392c54ee2119af317f4fe70bc722775c210f31ef6b12d06fc017dd7f5be6fb0ca21db4bf6239e1c687c8baabdcc8f22ae
+  checksum: 7299b9a958a8e2d9fde3407caff20c4339d9095d76314e1e4ed83c4eb5b8eb032d4f04527ad6df54eaccf2b5ecf240132cdb68ce059acd2b33fe7eb6ed0a58ec
   languageName: node
   linkType: hard
 
