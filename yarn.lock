@@ -6547,7 +6547,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/request-promise-native@npm:1.0.17, @types/request-promise-native@npm:^1.0.17":
+"@types/request-promise-native@npm:1.0.18":
+  version: 1.0.18
+  resolution: "@types/request-promise-native@npm:1.0.18"
+  dependencies:
+    "@types/request": "*"
+  checksum: b0b82861275095b9acf057aa9431a263ca000dc43efa606eb7b12ef7f739212404ad578df05a00241f8c7b379fd6c440537a0bd0786c1a97ffe06edb15b60769
+  languageName: node
+  linkType: hard
+
+"@types/request-promise-native@npm:^1.0.17":
   version: 1.0.17
   resolution: "@types/request-promise-native@npm:1.0.17"
   dependencies:
@@ -14673,7 +14682,7 @@ fsevents@^1.2.7:
   dependencies:
     "@types/node": 14.17.9
     "@types/object-hash": 1.3.4
-    "@types/request-promise-native": 1.0.17
+    "@types/request-promise-native": 1.0.18
     "@types/yup": 0.29.11
     apollo-server: 2.25.1
     graphql: 15.5.1
