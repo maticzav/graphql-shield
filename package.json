@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "2.16.0",
-    "@types/jest": "26.0.23",
+    "@types/jest": "26.0.24",
     "@types/node": "15.6.1",
     "codecov": "3.8.2",
     "husky": "6.0.0",
