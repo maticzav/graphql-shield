@@ -1,15 +1,13 @@
 import 'remark-admonitions/styles/infima.css'
-import 'prism-themes/themes/prism-atom-dark.css'
 import '../../public/style.css'
 import '../../public/admonitions.css'
 
 import { appWithTranslation } from 'next-i18next'
-import { chakra, Code, Box, extendTheme, Text, theme as chakraTheme, UnorderedList, useColorModeValue } from '@chakra-ui/react'
+
+import { chakra, Code, extendTheme, theme as chakraTheme, UnorderedList, useColorModeValue } from '@chakra-ui/react'
 import { mode } from '@chakra-ui/theme-tools'
-import { CombinedThemeProvider, DocsPage, ExtendComponents, handlePushRoute } from '@guild-docs/client'
+import { AppSeoProps, CombinedThemeProvider, DocsPage, ExtendComponents, handlePushRoute } from '@guild-docs/client'
 import { Footer, Header, Subheader } from '@theguild/components'
-import { CopyToClipboard } from '../components/CopyToClipboard'
-import { PackageInstall } from '../components/PackageInstall'
 
 import type { AppProps } from 'next/app'
 
@@ -22,26 +20,22 @@ ExtendComponents({
       },
     },
   }),
-  pre: (props) => <div {...props} />,
-  code: (props) => {
-    return (
-      <Code
-        fontSize="0.9rem"
-        colorScheme={'blackAlpha'}
-        {...props}
-        padding={'20px !important'}
-        width={'100%'}
-        borderRadius={'sm'}
-      />
-    )
-  },
+  pre: (props) => (
+    <Code
+      fontSize="0.9rem"
+      colorScheme={'blackAlpha'}
+      padding={'20px !important'}
+      width={'100%'}
+      borderRadius={'sm'}
+      {...props}
+    />
+  ),
   inlineCode: (props) => {
     const colorScheme = useColorModeValue('blackAlpha', undefined)
 
-    return <Code margin="1px" colorScheme={colorScheme} fontWeight="semibold" fontSize="0.875em" {...props} />
+    return <Code display="inline" margin="1px" colorScheme={colorScheme} fontWeight="semibold" fontSize="0.875em" {...props} />
   },
-  Text,
-  PackageInstall,
+
   ul: UnorderedList,
 })
 
@@ -70,8 +64,8 @@ const theme = extendTheme({
     },
   },
   fonts: {
-    heading: '"Poppins", sans-serif',
-    body: '"Poppins", sans-serif',
+    heading: 'TGCFont, sans-serif',
+    body: 'TGCFont, sans-serif',
   },
   config: {
     initialColorMode: 'light',
@@ -142,9 +136,19 @@ const AppContentWrapper = appWithTranslation(function TranslatedApp(appProps) {
   return <AppContent {...appProps} />
 })
 
+const defaultSeo: AppSeoProps = {
+  title: 'GraphQL Shield',
+  description: 'A GraphQL tool to ease the creation of permission layers.',
+  logo: {
+    url: 'https://www.graphql-shield.com/logo.png',
+    width: 50,
+    height: 54,
+  },
+}
+
 export default function App(appProps: AppProps) {
   return (
-    <CombinedThemeProvider theme={theme} accentColor={accentColor}>
+    <CombinedThemeProvider theme={theme} accentColor={accentColor} defaultSeo={defaultSeo}>
       <AppContentWrapper {...appProps} />
     </CombinedThemeProvider>
   )
