@@ -28,7 +28,7 @@
     "fs-extra": "10.0.0",
     "globby": "11.0.3",
     "next": "10.2.3",
-    "next-i18next": "8.4.0",
+    "next-i18next": "8.6.0",
     "next-remote-watch": "1.0.0",
     "npms.io": "2.0.6",
     "prism-themes": "1.7.0",
