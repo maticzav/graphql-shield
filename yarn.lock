@@ -4333,40 +4333,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/server@npm:0.2.5":
-  version: 0.2.5
-  resolution: "@guild-docs/server@npm:0.2.5"
+"@guild-docs/server@npm:0.2.25":
+  version: 0.2.25
+  resolution: "@guild-docs/server@npm:0.2.25"
   dependencies:
-    "@guild-docs/types": ^0.2.1
+    "@guild-docs/types": ^0.2.17
     github-slugger: ^1.3.0
-    globby: ^11.0.3
+    globby: ^11.0.4
     gray-matter: ^4.0.3
-    next-mdx-remote: ^3.0.2
-    remark-slug: ^6.0.0
+    next-mdx-remote: ^3.0.4
+    node-fetch: ^2.6.1
+    npms.io: ^2.1.0
+    remark-emoji: ^2.2.0
+    remark-slug: ^6.1.0
+    tiny-lru: ^7.0.6
   peerDependencies:
-    next: ^10.2.0
-    next-i18next: ^8.2.0
+    next: ^11.0.1
+    next-i18next: ^8.5.3
     react: ^17.0.2
     react-dom: ^17.0.2
     remark-admonitions: ^1.2.1
     remark-prism: ^1.3.6
-  checksum: 47cc4faca77282bfcc77bd39df45321421a7974084ba83bc96cf7090060fe322ab723285bde02b368e9ac0491f746f797cebda9c133b58077e88fcef6b316890
+  checksum: 5e322272728fe81c0af7285484886e1cc6a10da616742ab39a5eed6d5e97a0fb71faf8cf982843230d5792b48cbc0fff6606423f434f99475723e4b5af40eea1
   languageName: node
   linkType: hard
 
-"@guild-docs/types@npm:^0.2.1":
-  version: 0.2.8
-  resolution: "@guild-docs/types@npm:0.2.8"
-  peerDependencies:
-    "@chakra-ui/react": ^1.6.3
-    "@types/react": ^17.0.11
-    next-i18next: ^8.4.0
-    next-mdx-remote: ^3.0.2
-  checksum: 02f683dfae8126eda9c75e425276f4e1832195a67a461b5968cedf3759ec7186cfc5f58261f5b8c508816298573a4b0f9e558b8f319473f41434ea32eb2b71ad
-  languageName: node
-  linkType: hard
-
-"@guild-docs/types@npm:^0.2.27":
+"@guild-docs/types@npm:^0.2.17, @guild-docs/types@npm:^0.2.27":
   version: 0.2.27
   resolution: "@guild-docs/types@npm:0.2.27"
   peerDependencies:
@@ -5741,7 +5733,7 @@ __metadata:
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
     "@guild-docs/client": 0.2.28
-    "@guild-docs/server": 0.2.5
+    "@guild-docs/server": 0.2.25
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.3.1
     "@types/concurrently": 6.2.1
@@ -11922,6 +11914,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"emoticon@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "emoticon@npm:3.2.0"
+  checksum: fc608314df036126955e4414e87a4a3e7e66793f7c085ed82a5f6278eee8576d89bbc5601326b7da9ca71d075e120d884517455ac3963aa2143e10d8a144ad4f
+  languageName: node
+  linkType: hard
+
 "enabled@npm:1.0.x":
   version: 1.0.2
   resolution: "enabled@npm:1.0.2"
@@ -14359,6 +14358,20 @@ fsevents@^1.2.7:
     merge2: ^1.3.0
     slash: ^3.0.0
   checksum: 623a19a4114ae7d040068293890eb1641d0ddef920aac346037d305c96745fc225cbb988921d908f2df2bd0a36f3aca4f3dc746c446d3724a60adf1b27fd7764
+  languageName: node
+  linkType: hard
+
+"globby@npm:^11.0.4":
+  version: 11.0.4
+  resolution: "globby@npm:11.0.4"
+  dependencies:
+    array-union: ^2.1.0
+    dir-glob: ^3.0.1
+    fast-glob: ^3.1.1
+    ignore: ^5.1.4
+    merge2: ^1.3.0
+    slash: ^3.0.0
+  checksum: 9f365b35b835c0235880e272fa2a2f5d9d78428e09af8dfc67536f1047953e7b0c66aab9bb6d41e6c0f4c3ec75a22840d9acb892f102daecaadd338b2c763219
   languageName: node
   linkType: hard
 
@@ -19972,21 +19985,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"next-mdx-remote@npm:^3.0.2":
-  version: 3.0.2
-  resolution: "next-mdx-remote@npm:3.0.2"
-  dependencies:
-    "@mdx-js/mdx": ^1.6.22
-    "@mdx-js/react": ^1.6.22
-    esbuild: ^0.11.12
-    pkg-dir: ^5.0.0
-  peerDependencies:
-    react: ">=16.x <=17.x"
-    react-dom: ">=16.x <=17.x"
-  checksum: ec7908828a21d55cab40f7584ea93208e72fcf3422b4ad5a6e3d447d7b1a9cc64f1c96aa3f2c432aa7b77c3cbe596ba68269bdd257645a82e86b742e2fa1b4fc
-  languageName: node
-  linkType: hard
-
 "next-mdx-remote@npm:^3.0.4":
   version: 3.0.4
   resolution: "next-mdx-remote@npm:3.0.4"
@@ -20194,6 +20192,15 @@ fsevents@^1.2.7:
   dependencies:
     minimatch: ^3.0.2
   checksum: 80c61dbf8da20a8820fd9ab1e4d78d3973a247389f4667147a18ffce77adbc71b42520914064cc23b6a1c9a0b8efcf8c6a360b109e327ed93a3f52d944c1b314
+  languageName: node
+  linkType: hard
+
+"node-emoji@npm:^1.10.0":
+  version: 1.11.0
+  resolution: "node-emoji@npm:1.11.0"
+  dependencies:
+    lodash: ^4.17.21
+  checksum: 2d85355dbde7dc13dc96747eb572a1f1884bbe1b5769dcbe9847557fc29ec0c939c4758270e9a78a1be7ad2a35e98453470805ef6bcb3a5fbdc0a7e88d882483
   languageName: node
   linkType: hard
 
@@ -20660,6 +20667,15 @@ fsevents@^1.2.7:
   dependencies:
     axios: 0.21.1
   checksum: f742b63d8b5fd016f6d9b84b0456fcfb349306d1ca286644aeeb3628715c6f7b10e97800eb79a626e03f8949b5dcb961f828839a1289adcb9b9033ba3d17a1b3
+  languageName: node
+  linkType: hard
+
+"npms.io@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "npms.io@npm:2.1.0"
+  dependencies:
+    axios: 0.21.1
+  checksum: 083005234d572b621fd4b241b1ae3df6fb1754891ca1c276cf5c97568922e7f6bbe99c43ac111ab652b0d8d444dffec0315bf06a9daa17f95b7ae8e49caf5431
   languageName: node
   linkType: hard
 
@@ -23757,6 +23773,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"remark-emoji@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "remark-emoji@npm:2.2.0"
+  dependencies:
+    emoticon: ^3.2.0
+    node-emoji: ^1.10.0
+    unist-util-visit: ^2.0.3
+  checksum: 7778e3327d4eac9ff656113145d35befe91d6215227ba8816a33a59abe4c0c765592321eb0037deefa597b9f290da146d25544b0d5efe64c2e8d32c8bbf83ed0
+  languageName: node
+  linkType: hard
+
 "remark-footnotes@npm:2.0.0":
   version: 2.0.0
   resolution: "remark-footnotes@npm:2.0.0"
@@ -23839,14 +23866,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"remark-slug@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "remark-slug@npm:6.0.0"
+"remark-slug@npm:^6.1.0":
+  version: 6.1.0
+  resolution: "remark-slug@npm:6.1.0"
   dependencies:
     github-slugger: ^1.0.0
     mdast-util-to-string: ^1.0.0
     unist-util-visit: ^2.0.0
-  checksum: 90471e3768faa6b6cfc6300aa5e5c34205b4f889f305c185a0e7aa7249410102d928e8617bcf493e29695a0fe9a29689af9520868a0428ac75642599f6217aba
+  checksum: 11432cb7e076676c9f9ce295a42ef4625f8aaf97b794a36eea5bdc5a1ae75f29230160616070c78c272d80525450aa636b0fd7a5d00dcc6d7317197b4d3b07eb
   languageName: node
   linkType: hard
 
@@ -26423,7 +26450,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"tiny-lru@npm:7.0.6":
+"tiny-lru@npm:7.0.6, tiny-lru@npm:^7.0.6":
   version: 7.0.6
   resolution: "tiny-lru@npm:7.0.6"
   checksum: 9fb221279eee2747e20511ce9d4cc080527b6c44f835b867d5f02e136fe0e34f0c10348af7e22c56420ffb69636ac042eb4ffead90dd8d80a7b6368be30f112a
@@ -27448,7 +27475,7 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"unist-util-visit@npm:2.0.3, unist-util-visit@npm:^2.0.1":
+"unist-util-visit@npm:2.0.3, unist-util-visit@npm:^2.0.1, unist-util-visit@npm:^2.0.3":
   version: 2.0.3
   resolution: "unist-util-visit@npm:2.0.3"
   dependencies:
