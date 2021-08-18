@@ -4302,30 +4302,34 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/client@npm:0.2.10":
-  version: 0.2.10
-  resolution: "@guild-docs/client@npm:0.2.10"
+"@guild-docs/client@npm:0.2.28":
+  version: 0.2.28
+  resolution: "@guild-docs/client@npm:0.2.28"
   dependencies:
-    "@guild-docs/types": ^0.2.8
-    immer: ^9.0.3
-    next-mdx-remote: ^3.0.2
+    "@guild-docs/types": ^0.2.27
+    immer: ^9.0.5
+    next-mdx-remote: ^3.0.4
+    next-seo: ^4.26.0
     nprogress: ^0.2.0
+    react-icons: ^4.2.0
     react-intersection-observer: ^8.32.0
-    use-immer: ^0.5.2
+    react-use: ^17.2.4
+    use-immer: ^0.6.0
+    zustand: ^3.5.7
   peerDependencies:
-    "@chakra-ui/icons": ^1.0.13
-    "@chakra-ui/react": ^1.6.3
-    "@chakra-ui/utils": ^1.8.0
+    "@chakra-ui/icons": ^1.0.15
+    "@chakra-ui/react": ^1.6.6
+    "@chakra-ui/utils": ^1.8.2
     "@emotion/react": ^11.4.0
     "@mdx-js/react": ^1.6.22
-    "@theguild/components": ^1.3.0
-    "@types/mdx-js__react": ^1.5.3
+    "@theguild/components": ^1.4.7
+    "@types/mdx-js__react": ^1.5.4
     framer-motion: ^4.1.17
-    next: ^10.2.3
-    next-i18next: ^8.4.0
+    next: ^11.0.1
+    next-i18next: ^8.5.3
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 0a7ad8916b04195ad28fbfdf4cc369dda0fb94d74507459b16e3784451cc613bbb2c928f8561fd70eb2ce0d129cd90149b27cabae1766cc9de6e49ec1f9d5023
+  checksum: 1f1644dfdfae2271b736e3bbe9ac984c33d38196560aabea989919fcf02c2461074ca31abab607838ccadc345840890b351f1442014f92b51003e98c9a1b0cfb
   languageName: node
   linkType: hard
 
@@ -4350,7 +4354,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/types@npm:^0.2.1, @guild-docs/types@npm:^0.2.8":
+"@guild-docs/types@npm:^0.2.1":
   version: 0.2.8
   resolution: "@guild-docs/types@npm:0.2.8"
   peerDependencies:
@@ -4359,6 +4363,18 @@ __metadata:
     next-i18next: ^8.4.0
     next-mdx-remote: ^3.0.2
   checksum: 02f683dfae8126eda9c75e425276f4e1832195a67a461b5968cedf3759ec7186cfc5f58261f5b8c508816298573a4b0f9e558b8f319473f41434ea32eb2b71ad
+  languageName: node
+  linkType: hard
+
+"@guild-docs/types@npm:^0.2.27":
+  version: 0.2.27
+  resolution: "@guild-docs/types@npm:0.2.27"
+  peerDependencies:
+    "@chakra-ui/react": ^1.6.5
+    "@types/react": ^17.0.15
+    next-i18next: ^8.5.3
+    next-mdx-remote: ^3.0.4
+  checksum: 02e26f49333de3f0e944d043a573b923e9e8129f404b33660356e1f31b50cc811cdde202fe7adcfcc59ecc450c7ff20530bf0b2838a82170788d6a57ac2a4cf5
   languageName: node
   linkType: hard
 
@@ -5724,7 +5740,7 @@ __metadata:
     "@chakra-ui/utils": 1.8.2
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
-    "@guild-docs/client": 0.2.10
+    "@guild-docs/client": 0.2.28
     "@guild-docs/server": 0.2.5
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.3.1
@@ -12245,6 +12261,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"esbuild@npm:^0.12.9":
+  version: 0.12.20
+  resolution: "esbuild@npm:0.12.20"
+  bin:
+    esbuild: bin/esbuild
+  checksum: 6c7624a0a20b7388191a584e8ce941c4169142bab4c225f081e0dabf2ac306a8b9af5014a32a40746b506bbdc9833506171c6d590042c297b21b108e7eaded77
+  languageName: node
+  linkType: hard
+
 "escalade@npm:^3.1.1":
   version: 3.1.1
   resolution: "escalade@npm:3.1.1"
@@ -15843,10 +15868,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"immer@npm:^9.0.3":
-  version: 9.0.3
-  resolution: "immer@npm:9.0.3"
-  checksum: 98e0dabde5361afe30fb72d6b662682af2cd9be82919d78955901dabb9851ce00e8655cf935f68f4b055f250f9f33a0f80f94f3e954e7887228ee6710c9d05b4
+"immer@npm:^9.0.5":
+  version: 9.0.5
+  resolution: "immer@npm:9.0.5"
+  checksum: a7fa984fa1887a33ce6d44a7a505fd5ac76009336d8b1c99d34f59aaefc28aadf93ab1e5db27513acd15be454a8a89d8151e915d9b0b6e86e72acbd28218410b
   languageName: node
   linkType: hard
 
@@ -19962,6 +19987,21 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"next-mdx-remote@npm:^3.0.4":
+  version: 3.0.4
+  resolution: "next-mdx-remote@npm:3.0.4"
+  dependencies:
+    "@mdx-js/mdx": ^1.6.22
+    "@mdx-js/react": ^1.6.22
+    esbuild: ^0.12.9
+    pkg-dir: ^5.0.0
+  peerDependencies:
+    react: ">=16.x <=17.x"
+    react-dom: ">=16.x <=17.x"
+  checksum: aaa5eee457269964ab685d164da4cc09912e58fbb52248cc50533ccf6afd7a9fe7dd3844b74383ef3728e77fedd6df847cba9c546fda2f4da9e8f1a913445e21
+  languageName: node
+  linkType: hard
+
 "next-remote-watch@npm:1.0.0":
   version: 1.0.0
   resolution: "next-remote-watch@npm:1.0.0"
@@ -19974,6 +20014,17 @@ fsevents@^1.2.7:
   bin:
     next-remote-watch: bin/next-remote-watch
   checksum: 43794861d986f2acc1c1af5b205c158327cd48babd3dc4197fee5afe4034cd695789f0da7b76919bac5e65ed00358d30c007eb4d52657628f1005aeae1467c09
+  languageName: node
+  linkType: hard
+
+"next-seo@npm:^4.26.0":
+  version: 4.26.0
+  resolution: "next-seo@npm:4.26.0"
+  peerDependencies:
+    next: ^8.1.1-canary.54 || >=9.0.0
+    react: ">=16.0.0"
+    react-dom: ">=16.0.0"
+  checksum: 5276a4a69ecc85c4ead7436d4df25b01380dfa23185f7e32c82f88b2d69191f4753eec0114bc9d7e2a97b1c724abc0501190c2d90213b8b79bc4884e550d41af
   languageName: node
   linkType: hard
 
@@ -23075,7 +23126,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-icons@npm:4.2.0":
+"react-icons@npm:4.2.0, react-icons@npm:^4.2.0":
   version: 4.2.0
   resolution: "react-icons@npm:4.2.0"
   peerDependencies:
@@ -23272,7 +23323,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-use@npm:17.2.4":
+"react-use@npm:17.2.4, react-use@npm:^17.2.4":
   version: 17.2.4
   resolution: "react-use@npm:17.2.4"
   dependencies:
@@ -27698,13 +27749,13 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"use-immer@npm:^0.5.2":
-  version: 0.5.2
-  resolution: "use-immer@npm:0.5.2"
+"use-immer@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "use-immer@npm:0.6.0"
   peerDependencies:
     immer: ">=2.0.0"
     react: ^16.8.0 || ^17.0.1
-  checksum: 17f4d2905df2917df63b11e0cde408ce0d2897d881ebbe1f4004e6e358206b5686c533f2f25703b5f5aa746b6c2a56cf72e0bd0112b69fd58c81a488e5488cf2
+  checksum: 8c75cae861ddd0f7373c4eaab231351946b047774dead57377dc094e5be132547401438afc11b6441eb5104c386f869660e7bb8aad3b012746eb53388a37af31
   languageName: node
   linkType: hard
 
@@ -29069,6 +29120,18 @@ typescript@4.3.5:
     react:
       optional: true
   checksum: bdac699f071176f66f96dee5356b62d28b943d9c1bcf4d11d16c7b9782b4e7f41a2981dc34ca027f8ba71e34e80c4d215aa7e0837f6051563a81c3712b3eae65
+  languageName: node
+  linkType: hard
+
+"zustand@npm:^3.5.7":
+  version: 3.5.9
+  resolution: "zustand@npm:3.5.9"
+  peerDependencies:
+    react: ">=16.8"
+  peerDependenciesMeta:
+    react:
+      optional: true
+  checksum: 7247391b60eb9d08c1e40375601f7e09703997b02ea51aa72d894a62429b076b4e534698a2462012bb0674d6dedf8a36890e3f9a1a762d851efb088ecd689594
   languageName: node
   linkType: hard
 
