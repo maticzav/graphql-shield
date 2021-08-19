@@ -5776,7 +5776,7 @@ __metadata:
     next: 10.2.3
     next-i18next: 8.6.0
     next-remote-watch: 1.0.0
-    npms.io: 2.0.6
+    npms.io: 2.1.0
     open-cli: 6.0.1
     prism-themes: 1.7.0
     react: 17.0.2
@@ -20682,16 +20682,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"npms.io@npm:2.0.6":
-  version: 2.0.6
-  resolution: "npms.io@npm:2.0.6"
-  dependencies:
-    axios: 0.21.1
-  checksum: f742b63d8b5fd016f6d9b84b0456fcfb349306d1ca286644aeeb3628715c6f7b10e97800eb79a626e03f8949b5dcb961f828839a1289adcb9b9033ba3d17a1b3
-  languageName: node
-  linkType: hard
-
-"npms.io@npm:^2.1.0":
+"npms.io@npm:2.1.0, npms.io@npm:^2.1.0":
   version: 2.1.0
   resolution: "npms.io@npm:2.1.0"
   dependencies:
