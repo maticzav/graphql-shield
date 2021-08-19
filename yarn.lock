@@ -5792,7 +5792,7 @@ __metadata:
     typescript: 4.3.5
     undici: 3.3.6
     use-http: 1.0.23
-    valtio: 1.0.6
+    valtio: 1.2.1
     wait-on: 5.3.0
     zustand: 3.5.9
   languageName: unknown
@@ -22831,10 +22831,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"proxy-compare@npm:2.0.0":
-  version: 2.0.0
-  resolution: "proxy-compare@npm:2.0.0"
-  checksum: 27e8841bc19085f0289f49af38381c462ec351cb0b7c9a97cf26fd9c61cbb12bedc9a772519e082e91ede2c97ae74e19e20690c2b98ed9f42ff7cfa98c74c82a
+"proxy-compare@npm:2.0.2":
+  version: 2.0.2
+  resolution: "proxy-compare@npm:2.0.2"
+  checksum: 9419c09b6d1abc144068b38232f7496fe45d3c66cce123086d4213ae6d5b8367dd2a4d8771c58a9c19e812bcdc999c9c9423be9b51c892acf88b4079c6a4b53e
   languageName: node
   linkType: hard
 
@@ -28026,11 +28026,11 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"valtio@npm:1.0.6":
-  version: 1.0.6
-  resolution: "valtio@npm:1.0.6"
+"valtio@npm:1.2.1":
+  version: 1.2.1
+  resolution: "valtio@npm:1.2.1"
   dependencies:
-    proxy-compare: 2.0.0
+    proxy-compare: 2.0.2
   peerDependencies:
     "@babel/helper-module-imports": ">=7.12"
     "@babel/types": ">=7.13"
@@ -28045,7 +28045,7 @@ typescript@4.3.5:
       optional: true
     react:
       optional: true
-  checksum: b1793ee118ef995e1b5a7be7888b854f1ab28c660836a7fe5fdcffd301baf66adbd9483e4e1eb4abe14c210d10d0db2c2f8e000a59e69c2903663adedd55fa31
+  checksum: 585e45b52a9b3fa8c24ccaf95c8d29dc162997317fae154be4613c94e931ad38cb87eb5e58f2697250cc52942359700d166e6569fd07afc9d06dd1e914f1fa2d
   languageName: node
   linkType: hard
 
