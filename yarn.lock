@@ -5788,7 +5788,7 @@ __metadata:
     remark-prism: 1.3.6
     strict-npm-engines: 0.0.1
     tiny-lru: 7.0.6
-    tsup: 4.11.2
+    tsup: 4.14.0
     typescript: 4.3.5
     undici: 3.3.6
     use-http: 1.0.23
@@ -12274,15 +12274,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:^0.11.12":
-  version: 0.11.23
-  resolution: "esbuild@npm:0.11.23"
-  bin:
-    esbuild: bin/esbuild
-  checksum: 9226fc3d74f7555c96778c5d9204312c578e9c11b472deebfbab52c4ac58b9efc3a40be529368f6ccbe257d0059c6b8fd142c179824a3227d055d912c7b5a94a
-  languageName: node
-  linkType: hard
-
 "esbuild@npm:^0.12.9":
   version: 0.12.20
   resolution: "esbuild@npm:0.12.20"
@@ -13992,7 +13983,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"fsevents@^2.3.2, fsevents@~2.3.1":
+"fsevents@^2.3.2, fsevents@~2.3.1, fsevents@~2.3.2":
   version: 2.3.2
   resolution: "fsevents@npm:2.3.2"
   dependencies:
@@ -14013,7 +14004,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"fsevents@patch:fsevents@^2.3.2#builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.1#builtin<compat/fsevents>":
+"fsevents@patch:fsevents@^2.3.2#builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.1#builtin<compat/fsevents>, fsevents@patch:fsevents@~2.3.2#builtin<compat/fsevents>":
   version: 2.3.2
   resolution: "fsevents@patch:fsevents@npm%3A2.3.2#builtin<compat/fsevents>::version=2.3.2&hash=11e9ea"
   dependencies:
@@ -24242,17 +24233,17 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"rollup@npm:^2.45.2":
-  version: 2.51.2
-  resolution: "rollup@npm:2.51.2"
+"rollup@npm:^2.56.1":
+  version: 2.56.2
+  resolution: "rollup@npm:2.56.2"
   dependencies:
-    fsevents: ~2.3.1
+    fsevents: ~2.3.2
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     rollup: dist/bin/rollup
-  checksum: adad3fa3993c5843cdfdd9d6e370a5780182816175c154a3bfb437f01ca7838b2725c2b3030eb3ba3b1002f0ce77f091be78bbfc4aef4b75ddd83302138a19c6
+  checksum: babe2dce8eec8c130915baa54b0d62260fa4691ca9f2a989a2685b4e72761e701d53c374efa51a59a4c3f59a3c667ca5c8ac0e0de9a294ad50d1c1271d2d5199
   languageName: node
   linkType: hard
 
@@ -27000,21 +26991,21 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"tsup@npm:4.11.2":
-  version: 4.11.2
-  resolution: "tsup@npm:4.11.2"
+"tsup@npm:4.14.0":
+  version: 4.14.0
+  resolution: "tsup@npm:4.14.0"
   dependencies:
     cac: ^6.7.2
     chalk: ^4.1.0
     chokidar: ^3.5.1
     debug: ^4.3.1
-    esbuild: ^0.11.12
+    esbuild: ^0.12.9
     execa: ^5.0.0
     globby: ^11.0.3
     joycon: ^3.0.1
     postcss-load-config: ^3.0.1
     resolve-from: ^5.0.0
-    rollup: ^2.45.2
+    rollup: ^2.56.1
     sucrase: ^3.18.1
     tree-kill: ^1.2.2
   peerDependencies:
@@ -27025,7 +27016,7 @@ fsevents@^1.2.7:
   bin:
     tsup: dist/cli-default.js
     tsup-node: dist/cli-node.js
-  checksum: 0504cdb51e65c65d37b65da0132fbc0f327bd7d2dc1f714406280be9bf6bc4b60aae68e08f647f4c852c18e85352a8c88b81e3c4f017520c380cdbe9f0f5d67e
+  checksum: 44756ed160a872744773c2607af0dbfc429f642b85ff08d0dc246eec67dc50e57dabf544a283ec19ef17a6b49c5588d6cf5c5c720a642aeab141c4cff1a8b7e1
   languageName: node
   linkType: hard
 
