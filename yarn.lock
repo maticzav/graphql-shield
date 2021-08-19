@@ -5778,7 +5778,7 @@ __metadata:
     next-remote-watch: 1.0.0
     npms.io: 2.1.0
     open-cli: 6.0.1
-    prism-themes: 1.7.0
+    prism-themes: 1.8.0
     react: 17.0.2
     react-dom: 17.0.2
     react-icons: 4.2.0
@@ -22297,10 +22297,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"prism-themes@npm:1.7.0":
-  version: 1.7.0
-  resolution: "prism-themes@npm:1.7.0"
-  checksum: e843eaaae17af65009c1667dcf931439df8a5dfaf0728d439f5ca1e98dcf516911002d812261486f3ecb1e642f8424937c3d8cfa546a22c9b41b6c858f8be007
+"prism-themes@npm:1.8.0":
+  version: 1.8.0
+  resolution: "prism-themes@npm:1.8.0"
+  checksum: ac6b5e9aa96180629f313cfda6f38d81ca998e33f8ba5418c218f2a0638dd88dfe150009c8434be6c0f7b8f84f42fff3f387258b05b992665cb18c84c6b55ea0
   languageName: node
   linkType: hard
 
