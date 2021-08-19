@@ -5793,7 +5793,7 @@ __metadata:
     undici: 3.3.6
     use-http: 1.0.23
     valtio: 1.2.1
-    wait-on: 5.3.0
+    wait-on: 6.0.0
     zustand: 3.5.9
   languageName: unknown
   linkType: soft
@@ -17714,16 +17714,16 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"joi@npm:^17.3.0":
-  version: 17.4.0
-  resolution: "joi@npm:17.4.0"
+"joi@npm:^17.4.0":
+  version: 17.4.2
+  resolution: "joi@npm:17.4.2"
   dependencies:
     "@hapi/hoek": ^9.0.0
     "@hapi/topo": ^5.0.0
     "@sideway/address": ^4.1.0
     "@sideway/formula": ^3.0.0
     "@sideway/pinpoint": ^2.0.0
-  checksum: 2f6203d4513c063d457a935dab5e8060413479880d55af2c4fada987c7fe1bedff46d46eec36b14cf433ecc4df3b580fe1c0a0fed5b73a265b78011f97ff5c2d
+  checksum: 4aee05091f6d1dcd3dd5e9e286cd2b399b8f371327f81f3382750bbcf5c461387ab0c36a3c0377f2a80db6f1f04745a77a4bf8194674643d14ca7d47a079a2b0
   languageName: node
   linkType: hard
 
@@ -24318,6 +24318,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"rxjs@npm:^7.1.0":
+  version: 7.3.0
+  resolution: "rxjs@npm:7.3.0"
+  dependencies:
+    tslib: ~2.1.0
+  checksum: 148b28cdc6701e5d5011079523d1f2475c82b94b6945654b5045050dd4b2e1290de26f53e8e253a9392b57d08ba7b83d97b141bb25bec124c202cd0c24f9d1e5
+  languageName: node
+  linkType: hard
+
 "safe-buffer@npm:5.1.2, safe-buffer@npm:~5.1.0, safe-buffer@npm:~5.1.1":
   version: 5.1.2
   resolution: "safe-buffer@npm:5.1.2"
@@ -28155,18 +28164,18 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"wait-on@npm:5.3.0":
-  version: 5.3.0
-  resolution: "wait-on@npm:5.3.0"
+"wait-on@npm:6.0.0":
+  version: 6.0.0
+  resolution: "wait-on@npm:6.0.0"
   dependencies:
     axios: ^0.21.1
-    joi: ^17.3.0
+    joi: ^17.4.0
     lodash: ^4.17.21
     minimist: ^1.2.5
-    rxjs: ^6.6.3
+    rxjs: ^7.1.0
   bin:
     wait-on: bin/wait-on
-  checksum: 405cad859a3ede2b48ebe7a3e39e543adff21333ac3e309b1469bffa71952db0c0920bebabf5d7282e8709bd43c2bab312ed6e764cdae149986b57dc0b263ff9
+  checksum: c43c09f02b0b23582150cab4d6779e76fa511f78dc920ce892c3ccd4cc9e342726ef993c2186fead7f5760d8ea2b01bcab6b2fd075ffdfa97a1db0957345a568
   languageName: node
   linkType: hard
 
