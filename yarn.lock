@@ -5758,7 +5758,7 @@ __metadata:
     "@guild-docs/client": 0.2.28
     "@guild-docs/server": 0.2.25
     "@mdx-js/react": 1.6.22
-    "@theguild/components": 1.3.1
+    "@theguild/components": 1.4.8
     "@types/concurrently": 6.2.1
     "@types/fs-extra": 9.0.12
     "@types/mdx-js__react": 1.5.4
@@ -5878,9 +5878,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@theguild/components@npm:1.3.1":
-  version: 1.3.1
-  resolution: "@theguild/components@npm:1.3.1"
+"@theguild/components@npm:1.4.8":
+  version: 1.4.8
+  resolution: "@theguild/components@npm:1.4.8"
   dependencies:
     "@emotion/react": ^11.4.0
     "@emotion/styled": ^11.3.0
@@ -5893,11 +5893,12 @@ __metadata:
     react-player: ^2.9.0
     tailwindcss: ^2.1.4
     twin.macro: ^2.4.2
-    use-debounce: ^6.0.1
+    use-debounce: ^7.0.0
+    validator: 13.6.0
   peerDependencies:
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 52831b4da089785cab7dc618c94e708e427638cd32831d556aecc88118e8649db4d026600e11d9a0e1e7e341d148ddd17fffc13785c513284a2b508c9a1cb85a
+  checksum: f87847e99053c8faeb3989edc13004f0a9ffab65216e640056f182dd808e1c0104fe781103dd27a3b3cfe6873b9203dd7a7b688a1a9df5f05d66739ccb893cb3
   languageName: node
   linkType: hard
 
@@ -27773,12 +27774,12 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"use-debounce@npm:^6.0.1":
-  version: 6.0.1
-  resolution: "use-debounce@npm:6.0.1"
+"use-debounce@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "use-debounce@npm:7.0.0"
   peerDependencies:
     react: ">=16.8.0"
-  checksum: 4e28868f1b87d6911b89486eb9537abc3ef11962e631682b21da71678532230a084aced98d39fe266b1294fed02cdbbcdc179a7e39ef166977f44c2203a3e7d9
+  checksum: e0a10404cad3eba324416955397883c9c276df8141040377916e0e79d0d1d939e75f88acf8fe6b9bb5d10bcab6828a15b5bc42314adb967da57c9a3c517b6681
   languageName: node
   linkType: hard
 
@@ -28010,6 +28011,13 @@ typescript@4.3.5:
     spdx-correct: ^3.0.0
     spdx-expression-parse: ^3.0.0
   checksum: 940899bd4eacfa012ceecb10a5814ba0e8103da5243aa74d0d62f1f8a405efcd23e034fb7193e2d05b392870c53aabcb1f66439b062075cdcb28bc5d562a8ff6
+  languageName: node
+  linkType: hard
+
+"validator@npm:13.6.0":
+  version: 13.6.0
+  resolution: "validator@npm:13.6.0"
+  checksum: 6ae43bfd47ae7e3ed5803c6fff949c5cbabb4d248af38fce0ccafb637c85db8c0c5cee2a91817242865de4f5970d61de809f0975910ec78282307ffd23249466
   languageName: node
   linkType: hard
 
