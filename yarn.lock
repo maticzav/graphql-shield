@@ -5768,7 +5768,7 @@ __metadata:
     tsup: 4.11.2
     typescript: 4.3.5
     undici: 3.3.6
-    use-http: 1.0.21
+    use-http: 1.0.23
     valtio: 1.0.6
     wait-on: 5.3.0
     zustand: 3.5.8
@@ -27762,9 +27762,9 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"use-http@npm:1.0.21":
-  version: 1.0.21
-  resolution: "use-http@npm:1.0.21"
+"use-http@npm:1.0.23":
+  version: 1.0.23
+  resolution: "use-http@npm:1.0.23"
   dependencies:
     urs: ^0.0.8
     use-ssr: ^1.0.24
@@ -27772,7 +27772,7 @@ typescript@4.3.5:
   peerDependencies:
     react: ^16.13.1 || ^17.0.0
     react-dom: ^16.13.1 || ^17.0.0
-  checksum: 5adc86b37b96c160062fc422cb02039aaafbb236769911504d19f2cf0016e23e11e95dd08f55662f0bde5fb910b3137ab117584c6f7832231f3b945f4300f0f5
+  checksum: d82420fd9d6c6949260a516b75d2515f2e93d4bb8be3ddd640b369972dc86aa82339de43939928bbb65b05a39242a0f7542c5a15c01b132c613a1442f61b9273
   languageName: node
   linkType: hard
 
