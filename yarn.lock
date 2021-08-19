@@ -5745,7 +5745,7 @@ __metadata:
     "@types/wait-on": 5.3.1
     concurrently: 6.2.1
     date-fns: 2.22.1
-    esbuild: 0.12.8
+    esbuild: 0.12.21
     esbuild-register: 2.5.0
     framer-motion: 4.1.17
     fs-extra: 10.0.0
@@ -12242,12 +12242,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"esbuild@npm:0.12.8":
-  version: 0.12.8
-  resolution: "esbuild@npm:0.12.8"
+"esbuild@npm:0.12.21":
+  version: 0.12.21
+  resolution: "esbuild@npm:0.12.21"
   bin:
     esbuild: bin/esbuild
-  checksum: 91ad2c8ddb8a3b0b1746e41e09684ab9415fa77aa39b0a07b45e9041cfb8825353e11ae2f4cefb53189f8c5a40edc372aa8cb8093e48d782635576f518a1b662
+  checksum: b7f4839ba9dfb2e2c2fefd96bda6d6d82cc21e494120a72e9571bf74bc13796b884b04bc216dc8aaaba7cece5ef6ea6bba4a99e00abd3c6d713d4b2ea6a5e39c
   languageName: node
   linkType: hard
 
