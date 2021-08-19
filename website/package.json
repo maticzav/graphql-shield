@@ -43,7 +43,7 @@
     "undici": "3.3.6",
     "use-http": "1.0.23",
     "valtio": "1.0.6",
-    "zustand": "3.5.8"
+    "zustand": "3.5.9"
   },
   "devDependencies": {
     "@types/concurrently": "6.2.1",
