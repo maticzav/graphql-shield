@@ -2520,7 +2520,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@chakra-ui/utils@npm:1.8.2, @chakra-ui/utils@npm:^1.7.0, @chakra-ui/utils@npm:^1.8.2":
+"@chakra-ui/utils@npm:1.8.2, @chakra-ui/utils@npm:^1.7.0":
   version: 1.8.2
   resolution: "@chakra-ui/utils@npm:1.8.2"
   dependencies:
@@ -4786,7 +4786,7 @@ __metadata:
     "@chakra-ui/react": 1.6.6
     "@chakra-ui/system": 1.7.2
     "@chakra-ui/theme-tools": 1.1.9
-    "@chakra-ui/utils": ^1.8.2
+    "@chakra-ui/utils": 1.8.2
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
     "@guild-docs/client": 1.0.2
