@@ -5480,10 +5480,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:14.17.10":
-  version: 14.17.10
-  resolution: "@types/node@npm:14.17.10"
-  checksum: 3a0487d8c0f7ad2d4d585401bb4292a7380a7ae72a7ffab4b9df68ddc79261e3a118e2e2383efca391b958930e26bf53a1733585d1e207786c8433eae8571ed6
+"@types/node@npm:14.17.11":
+  version: 14.17.11
+  resolution: "@types/node@npm:14.17.11"
+  checksum: c52c533d83602e232ec283c7527eaaf0c60e7b899bbced65799fbf76cf0a393ff7c22feb64c66d9f52e3a505e850a8d37cd64d790e295cbe8b0dacfdd504edc3
   languageName: node
   linkType: hard
 
@@ -13573,7 +13573,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "graphql-shield@workspace:packages/graphql-shield"
   dependencies:
-    "@types/node": 14.17.10
+    "@types/node": 14.17.11
     "@types/object-hash": 1.3.4
     "@types/request-promise-native": 1.0.18
     "@types/yup": 0.29.13
