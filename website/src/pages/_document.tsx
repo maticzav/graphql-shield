@@ -31,7 +31,6 @@ export default class MyDocument extends Document {
           {/* Fonts */}
 
           <link rel="preconnect" href="https://fonts.gstatic.com" />
-          <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=block" rel="stylesheet" />
           <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=block" rel="stylesheet" />
 
           {/* Crisp */}
