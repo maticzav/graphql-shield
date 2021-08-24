@@ -3014,19 +3014,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-tools/delegate@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "@graphql-tools/delegate@npm:8.1.0"
+"@graphql-tools/delegate@npm:^8.1.1":
+  version: 8.1.1
+  resolution: "@graphql-tools/delegate@npm:8.1.1"
   dependencies:
     "@graphql-tools/batch-execute": ^8.0.5
     "@graphql-tools/schema": ^8.1.2
-    "@graphql-tools/utils": ^8.1.1
+    "@graphql-tools/utils": ^8.1.2
     dataloader: 2.0.0
     tslib: ~2.3.0
     value-or-promise: 1.0.10
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
-  checksum: e7302309ffb88bcfc9ea8b9100a78428582a7c3fe2d01f7fc0b809d9863475b3d11b158a27151a565d48a2764ce32c1cb062c3aeec50884353ac91d71f8f7e4d
+  checksum: f8b2b7a82398681688f9fd80e90a08e5b93af1a6090f8acf54ab84ec38a552171c434ac961ca979dbb56a82b58695f27313734b822ffc0bee37c43d215cb6fee
   languageName: node
   linkType: hard
 
@@ -3352,6 +3352,17 @@ __metadata:
   peerDependencies:
     graphql: ^14.0.0 || ^15.0.0
   checksum: 95354f2aa3b639e3cd211ebb34d071cabe4a0e811262a90aa35e850e1385f410bd46ac272b71e802c04bd35c7caa12e5416f5da1384dc6a458b35870dd8c28ae
+  languageName: node
+  linkType: hard
+
+"@graphql-tools/utils@npm:^8.1.2":
+  version: 8.1.2
+  resolution: "@graphql-tools/utils@npm:8.1.2"
+  dependencies:
+    tslib: ~2.3.0
+  peerDependencies:
+    graphql: ^14.0.0 || ^15.0.0
+  checksum: 33e95d025e74ee73e8008386d3e1e959726d7573ad108b12f84c50fbfbad03a40c1574539b7e328db39e28b2693a6ef633d181c8bc474a3c09b5b9dd9d861b73
   languageName: node
   linkType: hard
 
@@ -13420,15 +13431,15 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-middleware@npm:6.1.3":
-  version: 6.1.3
-  resolution: "graphql-middleware@npm:6.1.3"
+"graphql-middleware@npm:6.1.4":
+  version: 6.1.4
+  resolution: "graphql-middleware@npm:6.1.4"
   dependencies:
-    "@graphql-tools/delegate": ^8.1.0
+    "@graphql-tools/delegate": ^8.1.1
     "@graphql-tools/schema": ^8.1.2
   peerDependencies:
     graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-  checksum: 0d3afc8dc347feadbe1964c57db2e8b23895a66f555147d2a556932e98af59faa1320971d6e6da4188f32865a81c9aaf11e7cfbf308b59490e5d37afaebbb0ee
+  checksum: 7333aca29275c1b07171c5fe7aac64da96030cb796ebc577467bc25a8145550f11d6258deb761b8e27af0615e3ac3c9a96e887818e3d0ab0f4a4e86b49c91e90
   languageName: node
   linkType: hard
 
@@ -13579,7 +13590,7 @@ fsevents@^1.2.7:
     "@types/yup": 0.29.13
     apollo-server: 2.25.2
     graphql: 15.5.1
-    graphql-middleware: 6.1.3
+    graphql-middleware: 6.1.4
     graphql-shield-rules: 0.0.1
     graphql-tools: 7.0.5
     object-hash: ^2.0.3
