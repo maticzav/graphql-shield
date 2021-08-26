@@ -29,7 +29,7 @@
     "next-remote-watch": "1.0.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-markdown": "7.0.0",
+    "react-markdown": "7.0.1",
     "remark-admonitions": "1.2.1",
     "shiki": "0.9.7"
   },
