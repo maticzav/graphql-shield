@@ -4821,7 +4821,7 @@ __metadata:
     open-cli: 7.0.0
     react: 17.0.2
     react-dom: 17.0.2
-    react-markdown: 7.0.0
+    react-markdown: 7.0.1
     remark-admonitions: 1.2.1
     shiki: 0.9.7
     strict-npm-engines: 0.0.1
@@ -21890,9 +21890,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-markdown@npm:7.0.0":
-  version: 7.0.0
-  resolution: "react-markdown@npm:7.0.0"
+"react-markdown@npm:7.0.1":
+  version: 7.0.1
+  resolution: "react-markdown@npm:7.0.1"
   dependencies:
     "@types/hast": ^2.0.0
     "@types/unist": ^2.0.0
@@ -21910,7 +21910,7 @@ fsevents@^1.2.7:
   peerDependencies:
     "@types/react": ">=16"
     react: ">=16"
-  checksum: f4d299ec170fc562d527ad337276fbc31d393baabdbd33a045723148237d2dc3d49c63728248afb312f297fee0b7a6795a1b64404941f328cc1c88978fd45d53
+  checksum: 1ca8c902f1219ff0989475fc9ea3f9f911f10a26a9b79b83f0495468c5f54859a2c8cfe15e650f92366c3a40e806b36264e36206fb2434a1c18fe94f544ad31e
   languageName: node
   linkType: hard
 
