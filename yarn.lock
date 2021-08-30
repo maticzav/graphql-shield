@@ -4859,7 +4859,7 @@ __metadata:
     next: 11.1.0
     next-i18next: 8.6.0
     next-remote-watch: 1.0.0
-    open-cli: 7.0.0
+    open-cli: 7.0.1
     react: 17.0.2
     react-dom: 17.0.2
     react-markdown: 7.0.1
@@ -19773,9 +19773,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"open-cli@npm:7.0.0":
-  version: 7.0.0
-  resolution: "open-cli@npm:7.0.0"
+"open-cli@npm:7.0.1":
+  version: 7.0.1
+  resolution: "open-cli@npm:7.0.1"
   dependencies:
     file-type: ^16.5.0
     get-stdin: ^9.0.0
@@ -19784,7 +19784,7 @@ fsevents@^1.2.7:
     tempy: ^1.0.1
   bin:
     open-cli: cli.js
-  checksum: c9ba58f002d4ce44bb7773e1d56deb9b72a24cf9248b9ac1a559950deaccfcb9a64af4e534cf6becc7578fe730ae5b343222788f5a240b01c9ba07209c4c9796
+  checksum: 302fedd1307dedd3e2ce905d6f71584ab5f88c55057948c7b99cfea58bec872a5e30011952e7d0fd5264fb9322d025ad7271ecb0b9914d74e11359f234127676
   languageName: node
   linkType: hard
 
