@@ -13630,7 +13630,7 @@ fsevents@^1.2.7:
     "@types/request-promise-native": 1.0.18
     "@types/yup": 0.29.13
     apollo-server: 2.25.2
-    graphql: 15.5.1
+    graphql: 15.5.2
     graphql-middleware: 6.1.4
     graphql-shield-rules: 0.0.1
     graphql-tools: 7.0.5
@@ -13808,10 +13808,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql@npm:15.5.1":
-  version: 15.5.1
-  resolution: "graphql@npm:15.5.1"
-  checksum: 509cdc2fc072e7cd1b5a25cf3fe13838d41892b035434f02419c209608f89e323f5234ca7e2bde77e9371e629339cbd8435f1dbc8c250910e4e9ac0babfa6c64
+"graphql@npm:15.5.2":
+  version: 15.5.2
+  resolution: "graphql@npm:15.5.2"
+  checksum: cc76d066cae03e7f55967b4a612aafc3a2ad78494f3f6912c468b2240752a6643958f96f06d32bea2dacca712f2a315ea8075181a8f06ff68db39bb9ceb66c8f
   languageName: node
   linkType: hard
 
