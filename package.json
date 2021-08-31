@@ -19,7 +19,7 @@
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\""
   },
   "devDependencies": {
-    "@changesets/cli": "2.16.0",
+    "@changesets/cli": "2.17.0",
     "@types/jest": "26.0.24",
     "@types/node": "15.6.1",
     "codecov": "3.8.3",
