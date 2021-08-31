@@ -24,7 +24,7 @@
     "@theguild/components": "1.4.8",
     "esbuild": "0.12.21",
     "framer-motion": "4.1.17",
-    "next": "11.1.1",
+    "next": "11.1.2",
     "next-i18next": "8.6.0",
     "next-remote-watch": "1.0.0",
     "react": "17.0.2",
