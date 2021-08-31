@@ -2697,17 +2697,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/git@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@changesets/git@npm:1.1.1"
+"@changesets/git@npm:1.1.2":
+  version: 1.1.2
+  resolution: "@changesets/git@npm:1.1.2"
   dependencies:
     "@babel/runtime": ^7.10.4
     "@changesets/errors": ^0.1.4
-    "@changesets/types": ^4.0.0
+    "@changesets/types": ^4.0.1
     "@manypkg/get-packages": ^1.0.1
     is-subdir: ^1.1.1
     spawndamnit: ^2.0.0
-  checksum: 6610b29401948cd6961e503743f8f25c90c0b55a4fc8a2c6773373ef2a153790c55d191db6a6507b36a88f5428617657a45297083ca4565444a32f09357bb928
+  checksum: 878a5b23be6985cd2b730e51c834409f22c5f9851dc15913e1543804d37fdf4dee6f556f6b22035b60a62a41cbc310f7df76a3bd1e18229c6658dbd1382d04ef
   languageName: node
   linkType: hard
 
@@ -2763,6 +2763,13 @@ __metadata:
   version: 4.0.0
   resolution: "@changesets/types@npm:4.0.0"
   checksum: 7597a8520e6e8bfb324ac6d490d8849b8fe8b064f4cb6a4207044cb56a7db8ad1c8a79f2f07e5056782d53f9a4b0e33553c4e84e2b417a61739d83ddd5e6314f
+  languageName: node
+  linkType: hard
+
+"@changesets/types@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "@changesets/types@npm:4.0.1"
+  checksum: ec959d0a9c2e96e3d0785f6ea51c1d8c0851b7c36a15c6d8f3aaa412bb3bdc3a3cf7270c95dc686daf199ad959010cd14459e0a309bf546c8b76a6dadc81038b
   languageName: node
   linkType: hard
 

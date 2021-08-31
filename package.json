@@ -34,7 +34,7 @@
     "typescript": "4.3.5"
   },
   "resolutions": {
-    "@changesets/git": "1.1.1",
+    "@changesets/git": "1.1.2",
     "prettier": "2.3.2"
   }
 }
