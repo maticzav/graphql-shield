@@ -3435,20 +3435,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/client@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@guild-docs/client@npm:1.0.3"
+"@guild-docs/client@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@guild-docs/client@npm:1.0.4"
   dependencies:
     "@guild-docs/types": ^1.0.0
-    immer: ^9.0.5
+    immer: ^9.0.6
     next-mdx-remote: ^3.0.4
     next-seo: ^4.26.0
     nprogress: ^0.2.0
     react-icons: ^4.2.0
-    react-intersection-observer: ^8.32.0
-    react-use: ^17.2.4
+    react-intersection-observer: ^8.32.1
+    react-use: ^17.3.1
     use-immer: ^0.6.0
-    zustand: ^3.5.9
+    zustand: ^3.5.10
   peerDependencies:
     "@chakra-ui/icons": ^1.0.15
     "@chakra-ui/react": ^1.6.6
@@ -3462,7 +3462,7 @@ __metadata:
     next-i18next: ^8.6.0
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 89a1e78b6b1b727d84b0aa538ce9fefb7cfe42dea7260ba5a56a2e3fd03a81aae535b1ef8a3822cdda4ffc40c85064e242dc75152432d9cca17438d7851776ba
+  checksum: ebdd65d004571dd003ef34ada008d0b646ae6cba02be8334bb698671ead204bfbda87efc62b87d3cc98a58af92efdd26368a55851a964c8a65fb99707a1b3334
   languageName: node
   linkType: hard
 
@@ -4886,7 +4886,7 @@ __metadata:
     "@chakra-ui/utils": 1.8.2
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
-    "@guild-docs/client": 1.0.3
+    "@guild-docs/client": 1.0.4
     "@guild-docs/server": 1.0.1
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.4.8
@@ -14645,10 +14645,10 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"immer@npm:^9.0.5":
-  version: 9.0.5
-  resolution: "immer@npm:9.0.5"
-  checksum: a7fa984fa1887a33ce6d44a7a505fd5ac76009336d8b1c99d34f59aaefc28aadf93ab1e5db27513acd15be454a8a89d8151e915d9b0b6e86e72acbd28218410b
+"immer@npm:^9.0.6":
+  version: 9.0.6
+  resolution: "immer@npm:9.0.6"
+  checksum: 48c9b673ee0f3a05f0651f26c8ccdcbc034a47502dd26e716bd7bb301bcede194d1c5e895d4d6ec8d1e7bfb6444dd1056095b3f10e6c5e08cc3e798497a96531
   languageName: node
   linkType: hard
 
@@ -21982,12 +21982,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-intersection-observer@npm:^8.32.0":
-  version: 8.32.0
-  resolution: "react-intersection-observer@npm:8.32.0"
+"react-intersection-observer@npm:^8.32.1":
+  version: 8.32.1
+  resolution: "react-intersection-observer@npm:8.32.1"
   peerDependencies:
     react: ^15.0.0 || ^16.0.0 || ^17.0.0|| ^18.0.0
-  checksum: 416c541f53ffcf518337b3d207769c1e721296cc96e837e37d6fdb56eb453eb27edeadeb8ccfd736662cc123cbd71d76ed7e9e4bdba818efae66677a2a071e0c
+  checksum: c2ea2e0ca50479d110632c08a800b70d90898ca9058bdbaa811559fab20108452ac276c301be685aeaea3fecfff2464934ea38bb78e53443adb2a349f0ef0256
   languageName: node
   linkType: hard
 
@@ -22124,9 +22124,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"react-use@npm:^17.2.4":
-  version: 17.2.4
-  resolution: "react-use@npm:17.2.4"
+"react-use@npm:^17.3.1":
+  version: 17.3.1
+  resolution: "react-use@npm:17.3.1"
   dependencies:
     "@types/js-cookie": ^2.2.6
     "@xobotyi/scrollbar-width": ^1.9.5
@@ -22145,7 +22145,7 @@ fsevents@^1.2.7:
   peerDependencies:
     react: ^16.8.0  || ^17.0.0
     react-dom: ^16.8.0  || ^17.0.0
-  checksum: eb215eccee832ad1de5f1c204a210019a8cc9e221902d2a215d5b80aad5a892496c39c52b4c9047a5d33b67306566c1874b8a1be2accad1cc5046ea4bd34e364
+  checksum: 0943122f05b904df14f9bb054848327a01fd6a12de55ede3fd3ab0467380fdd408d3a20479db41af00c12a395ef87f5264f4ef96b0d5a4ebbaf6fea6b3256331
   languageName: node
   linkType: hard
 
@@ -27871,15 +27871,15 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"zustand@npm:^3.5.9":
-  version: 3.5.9
-  resolution: "zustand@npm:3.5.9"
+"zustand@npm:^3.5.10":
+  version: 3.5.10
+  resolution: "zustand@npm:3.5.10"
   peerDependencies:
     react: ">=16.8"
   peerDependenciesMeta:
     react:
       optional: true
-  checksum: 7247391b60eb9d08c1e40375601f7e09703997b02ea51aa72d894a62429b076b4e534698a2462012bb0674d6dedf8a36890e3f9a1a762d851efb088ecd689594
+  checksum: 9070771112bbef4293ec04892a25c16e38d4a0248447e7461eae0dc9bb102c50c83a26aa1b6247f876329874ebeffe122358dc60d6f51879e9005fbdf1846fc0
   languageName: node
   linkType: hard
 
