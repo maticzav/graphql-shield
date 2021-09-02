@@ -3466,19 +3466,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/server@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@guild-docs/server@npm:1.0.1"
+"@guild-docs/server@npm:1.0.2":
+  version: 1.0.2
+  resolution: "@guild-docs/server@npm:1.0.2"
   dependencies:
     "@guild-docs/types": ^1.0.0
-    "@stefanprobst/remark-shiki": ^1.1.1
-    github-slugger: ^1.3.0
+    "@stefanprobst/remark-shiki": ^2.0.0
+    github-slugger: ^1.4.0
     globby: ^11.0.4
     gray-matter: ^4.0.3
     next-mdx-remote: ^3.0.4
     node-fetch: ^2.6.1
     npms.io: ^2.1.0
-    remark-emoji: ^3.0.0
+    remark-emoji: ^3.0.1
     remark-slug: ^7.0.0
     tiny-lru: ^7.0.6
   peerDependencies:
@@ -3487,8 +3487,8 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     remark-admonitions: ^1.2.1
-    shiki: ^0.9.6
-  checksum: 3e241bff4879c50cff412d2ea3833f814a821a430340074a5b8be878834d532bb8b0f1708377b932406d161c3d7ec28ec87ff328ffce494b3e81ecefc0d57801
+    shiki: ^0.9.7
+  checksum: a3f9a36106af5ca6fe2aa2a069d954bd30ebdcbd1b261dd077b1169a5bbfc9407a06618b8be8e7e4c334e0dcf4c594361aa1ffdd8662d355f578b1857914fbe0
   languageName: node
   linkType: hard
 
@@ -4887,7 +4887,7 @@ __metadata:
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
     "@guild-docs/client": 1.0.4
-    "@guild-docs/server": 1.0.1
+    "@guild-docs/server": 1.0.2
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.4.8
     "@types/concurrently": 6.2.1
@@ -4972,15 +4972,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@stefanprobst/remark-shiki@npm:^1.1.1":
-  version: 1.1.1
-  resolution: "@stefanprobst/remark-shiki@npm:1.1.1"
+"@stefanprobst/remark-shiki@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@stefanprobst/remark-shiki@npm:2.0.0"
   dependencies:
-    unified: ^9.2.1
-    unist-util-visit: ^2.0.3
+    unified: ^10.1.0
+    unist-util-visit: ^4.0.0
   peerDependencies:
     shiki: ^0.9.6
-  checksum: 7b4329ee338cf33f77a4aee161745001a60e766cf5176b5c4a3ee8fbd5fa70c7a39b7359f01688134484695c9bbfe63385eff5b8d6de27fc53ec744a247a1734
+  checksum: 1b9925ca0342ce0c6fbc89a94242fc660d02253a5bcf40fc9a0ea33a08f51caf2724b7ca95af2e31007a42d04ed0388de12b1b52093663f9708441eeffee01dc
   languageName: node
   linkType: hard
 
@@ -12988,12 +12988,19 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"github-slugger@npm:^1.0.0, github-slugger@npm:^1.3.0":
+"github-slugger@npm:^1.0.0":
   version: 1.3.0
   resolution: "github-slugger@npm:1.3.0"
   dependencies:
     emoji-regex: ">=6.0.0 <=6.1.1"
   checksum: 1f5961777b75d2ce2df5ae8d16a1eba49145a9896c5808341ca4100894631a4182ab010dea260a8a22855ea89d383f61412507dd34977a67b3a641168af19e10
+  languageName: node
+  linkType: hard
+
+"github-slugger@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "github-slugger@npm:1.4.0"
+  checksum: f6767047f38d6ed15024feae284286447ee11308af38b43422720ca39bb5a4197aa202e4673c5e97410192495689e953cea407e5e83c00360dea802ca3569c87
   languageName: node
   linkType: hard
 
@@ -22596,7 +22603,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"remark-emoji@npm:^3.0.0":
+"remark-emoji@npm:^3.0.1":
   version: 3.0.1
   resolution: "remark-emoji@npm:3.0.1"
   dependencies:
@@ -26090,7 +26097,7 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"unified@npm:^10.0.0":
+"unified@npm:^10.0.0, unified@npm:^10.1.0":
   version: 10.1.0
   resolution: "unified@npm:10.1.0"
   dependencies:
@@ -26115,20 +26122,6 @@ typescript@4.3.5:
     trough: ^1.0.0
     vfile: ^4.0.0
   checksum: d94242a81660436d762f18587e080da8065fea7a81b2008ee411b4dccef7df7d98f969ea4db1ee12b18fb7ac91b8b94fbc8f95b016410e5dff29c9bcad8eb812
-  languageName: node
-  linkType: hard
-
-"unified@npm:^9.2.1":
-  version: 9.2.2
-  resolution: "unified@npm:9.2.2"
-  dependencies:
-    bail: ^1.0.0
-    extend: ^3.0.0
-    is-buffer: ^2.0.0
-    is-plain-obj: ^2.0.0
-    trough: ^1.0.0
-    vfile: ^4.0.0
-  checksum: 1f0d970be2813d04e790a47cb5fcaf4a07fafbc3619c68dba0b95e1874dbb0f1ae1ffc9e97a33ca78fbe9626f9b0bde19568f1b41b81a9bc39538f8a8f44aedc
   languageName: node
   linkType: hard
 
@@ -26304,7 +26297,7 @@ typescript@4.3.5:
   languageName: node
   linkType: hard
 
-"unist-util-visit@npm:2.0.3, unist-util-visit@npm:^2.0.0, unist-util-visit@npm:^2.0.1, unist-util-visit@npm:^2.0.3":
+"unist-util-visit@npm:2.0.3, unist-util-visit@npm:^2.0.0, unist-util-visit@npm:^2.0.1":
   version: 2.0.3
   resolution: "unist-util-visit@npm:2.0.3"
   dependencies:
