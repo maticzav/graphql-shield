@@ -3466,12 +3466,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/server@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@guild-docs/server@npm:1.0.2"
+"@guild-docs/server@npm:1.0.3":
+  version: 1.0.3
+  resolution: "@guild-docs/server@npm:1.0.3"
   dependencies:
     "@guild-docs/types": ^1.0.0
-    "@stefanprobst/remark-shiki": ^2.0.0
     github-slugger: ^1.4.0
     globby: ^11.0.4
     gray-matter: ^4.0.3
@@ -3481,6 +3480,8 @@ __metadata:
     remark-emoji: ^3.0.1
     remark-slug: ^7.0.0
     tiny-lru: ^7.0.6
+    unified: ^10.1.0
+    unist-util-visit: ^4.0.0
   peerDependencies:
     next: ^11.1.0
     next-i18next: ^8.6.0
@@ -3488,7 +3489,7 @@ __metadata:
     react-dom: ^17.0.2
     remark-admonitions: ^1.2.1
     shiki: ^0.9.7
-  checksum: a3f9a36106af5ca6fe2aa2a069d954bd30ebdcbd1b261dd077b1169a5bbfc9407a06618b8be8e7e4c334e0dcf4c594361aa1ffdd8662d355f578b1857914fbe0
+  checksum: 13641c21fa481b39a40b22c47896f30778d5af0483152a1268953300209500801f9d8020a7e60c36275960e35a60df02187bd0741e928ffce44126092ba56cf8
   languageName: node
   linkType: hard
 
@@ -4887,7 +4888,7 @@ __metadata:
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
     "@guild-docs/client": 1.0.4
-    "@guild-docs/server": 1.0.2
+    "@guild-docs/server": 1.0.3
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.4.8
     "@types/concurrently": 6.2.1
@@ -4969,18 +4970,6 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^1.7.0
   checksum: 5ce48e40db14d7e1419bae287b84559133d580cb56130b51d7479dff318bfafed87531f8b48f618f07e3c9a6113c9e3f00286805d55de64986b9cccb8eb6d5cf
-  languageName: node
-  linkType: hard
-
-"@stefanprobst/remark-shiki@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "@stefanprobst/remark-shiki@npm:2.0.0"
-  dependencies:
-    unified: ^10.1.0
-    unist-util-visit: ^4.0.0
-  peerDependencies:
-    shiki: ^0.9.6
-  checksum: 1b9925ca0342ce0c6fbc89a94242fc660d02253a5bcf40fc9a0ea33a08f51caf2724b7ca95af2e31007a42d04ed0388de12b1b52093663f9708441eeffee01dc
   languageName: node
   linkType: hard
 
