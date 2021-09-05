@@ -4903,7 +4903,7 @@ __metadata:
     esbuild-register: 3.0.0
     framer-motion: 4.1.17
     next: 11.1.2
-    next-i18next: 8.6.0
+    next-i18next: 8.7.0
     next-remote-watch: 1.0.0
     open-cli: 7.0.1
     react: 17.0.2
@@ -18900,9 +18900,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"next-i18next@npm:8.6.0":
-  version: 8.6.0
-  resolution: "next-i18next@npm:8.6.0"
+"next-i18next@npm:8.7.0":
+  version: 8.7.0
+  resolution: "next-i18next@npm:8.7.0"
   dependencies:
     "@babel/runtime": ^7.13.17
     "@types/hoist-non-react-statics": ^3.3.1
@@ -18915,7 +18915,7 @@ fsevents@^1.2.7:
   peerDependencies:
     next: ">= 10.0.0"
     react: ">= 16.8.0"
-  checksum: a6cf6af620632ac3636acc27893a3d4cee67ec2711c8729933df2f9706de57c482d8ef51349935ca0b93251449d6e8bd851b194e98cb04f504409ac42a03fe3b
+  checksum: bde1614c09aa1c302aa28431b89a1652392908a7283a650271ebc36af6db5cbd32e9664c26e904b20ba20d05cb63d1ec609c0ae0982d24cfa76bcd5e85cc5586
   languageName: node
   linkType: hard
 
