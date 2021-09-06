@@ -3466,16 +3466,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/server@npm:1.0.3":
-  version: 1.0.3
-  resolution: "@guild-docs/server@npm:1.0.3"
+"@guild-docs/server@npm:1.0.4":
+  version: 1.0.4
+  resolution: "@guild-docs/server@npm:1.0.4"
   dependencies:
     "@guild-docs/types": ^1.0.0
     github-slugger: ^1.4.0
     globby: ^11.0.4
     gray-matter: ^4.0.3
     next-mdx-remote: ^3.0.4
-    node-fetch: ^2.6.1
+    node-fetch: ^2.6.2
     npms.io: ^2.1.0
     remark-emoji: ^3.0.1
     remark-slug: ^7.0.0
@@ -3484,12 +3484,12 @@ __metadata:
     unist-util-visit: ^4.0.0
   peerDependencies:
     next: ^11.1.0
-    next-i18next: ^8.6.0
+    next-i18next: ^8.7.0
     react: ^17.0.2
     react-dom: ^17.0.2
     remark-admonitions: ^1.2.1
     shiki: ^0.9.7
-  checksum: 13641c21fa481b39a40b22c47896f30778d5af0483152a1268953300209500801f9d8020a7e60c36275960e35a60df02187bd0741e928ffce44126092ba56cf8
+  checksum: 795ff091d6028cc406d92f419d7b633cc658d89706ddae84d8cb0cc18d670c98f005b816b3ed7e7ddb81e760330bede962ca4fdbaf526e5926c5d0e68d699924
   languageName: node
   linkType: hard
 
@@ -4888,7 +4888,7 @@ __metadata:
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
     "@guild-docs/client": 1.0.5
-    "@guild-docs/server": 1.0.3
+    "@guild-docs/server": 1.0.4
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.4.8
     "@types/concurrently": 6.2.1
@@ -19190,6 +19190,13 @@ fsevents@^1.2.7:
     encoding: ^0.1.11
     is-stream: ^1.0.1
   checksum: d04afb2e328ffb974a5ac4800fe5714d7419243d72f089a6a2383d3b93368c61ae88954a4866c476c0d7f95d7af414c1b9a885e051971061efe4054d526e23ed
+  languageName: node
+  linkType: hard
+
+"node-fetch@npm:^2.6.2":
+  version: 2.6.2
+  resolution: "node-fetch@npm:2.6.2"
+  checksum: f48d84c89c861ae7ff6d0a363a6c85fb7159e51165b1b97819c1b750f1fbbe27765d7bbda37c7a0e453a736db25a396d3ec22057d257d3403a79e722710a97f7
   languageName: node
   linkType: hard
 
