@@ -3435,9 +3435,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/client@npm:1.0.4":
-  version: 1.0.4
-  resolution: "@guild-docs/client@npm:1.0.4"
+"@guild-docs/client@npm:1.0.5":
+  version: 1.0.5
+  resolution: "@guild-docs/client@npm:1.0.5"
   dependencies:
     "@guild-docs/types": ^1.0.0
     immer: ^9.0.6
@@ -3459,10 +3459,10 @@ __metadata:
     "@types/mdx-js__react": ^1.5.4
     framer-motion: ^4.1.17
     next: ^11.1.0
-    next-i18next: ^8.6.0
+    next-i18next: ^8.7.0
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: ebdd65d004571dd003ef34ada008d0b646ae6cba02be8334bb698671ead204bfbda87efc62b87d3cc98a58af92efdd26368a55851a964c8a65fb99707a1b3334
+  checksum: 757fd8beafc0bb97eb6f4cdb6b4d1495609c62be215991c6a08b9a2d8e535e2a59aa9e7f8f271f2aecf05651f1f498339dfe0c8a31709fa3e49c10fa4256d324
   languageName: node
   linkType: hard
 
@@ -4887,7 +4887,7 @@ __metadata:
     "@chakra-ui/utils": 1.8.2
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
-    "@guild-docs/client": 1.0.4
+    "@guild-docs/client": 1.0.5
     "@guild-docs/server": 1.0.3
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.4.8
