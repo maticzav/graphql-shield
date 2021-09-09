@@ -21044,12 +21044,12 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.3.2":
-  version: 2.3.2
-  resolution: "prettier@npm:2.3.2"
+"prettier@npm:2.4.0":
+  version: 2.4.0
+  resolution: "prettier@npm:2.4.0"
   bin:
     prettier: bin-prettier.js
-  checksum: 4fd89a7f6a12b13456d359fba2b1dd0fc0a17cf33f8f15953ab9f43b21ea9b09b5a2861d63b558ca0577274ce606d390e70628cf93e26d19d6cb7f19c9eebc31
+  checksum: b8409c92cf2e4e423b74e408f76b4786c2d8d5bc63c97aad256e9ca65c919a138e64717fdff4abeb9cb3b2048bb8320fc2e8fbca6f220b01dc08ad83c349cdc5
   languageName: node
   linkType: hard
 
@@ -23062,7 +23062,7 @@ fsevents@^1.2.7:
     husky: 6.0.0
     jest: 27.1.1
     lint-staged: 11.1.2
-    prettier: 2.3.2
+    prettier: 2.4.0
     pretty-quick: 3.1.1
     rimraf: 3.0.2
     ts-jest: 27.0.5
