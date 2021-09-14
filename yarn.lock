@@ -4910,7 +4910,7 @@ __metadata:
     react-dom: 17.0.2
     react-markdown: 7.0.1
     remark-admonitions: 1.2.1
-    shiki: 0.9.10
+    shiki: 0.9.11
     strict-npm-engines: 0.0.1
     tsup: 4.14.0
     typescript: 4.3.5
@@ -23574,14 +23574,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"shiki@npm:0.9.10":
-  version: 0.9.10
-  resolution: "shiki@npm:0.9.10"
+"shiki@npm:0.9.11":
+  version: 0.9.11
+  resolution: "shiki@npm:0.9.11"
   dependencies:
-    json5: ^2.2.0
+    jsonc-parser: ^3.0.0
     onigasm: ^2.2.5
     vscode-textmate: 5.2.0
-  checksum: a8ec6454b98485494f1ef37b1cda3c13a5c215972e7aef61ac76dc759e287cdb329cfaa90e164277660bc0573bf2a693ebfe5eec50a2e8cca904d530b47edd95
+  checksum: 1839d84152a7feb280d467462c70d1fb4971a4efb9c07a8336cfeb75da22a094255eddaaa8182863f37264e307d671b6747a35c8db7812c8ff4a184a9c6ec353
   languageName: node
   linkType: hard
 
