@@ -3435,14 +3435,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@guild-docs/client@npm:1.0.5":
-  version: 1.0.5
-  resolution: "@guild-docs/client@npm:1.0.5"
+"@guild-docs/client@npm:1.0.6":
+  version: 1.0.6
+  resolution: "@guild-docs/client@npm:1.0.6"
   dependencies:
     "@guild-docs/types": ^1.0.0
     immer: ^9.0.6
     next-mdx-remote: ^3.0.4
-    next-seo: ^4.26.0
+    next-seo: ^4.27.0
     nprogress: ^0.2.0
     react-icons: ^4.2.0
     react-intersection-observer: ^8.32.1
@@ -3459,10 +3459,10 @@ __metadata:
     "@types/mdx-js__react": ^1.5.4
     framer-motion: ^4.1.17
     next: ^11.1.0
-    next-i18next: ^8.7.0
+    next-i18next: ^8.8.0
     react: ^17.0.2
     react-dom: ^17.0.2
-  checksum: 757fd8beafc0bb97eb6f4cdb6b4d1495609c62be215991c6a08b9a2d8e535e2a59aa9e7f8f271f2aecf05651f1f498339dfe0c8a31709fa3e49c10fa4256d324
+  checksum: 5425e031f08abafb5a76e223ed6be93ad8051c3eaac390a522474793cb2b862841b90c56ba7c94e7c26f81b53546d4855323693859d6eda92773a1f47dee3e96
   languageName: node
   linkType: hard
 
@@ -4887,7 +4887,7 @@ __metadata:
     "@chakra-ui/utils": 1.8.2
     "@emotion/react": 11.4.1
     "@emotion/styled": 11.3.0
-    "@guild-docs/client": 1.0.5
+    "@guild-docs/client": 1.0.6
     "@guild-docs/server": 1.0.4
     "@mdx-js/react": 1.6.22
     "@theguild/components": 1.4.8
@@ -18960,14 +18960,14 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"next-seo@npm:^4.26.0":
-  version: 4.26.0
-  resolution: "next-seo@npm:4.26.0"
+"next-seo@npm:^4.27.0":
+  version: 4.27.0
+  resolution: "next-seo@npm:4.27.0"
   peerDependencies:
     next: ^8.1.1-canary.54 || >=9.0.0
     react: ">=16.0.0"
     react-dom: ">=16.0.0"
-  checksum: 5276a4a69ecc85c4ead7436d4df25b01380dfa23185f7e32c82f88b2d69191f4753eec0114bc9d7e2a97b1c724abc0501190c2d90213b8b79bc4884e550d41af
+  checksum: c5fbdc6bb0dc751c50ca00a4c72501b8e1e2c6a3c61eceec861e9bf64b3f4709d9fe807f88e8bff95040b836813c32338864ab6d57becfe5c066bcff4765aef4
   languageName: node
   linkType: hard
 
