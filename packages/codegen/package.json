@@ -1,0 +1,48 @@
+{
+  "name": "@shield/codegen",
+  "description": "GraphQL Codegen extension that adds type-safety to GraphQL Shield.",
+  "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
+  "files": [
+    "dist"
+  ],
+  "homepage": "graphql-shield.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maticzav/graphql-shield.git",
+    "directory": "packages/codegen"
+  },
+  "keywords": [
+    "graphql",
+    "shield",
+    "codegen",
+    "permissions",
+    "gql"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "peerDependencies": {},
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "license": "MIT"
+}

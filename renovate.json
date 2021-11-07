@@ -2,6 +2,11 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
   "postUpdateOptions": ["yarnDedupeFewer"],
+  "automerge": true,
+  "major": {
+    "automerge": false
+  },
+  "labels": ["dependencies"],
   "pathRules": [
     {
       "paths": ["examples/**"],
@@ -14,11 +19,10 @@
     {
       "packageNames": ["graphql-shield-rules"],
       "automerge": false
+    },
+    {
+      "groupName": "graphql-tools",
+      "matchPackagePrefixes": "@graphql-tools"
     }
-  ],
-  "automerge": true,
-  "major": {
-    "automerge": false
-  },
-  "labels": ["dependencies"]
+  ]
 }
