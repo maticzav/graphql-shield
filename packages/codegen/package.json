@@ -1,5 +1,6 @@
 {
   "name": "@shield/codegen",
+  "version": "0.0.0",
   "description": "GraphQL Codegen extension that adds type-safety to GraphQL Shield.",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "files": [
@@ -37,9 +38,13 @@
   "scripts": {
     "test": "jest"
   },
-  "dependencies": {},
-  "devDependencies": {},
-  "peerDependencies": {},
+  "dependencies": {
+    "@graphql-codegen/plugin-helpers": "^2.3.1",
+    "@graphql-codegen/visitor-plugin-common": "^2.5.0"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
   "publishConfig": {
     "directory": "dist",
     "access": "public"

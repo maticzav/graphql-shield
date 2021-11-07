@@ -1,31 +1,37 @@
 import { GraphQLResolveInfo } from 'graphql'
-import { ShieldAuthorizationError } from './error'
+import * as zod from 'zod'
 
-declare const RuleKind: unique symbol
+import { error, ShieldAuthorizationError } from './error'
+import { ExhaustiveSwitchCheck } from './utils'
+
+// Unique Symbol that prevents any code outside of GraphQL Shield to be structurally
+// equal to types that we create internally.
+const Lock = Symbol('GraphQLShield')
+type Lock = typeof Lock
 
 enum Kind {
   // Basic Rules
-  EXECUTION,
-  VALIDATION,
+  EXECUTION = 'EXECUTION',
+  VALIDATION = 'VALIDATION',
   // Operators
-  ALLOW,
-  DENY,
-  OR,
-  RACE,
-  AND,
-  CHAIN,
+  ALLOW = 'ALLOW',
+  DENY = 'DENY',
+  OR = 'OR',
+  RACE = 'RACE',
+  AND = 'AND',
+  CHAIN = 'CHAIN',
 }
 
 type RuleExecutionResult =
   | boolean
   | ShieldAuthorizationError
-  | Promise<boolean>
-  | Promise<ShieldAuthorizationError>
+  | Promise<boolean | ShieldAuthorizationError>
 
-type Rule<Parent = any, Arguments = any, Context = any> =
+export type Rule<Parent = any, Arguments = any, Context = any> =
   // User Defined rules
   | {
-      readonly [RuleKind]: Kind.EXECUTION
+      readonly __lock__: Lock
+      readonly kind: Kind.EXECUTION
       resolver: (
         parent: Parent,
         args: Arguments,
@@ -35,27 +41,38 @@ type Rule<Parent = any, Arguments = any, Context = any> =
       fields: string[]
     }
   | {
-      readonly [RuleKind]: Kind.VALIDATION
+      readonly __lock__: Lock
+      readonly kind: Kind.VALIDATION
       resolver: (ctx: Context) => RuleExecutionResult
     }
   // Algebra
-  | { readonly [RuleKind]: Kind.ALLOW }
-  | { readonly [RuleKind]: Kind.DENY }
+  | {
+      readonly __lock__: Lock
+      readonly kind: Kind.ALLOW
+    }
+  | {
+      readonly __lock__: Lock
+      readonly kind: Kind.DENY
+    }
   // Operators
   | {
-      readonly [RuleKind]: Kind.OR
+      readonly __lock__: Lock
+      readonly kind: Kind.OR
       rules: Rule<Parent, Arguments, Context>[]
     }
   | {
-      readonly [RuleKind]: Kind.RACE
+      readonly __lock__: Lock
+      readonly kind: Kind.RACE
       rules: Rule<Parent, Arguments, Context>[]
     }
   | {
-      readonly [RuleKind]: Kind.AND
+      readonly __lock__: Lock
+      readonly kind: Kind.AND
       rules: Rule<Parent, Arguments, Context>[]
     }
   | {
-      readonly [RuleKind]: Kind.CHAIN
+      readonly __lock__: Lock
+      readonly kind: Kind.CHAIN
       rules: Rule<Parent, Arguments, Context>[]
     }
 
@@ -66,23 +83,31 @@ export function execution<Parent, Arguments, Context>(
   fn: (parent: Parent, args: Arguments) => RuleExecutionResult,
 ): Rule<Parent, Arguments, Context> {
   return {
-    [RuleKind]: Kind.EXECUTION,
+    __lock__: Lock,
+    kind: Kind.EXECUTION,
     resolver: () => false,
     fields: [],
   }
 }
 
 /**
- * Validates input information
+ * Validates input information using a zod schema.
  */
-export function input<Parent, Arguments, Context>(
-  fn: (args: Arguments) => boolean,
-): Rule<Parent, Arguments, Context> {
+export function input<Parent, Arguments, Context>(opts: {
+  schema: zod.Schema<Arguments>
+  fields: (keyof Arguments & string)[]
+}): Rule<Parent, Arguments, Context> {
   return {
-    [RuleKind]: Kind.EXECUTION,
-    resolver: (parent, args) => fn(args),
-    // TODO: extract fields from the validation schema
-    fields: [],
+    __lock__: Lock,
+    kind: Kind.EXECUTION,
+    resolver: async (parent, args) => {
+      const result = await opts.schema.spa(args)
+      if (result.success) {
+        return true
+      }
+      return error(result.error.message)
+    },
+    fields: opts.fields,
   }
 }
 
@@ -94,10 +119,9 @@ export function validation<Parent, Arguments, Context>(
   fn: (ctx: Context) => RuleExecutionResult,
 ): Rule<Parent, Arguments, Context> {
   return {
-    [RuleKind]: Kind.VALIDATION,
-    resolver: (ctx) => {
-      return false
-    },
+    __lock__: Lock,
+    kind: Kind.VALIDATION,
+    resolver: (ctx: Context) => fn(ctx),
   }
 }
 
@@ -107,7 +131,11 @@ export function validation<Parent, Arguments, Context>(
 export function and<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
-  return { [RuleKind]: Kind.AND, rules }
+  return {
+    __lock__: Lock,
+    kind: Kind.AND,
+    rules,
+  }
 }
 
 /**
@@ -116,7 +144,11 @@ export function and<Parent, Arguments, Context>(
 export function chain<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
-  return { [RuleKind]: Kind.CHAIN, rules }
+  return {
+    __lock__: Lock,
+    kind: Kind.CHAIN,
+    rules,
+  }
 }
 
 /**
@@ -125,7 +157,11 @@ export function chain<Parent, Arguments, Context>(
 export function or<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
-  return { [RuleKind]: Kind.OR, rules }
+  return {
+    __lock__: Lock,
+    kind: Kind.OR,
+    rules,
+  }
 }
 
 /**
@@ -135,7 +171,11 @@ export function or<Parent, Arguments, Context>(
 export function race<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
-  return { [RuleKind]: Kind.RACE, rules }
+  return {
+    __lock__: Lock,
+    kind: Kind.RACE,
+    rules,
+  }
 }
 
 /**
@@ -146,7 +186,10 @@ export function allow<Parent, Arguments, Context>(): Rule<
   Arguments,
   Context
 > {
-  return { [RuleKind]: Kind.ALLOW }
+  return {
+    __lock__: Lock,
+    kind: Kind.ALLOW,
+  }
 }
 
 /**
@@ -157,5 +200,98 @@ export function deny<Parent, Arguments, Context>(): Rule<
   Arguments,
   Context
 > {
-  return { [RuleKind]: Kind.DENY }
+  return {
+    __lock__: Lock,
+    kind: Kind.DENY,
+  }
+}
+
+/**
+ * Executes the rules schema using given parameters.
+ */
+export async function execute<Parent, Arguments, Context>(
+  rule: Rule<Parent, Arguments, Context>,
+  parent: Parent,
+  args: Arguments,
+  ctx: Context,
+  info: GraphQLResolveInfo,
+): Promise<boolean | ShieldAuthorizationError> {
+  switch (rule.kind) {
+    case Kind.EXECUTION:
+      return rule.resolver(parent, args, ctx, info)
+    case Kind.VALIDATION:
+      return rule.resolver(ctx)
+    // Algebra
+    case Kind.ALLOW:
+      return true
+    case Kind.DENY:
+      return false
+    // Operators
+    case Kind.AND:
+      return new Promise(async (resolve) => {
+        let i = rule.rules.length
+        let resolved = false
+        for (const subrule of rule.rules) {
+          const exec = await execute(subrule, parent, args, ctx, info)
+          i--
+          if (exec instanceof ShieldAuthorizationError || exec === false) {
+            resolve(exec)
+            resolved = true
+          }
+          if (i === 0 && !resolved) {
+            resolve(true)
+          }
+        }
+      })
+    case Kind.OR:
+      return new Promise(async (resolve) => {
+        let i = rule.rules.length
+        let resolved = false
+        for (const subrule of rule.rules) {
+          const exec = await execute(subrule, parent, args, ctx, info)
+          i--
+          if (exec === true) {
+            resolve(exec)
+            resolved = true
+          }
+          if (i === 0 && !resolved) {
+            resolve(false)
+          }
+        }
+      })
+    case Kind.CHAIN:
+      return new Promise(async (resolve) => {
+        let i = rule.rules.length
+        let resolved = false
+        for (const subrule of rule.rules) {
+          const exec = await execute(subrule, parent, args, ctx, info)
+          i--
+          if (exec === true) {
+            resolve(exec)
+            resolved = true
+          }
+          if (i === 0 && !resolved) {
+            resolve(false)
+          }
+        }
+      })
+    case Kind.RACE:
+      return new Promise(async (resolve) => {
+        let i = rule.rules.length
+        let resolved = false
+        for (const subrule of rule.rules) {
+          const exec = await execute(subrule, parent, args, ctx, info)
+          i--
+          if (exec === true) {
+            resolve(exec)
+            resolved = true
+          }
+          if (i === 0 && !resolved) {
+            resolve(false)
+          }
+        }
+      })
+    default:
+      throw new ExhaustiveSwitchCheck(rule)
+  }
 }
