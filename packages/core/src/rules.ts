@@ -1,15 +1,16 @@
 import { GraphQLResolveInfo } from 'graphql'
+import * as uuid from 'uuid'
 import * as zod from 'zod'
 
 import { error, ShieldAuthorizationError } from './error'
-import { ExhaustiveSwitchCheck } from './utils'
 
-// Unique Symbol that prevents any code outside of GraphQL Shield to be structurally
-// equal to types that we create internally.
-const Lock = Symbol('GraphQLShield')
-type Lock = typeof Lock
+/*
+This file contains everything related to rule creation and definition.
+We reuse this definitions in schema to generate execution and validation
+functions.
+ */
 
-enum Kind {
+export enum RuleKind {
   // Basic Rules
   EXECUTION = 'EXECUTION',
   VALIDATION = 'VALIDATION',
@@ -22,57 +23,105 @@ enum Kind {
   CHAIN = 'CHAIN',
 }
 
-type RuleExecutionResult =
-  | boolean
-  | ShieldAuthorizationError
-  | Promise<boolean | ShieldAuthorizationError>
+// Unique Symbol that prevents any code outside of GraphQL Shield to be structurally
+// equal to types that we create internally.
+const Lock = Symbol('GraphQLShield')
+type Lock = typeof Lock
 
 export type Rule<Parent = any, Arguments = any, Context = any> =
   // User Defined rules
   | {
+      /**
+       * Execution rule lets users run certain script during execution.
+       * It should be asynchronous even when it's synchronous as a sensible default
+       * to prevent users from forgetting to await for responses.
+       *
+       * Its return value determines whether we should allow or deny the access.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.EXECUTION
+      readonly kind: RuleKind.EXECUTION
+      readonly uuid: string
       resolver: (
         parent: Parent,
         args: Arguments,
         ctx: Context,
         info: GraphQLResolveInfo,
-      ) => RuleExecutionResult
+      ) => Promise<boolean | ShieldAuthorizationError>
       fields: string[]
     }
   | {
+      /**
+       * Validation rule lets users run a synchronous function during validation phase
+       * of the GraphQL query execution cycle.
+       *
+       * Its return value determines whether we should allow or deny the access.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.VALIDATION
-      resolver: (ctx: Context) => RuleExecutionResult
+      readonly kind: RuleKind.VALIDATION
+      readonly uuid: string
+      resolver: (ctx: Context) => boolean | ShieldAuthorizationError
     }
   // Algebra
   | {
+      /**
+       * Allow rule always allows access to the given field.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.ALLOW
+      readonly kind: RuleKind.ALLOW
     }
   | {
+      /**
+       * Allow rule always denies access to the given field.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.DENY
+      readonly kind: RuleKind.DENY
     }
   // Operators
   | {
+      /**
+       * Or rule allows access if at least one of the options
+       * returned true.
+       *
+       * NOTE: an empty or is equal to deny.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.OR
+      readonly kind: RuleKind.OR
+      readonly uuid: string
       rules: Rule<Parent, Arguments, Context>[]
     }
   | {
+      /**
+       * Race rule allows access if at least one of the options
+       * returned true and runs all rules in parallel.
+       *
+       * NOTE: an empty race is equal to deny.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.RACE
+      readonly kind: RuleKind.RACE
+      readonly uuid: string
       rules: Rule<Parent, Arguments, Context>[]
     }
   | {
+      /**
+       * And rule allows access if all rules returned true and runs all
+       * rules in parallel.
+       *
+       * NOTE: an empty and is equal to allow.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.AND
+      readonly kind: RuleKind.AND
+      readonly uuid: string
       rules: Rule<Parent, Arguments, Context>[]
     }
   | {
+      /**
+       * Chain rule allows access if all rules returned true.
+       *
+       * NOTE: an empty chain is equal to allow.
+       */
       readonly __lock__: Lock
-      readonly kind: Kind.CHAIN
+      readonly kind: RuleKind.CHAIN
+      readonly uuid: string
       rules: Rule<Parent, Arguments, Context>[]
     }
 
@@ -80,12 +129,18 @@ export type Rule<Parent = any, Arguments = any, Context = any> =
  * A rule that we execute during the execution of the query.
  */
 export function execution<Parent, Arguments, Context>(
-  fn: (parent: Parent, args: Arguments) => RuleExecutionResult,
+  fn: (
+    parent: Parent,
+    args: Arguments,
+    context: Context,
+    info: GraphQLResolveInfo,
+  ) => Promise<boolean | ShieldAuthorizationError>,
 ): Rule<Parent, Arguments, Context> {
   return {
     __lock__: Lock,
-    kind: Kind.EXECUTION,
-    resolver: () => false,
+    kind: RuleKind.EXECUTION,
+    uuid: uuid.v4(),
+    resolver: (parent, args, context, info) => fn(parent, args, context, info),
     fields: [],
   }
 }
@@ -99,7 +154,8 @@ export function input<Parent, Arguments, Context>(opts: {
 }): Rule<Parent, Arguments, Context> {
   return {
     __lock__: Lock,
-    kind: Kind.EXECUTION,
+    kind: RuleKind.EXECUTION,
+    uuid: uuid.v4(),
     resolver: async (parent, args) => {
       const result = await opts.schema.spa(args)
       if (result.success) {
@@ -116,11 +172,12 @@ export function input<Parent, Arguments, Context>(opts: {
  * lifecycle (i.e. before we execute the query).
  */
 export function validation<Parent, Arguments, Context>(
-  fn: (ctx: Context) => RuleExecutionResult,
+  fn: (ctx: Context) => boolean,
 ): Rule<Parent, Arguments, Context> {
   return {
     __lock__: Lock,
-    kind: Kind.VALIDATION,
+    kind: RuleKind.VALIDATION,
+    uuid: uuid.v4(),
     resolver: (ctx: Context) => fn(ctx),
   }
 }
@@ -131,10 +188,24 @@ export function validation<Parent, Arguments, Context>(
 export function and<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
+  // If one of the rules is always false, "and" can't be true.
+  if (rules.some((rule) => rule.kind === RuleKind.DENY)) {
+    return deny()
+  }
+
+  // Remove ands because they don't add to anything.
+  const normalizedRules = rules.filter((rule) => rule.kind !== RuleKind.ALLOW)
+
+  // If we don't have any rules "and" is true.
+  if (normalizedRules.length === 0) {
+    return allow()
+  }
+
   return {
     __lock__: Lock,
-    kind: Kind.AND,
-    rules,
+    kind: RuleKind.AND,
+    uuid: uuid.v4(),
+    rules: normalizedRules,
   }
 }
 
@@ -144,10 +215,24 @@ export function and<Parent, Arguments, Context>(
 export function chain<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
+  // If one of the rules is always false, "chain" can't be true.
+  if (rules.some((rule) => rule.kind === RuleKind.DENY)) {
+    return deny()
+  }
+
+  // Remove ands because they don't add to anything.
+  const normalizedRules = rules.filter((rule) => rule.kind !== RuleKind.ALLOW)
+
+  // If we don't have any rules "chain" is true.
+  if (normalizedRules.length === 0) {
+    return allow()
+  }
+
   return {
     __lock__: Lock,
-    kind: Kind.CHAIN,
-    rules,
+    kind: RuleKind.CHAIN,
+    uuid: uuid.v4(),
+    rules: normalizedRules,
   }
 }
 
@@ -157,10 +242,24 @@ export function chain<Parent, Arguments, Context>(
 export function or<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
+  // If one of the rules is always true, "or" can't be denied.
+  if (rules.some((rule) => rule.kind === RuleKind.ALLOW)) {
+    return allow()
+  }
+
+  // Remove ands because they don't add to anything.
+  const normalizedRules = rules.filter((rule) => rule.kind !== RuleKind.DENY)
+
+  // If we don't have any rules "or" is false.
+  if (normalizedRules.length === 0) {
+    return deny()
+  }
+
   return {
     __lock__: Lock,
-    kind: Kind.OR,
-    rules,
+    kind: RuleKind.OR,
+    uuid: uuid.v4(),
+    rules: normalizedRules,
   }
 }
 
@@ -171,10 +270,24 @@ export function or<Parent, Arguments, Context>(
 export function race<Parent, Arguments, Context>(
   rules: Rule<Parent, Arguments, Context>[],
 ): Rule<Parent, Arguments, Context> {
+  // If one of the rules is always true, "race" can't be denied.
+  if (rules.some((rule) => rule.kind === RuleKind.ALLOW)) {
+    return allow()
+  }
+
+  // Remove ands because they don't add to anything.
+  const normalizedRules = rules.filter((rule) => rule.kind !== RuleKind.DENY)
+
+  // If we don't have any rules "race" is false.
+  if (normalizedRules.length === 0) {
+    return deny()
+  }
+
   return {
     __lock__: Lock,
-    kind: Kind.RACE,
-    rules,
+    kind: RuleKind.RACE,
+    uuid: uuid.v4(),
+    rules: normalizedRules,
   }
 }
 
@@ -188,7 +301,7 @@ export function allow<Parent, Arguments, Context>(): Rule<
 > {
   return {
     __lock__: Lock,
-    kind: Kind.ALLOW,
+    kind: RuleKind.ALLOW,
   }
 }
 
@@ -202,96 +315,6 @@ export function deny<Parent, Arguments, Context>(): Rule<
 > {
   return {
     __lock__: Lock,
-    kind: Kind.DENY,
-  }
-}
-
-/**
- * Executes the rules schema using given parameters.
- */
-export async function execute<Parent, Arguments, Context>(
-  rule: Rule<Parent, Arguments, Context>,
-  parent: Parent,
-  args: Arguments,
-  ctx: Context,
-  info: GraphQLResolveInfo,
-): Promise<boolean | ShieldAuthorizationError> {
-  switch (rule.kind) {
-    case Kind.EXECUTION:
-      return rule.resolver(parent, args, ctx, info)
-    case Kind.VALIDATION:
-      return rule.resolver(ctx)
-    // Algebra
-    case Kind.ALLOW:
-      return true
-    case Kind.DENY:
-      return false
-    // Operators
-    case Kind.AND:
-      return new Promise(async (resolve) => {
-        let i = rule.rules.length
-        let resolved = false
-        for (const subrule of rule.rules) {
-          const exec = await execute(subrule, parent, args, ctx, info)
-          i--
-          if (exec instanceof ShieldAuthorizationError || exec === false) {
-            resolve(exec)
-            resolved = true
-          }
-          if (i === 0 && !resolved) {
-            resolve(true)
-          }
-        }
-      })
-    case Kind.OR:
-      return new Promise(async (resolve) => {
-        let i = rule.rules.length
-        let resolved = false
-        for (const subrule of rule.rules) {
-          const exec = await execute(subrule, parent, args, ctx, info)
-          i--
-          if (exec === true) {
-            resolve(exec)
-            resolved = true
-          }
-          if (i === 0 && !resolved) {
-            resolve(false)
-          }
-        }
-      })
-    case Kind.CHAIN:
-      return new Promise(async (resolve) => {
-        let i = rule.rules.length
-        let resolved = false
-        for (const subrule of rule.rules) {
-          const exec = await execute(subrule, parent, args, ctx, info)
-          i--
-          if (exec === true) {
-            resolve(exec)
-            resolved = true
-          }
-          if (i === 0 && !resolved) {
-            resolve(false)
-          }
-        }
-      })
-    case Kind.RACE:
-      return new Promise(async (resolve) => {
-        let i = rule.rules.length
-        let resolved = false
-        for (const subrule of rule.rules) {
-          const exec = await execute(subrule, parent, args, ctx, info)
-          i--
-          if (exec === true) {
-            resolve(exec)
-            resolved = true
-          }
-          if (i === 0 && !resolved) {
-            resolve(false)
-          }
-        }
-      })
-    default:
-      throw new ExhaustiveSwitchCheck(rule)
+    kind: RuleKind.DENY,
   }
 }

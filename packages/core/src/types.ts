@@ -28,11 +28,11 @@ export type ArgumentsType = {
 /**
  * Rules schema lets us assign given rules to dedicated fields in the schema.
  */
-export type RulesSchemaType = {
+export type RulesSchemaType<Context> = {
   [type: string]: {
-    [field: string]: Rule
+    [field: string]: Rule<any, any, Context>
   }
-} & { '*': Rule }
+} & { '*': Rule<null, any, Context> }
 
 // MARK: - Experimenting
 
@@ -70,10 +70,7 @@ type GeneratedSchema = {
     parent: Query
     args: {}
   }
-  'Query.*':
-    | GeneratedSchema['Query.me']
-    | GeneratedSchema['Query.user']
-    | GeneratedSchema['Query.group']
+  'Query.*': GeneratedSchema['Query.me'] | GeneratedSchema['Query.user'] | GeneratedSchema['Query.group']
 }
 
 // Permissions
@@ -83,29 +80,14 @@ type GSch = {
   Query: {
     '*': GSch['Query']['me'] | GSch['Query']['user'] | GSch['Query']['group']
     // All fields.
-    me: Rule<
-      GeneratedSchema['Query.me']['parent'],
-      GeneratedSchema['Query.me']['args'],
-      Context
-    >
-    user: Rule<
-      GeneratedSchema['Query.user']['parent'],
-      GeneratedSchema['Query.user']['args'],
-      Context
-    >
-    group: Rule<
-      GeneratedSchema['Query.group']['parent'],
-      GeneratedSchema['Query.group']['args'],
-      Context
-    >
+    me: Rule<GeneratedSchema['Query.me']['parent'], GeneratedSchema['Query.me']['args'], Context>
+    user: Rule<GeneratedSchema['Query.user']['parent'], GeneratedSchema['Query.user']['args'], Context>
+    group: Rule<GeneratedSchema['Query.group']['parent'], GeneratedSchema['Query.group']['args'], Context>
   }
 }
 
 function rule<T extends keyof GeneratedSchema>(
-  fn: (
-    parent: GeneratedSchema[T]['parent'],
-    args: GeneratedSchema[T]['args'],
-  ) => void,
+  fn: (parent: GeneratedSchema[T]['parent'], args: GeneratedSchema[T]['args']) => void,
 ) {}
 
 rule<'Query.user' | 'Query.group'>((parent, { id }) => {

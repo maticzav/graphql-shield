@@ -40,10 +40,12 @@
   "dependencies": {
     "@graphql-tools/resolvers-composition": "^6.4.1",
     "@graphql-tools/schema": "^8.3.1",
-    "@graphql-tools/utils": "^8.5.3"
+    "@graphql-tools/utils": "^8.5.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@types/node": "14.17.29",
+    "@types/uuid": "^8.3.1",
     "graphql": "^16.0.1",
     "zod": "^3.11.6"
   },

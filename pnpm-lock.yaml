@@ -68,14 +68,18 @@ importers:
       '@graphql-tools/schema': ^8.3.1
       '@graphql-tools/utils': ^8.5.3
       '@types/node': 14.17.29
-      graphql: ^16.0.1
+      '@types/uuid': ^8.3.1
+      graphql: 16.0.1
+      uuid: ^8.3.2
       zod: ^3.11.6
     dependencies:
       '@graphql-tools/resolvers-composition': 6.4.1_graphql@16.0.1
       '@graphql-tools/schema': 8.3.1_graphql@16.0.1
       '@graphql-tools/utils': 8.5.3_graphql@16.0.1
+      uuid: 8.3.2
     devDependencies:
       '@types/node': 14.17.29
+      '@types/uuid': 8.3.1
       graphql: 16.0.1
       zod: 3.11.6
 
@@ -3063,6 +3067,10 @@ packages:
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: false
+
+  /@types/uuid/8.3.1:
+    resolution: {integrity: sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==}
+    dev: true
 
   /@types/wait-on/5.3.1:
     resolution: {integrity: sha512-2FFOKCF/YydrMUaqg+fkk49qf0e5rDgwt6aQsMzFQzbS419h2gNOXyiwp/o2yYy27bi/C1z+HgfncryjGzlvgQ==}
@@ -11290,7 +11298,6 @@ packages:
   /uuid/8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
-    dev: true
 
   /uvu/0.5.2:
     resolution: {integrity: sha512-m2hLe7I2eROhh+tm3WE5cTo/Cv3WQA7Oc9f7JB6uWv+/zVKvfAm53bMyOoGOSZeQ7Ov2Fu9pLhFr7p07bnT20w==}
