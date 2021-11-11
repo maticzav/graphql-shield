@@ -9,17 +9,15 @@ export class ExhaustiveSwitchCheck extends Error {
 }
 
 /**
+ * Requires a selection of fields in a type.
+ */
+export type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+
+/**
  * Taken from
  * https://github.com/sindresorhus/type-fest/blob/main/source/primitive.d.ts.
  */
-export type Primitive =
-  | null
-  | undefined
-  | string
-  | number
-  | boolean
-  | symbol
-  | bigint
+export type Primitive = null | undefined | string | number | boolean | symbol | bigint
 
 /**
  * PartialDeep implementation taken from
@@ -48,8 +46,7 @@ export type PartialDeep<T> = T extends Primitive
 /**
 Same as `PartialDeep`, but accepts only `Map`s and as inputs. Internal helper for `PartialDeep`.
 */
-interface PartialMapDeep<KeyType, ValueType>
-  extends Map<PartialDeep<KeyType>, PartialDeep<ValueType>> {}
+interface PartialMapDeep<KeyType, ValueType> extends Map<PartialDeep<KeyType>, PartialDeep<ValueType>> {}
 
 /**
 Same as `PartialDeep`, but accepts only `Set`s as inputs. Internal helper for `PartialDeep`.

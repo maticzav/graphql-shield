@@ -1,5 +1,4 @@
 import {
-  GraphQLResolveInfo,
   ValidationRule,
   getNamedType,
   isIntrospectionType,
@@ -14,114 +13,103 @@ import {
 import { ShieldAuthorizationError } from './error'
 
 import { Rule, RuleKind } from './rules'
-import { RulesSchemaType } from './types'
-import { ExhaustiveSwitchCheck } from './utils'
+import './types'
+import { ExhaustiveSwitchCheck, PartialDeep } from './utils'
 
 const DEFAULT_INSUFFICIENT_PERMISSIONS_ERROR = `Insufficient permissions for selection.`
 
 /**
- * Returns a validation rule from GraphQL schema and rules that you may
- * include in the validation step of  GraphQL query execution cycle.
+ * Returns a custom execution function that works as a validation function.
+ * Since we run all validation before actually executing the query, we only benefit
+ * from having access to the context and don't trade any benefit of performing validation.
  */
-export function getValidationRule<Context>(schema: GraphQLSchema, rules: RulesSchemaType): ValidationRule {
+export function getValidationRule<
+  T extends PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>,
+  Context,
+>(params: { rules: T; context: Context; schema: GraphQLSchema }): ValidationRule {
   // We cache the execution of the functions that allowed access to prevent duplicated
   // execution on the same context.
   const cache = new Set<string>()
 
-  // Tells whether validation has completed to prevent unnecessary calculation.
-  let completed = false
+  // Recursively executes the rules using given context and returns whether we allowed the execution or not.
+  function evaluate(node: FieldNode, rule: Rule<any, any, Context>): boolean | ShieldAuthorizationError {
+    // Make sure we still haven't finished executing.
+
+    // Process the rules.
+    switch (rule.kind) {
+      case RuleKind.EXECUTION:
+        return true
+      case RuleKind.ALLOW:
+        return true
+      case RuleKind.DENY: {
+        return false
+      }
+      case RuleKind.VALIDATION: {
+        // Allow if we've already calculated and cached the result.
+        if (cache.has(rule.uuid)) {
+          return true
+        }
+
+        const result = rule.resolver(params.context)
+        if (result === true) {
+          cache.add(rule.uuid)
+          return true
+        }
+        return false
+      }
+      // Operators
+      case RuleKind.CHAIN:
+      case RuleKind.AND: {
+        for (const subrule of rule.rules) {
+          const result = evaluate(node, subrule)
+          if (result !== true) {
+            return result
+          }
+        }
+
+        // Cache the success of the execution.
+        cache.add(rule.uuid)
+        return true
+      }
+      case RuleKind.RACE:
+      case RuleKind.OR: {
+        for (const subrule of rule.rules) {
+          const exec = evaluate(node, subrule)
+          // At least one of the rules has to pass.
+          if (exec === true) {
+            cache.add(rule.uuid)
+            return true
+          }
+        }
+
+        return false
+      }
+
+      default:
+        throw new ExhaustiveSwitchCheck(rule)
+    }
+  }
 
   return (context) => {
-    const execctx: any = {}
-
-    // Recursively executes the rules using given context.
-    function evaluate<Context>(rule: Rule<any, any, Context>): void {
-      // Make sure we still haven't finished executing.
-      if (completed) {
-        return
-      }
-
-      // Process the rules.
-      switch (rule.kind) {
-        case RuleKind.EXECUTION:
-          return
-        case RuleKind.ALLOW:
-          return
-        case RuleKind.DENY: {
-          completed = true
-          const error = new GraphQLError(DEFAULT_INSUFFICIENT_PERMISSIONS_ERROR, [node])
-          context.reportError(error)
-          return
-        }
-        case RuleKind.VALIDATION: {
-          // Don't do anything if we've already calculated the result.
-          if (cache.has(rule.uuid)) {
-            return
-          }
-
-          const result = rule.resolver(execctx)
-          if (result === true) {
-            cache.add(rule.uuid)
-          } else {
-            completed = true
-            const message =
-              result instanceof ShieldAuthorizationError
-                ? ShieldAuthorizationError.message
-                : DEFAULT_INSUFFICIENT_PERMISSIONS_ERROR
-            const error = new GraphQLError(message, [node])
-            context.reportError(error)
-          }
-          return
-        }
-        // Operators
-        case RuleKind.CHAIN:
-        case RuleKind.AND: {
-          // We evaluate each of the subrules. If none of the subrules
-          // reported an error, then we don't have to report an error either
-          // and if it did then it's in the global context already anyway.
-          for (const subrule of rule.rules) {
-            evaluate(subrule)
-          }
-
-          // Cache the success of the execution.
-          cache.add(rule.uuid)
-          return
-        }
-
-        case RuleKind.RACE:
-        case RuleKind.OR: {
-          for (const subrule of rule.rules) {
-            const exec = evaluate(subrule)
-            // At least one of the rules has to pass.
-            if (exec === true) {
-              cache.add(rule.uuid)
-              return
-            }
-          }
-
-          // Report an error if none of the rules passed.
-          completed = true
-          const error = new GraphQLError(DEFAULT_INSUFFICIENT_PERMISSIONS_ERROR, [node])
-          context.reportError(error)
-          return
-        }
-
-        default:
-          throw new ExhaustiveSwitchCheck(rule)
-      }
-    }
-
     // Handles the validation of a single field.
     const handleField = (node: FieldNode, objectType: GraphQLObjectType) => {
       const type = objectType.name
       const field = node.name.value
 
       // Execute the validation rule.
-      const rule = rules[type]?.[field]
+      const rule = params.rules[type]?.[field] || params.rules[type]?.['*'] || params.rules['*']
 
       if (rule) {
-        const executionContext = context
-        context.reportError(new GraphQLError('', [node]))
+        const evaluation = evaluate(node, rule)
+
+        if (evaluation !== true) {
+          const message =
+            evaluation instanceof ShieldAuthorizationError
+              ? evaluation.message
+              : DEFAULT_INSUFFICIENT_PERMISSIONS_ERROR
+          const error = new GraphQLError(message, [node])
+          context.reportError(error)
+        }
       }
     }
 
@@ -144,15 +132,24 @@ export function getValidationRule<Context>(schema: GraphQLSchema, rules: RulesSc
             return false
           }
 
+          // We handle objects, interface and union permissions differently.
+          // When accessing an an object field, we check simply run the check.
           if (isObjectType(parentType)) {
             handleField(node, parentType)
-          } else if (isUnionType(parentType)) {
+          }
+
+          // To allow a union case, every type in the union has to be allowed/
+          // If one of the types doesn't permit access we should throw a validation error.
+          if (isUnionType(parentType)) {
             for (const objectType of parentType.getTypes()) {
               handleField(node, objectType)
             }
-          } else if (isInterfaceType(parentType)) {
-            const implementations = schema.getImplementations(parentType)
-            for (const objectType of implementations.objects) {
+          }
+
+          // Same goes for interfaces. Every implementation should allow the access of the given
+          // field to pass the validation rule.
+          if (isInterfaceType(parentType)) {
+            for (const objectType of params.schema.getImplementations(parentType).objects) {
               handleField(node, objectType)
             }
           }

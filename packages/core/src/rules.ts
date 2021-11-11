@@ -2,7 +2,9 @@ import { GraphQLResolveInfo } from 'graphql'
 import * as uuid from 'uuid'
 import * as zod from 'zod'
 
+import './types'
 import { error, ShieldAuthorizationError } from './error'
+import { Require } from './utils'
 
 /*
 This file contains everything related to rule creation and definition.
@@ -128,14 +130,39 @@ export type Rule<Parent = any, Arguments = any, Context = any> =
 /**
  * A rule that we execute during the execution of the query.
  */
-export function execution<Parent, Arguments, Context>(
-  fn: (
-    parent: Parent,
-    args: Arguments,
-    context: Context,
-    info: GraphQLResolveInfo,
-  ) => Promise<boolean | ShieldAuthorizationError>,
-): Rule<Parent, Arguments, Context> {
+//  fn: (parent: GeneratedSchema[T]['parent'], args: GeneratedSchema[T]
+export function execution<
+  T extends keyof GraphQLShield.GlobalFieldsSchema = any,
+  Context = any,
+  Field extends keyof GraphQLShield.GlobalFieldsSchema[T]['parent'] & string = any,
+>(
+  fn:
+    | ((
+        parent: GraphQLShield.GlobalFieldsSchema[T]['parent'],
+        args: GraphQLShield.GlobalFieldsSchema[T]['args'],
+        context: Context,
+        info: GraphQLResolveInfo,
+      ) => Promise<boolean | ShieldAuthorizationError>)
+    | {
+        rule: (
+          parent: Require<GraphQLShield.GlobalFieldsSchema[T]['parent'], Field>,
+          args: GraphQLShield.GlobalFieldsSchema[T]['args'],
+          context: Context,
+          info: GraphQLResolveInfo,
+        ) => Promise<boolean | ShieldAuthorizationError>
+        fields: Field[]
+      },
+): Rule<GraphQLShield.GlobalFieldsSchema[T]['parent'], GraphQLShield.GlobalFieldsSchema[T]['args'], Context> {
+  if (typeof fn !== 'function') {
+    return {
+      __lock__: Lock,
+      kind: RuleKind.EXECUTION,
+      uuid: uuid.v4(),
+      resolver: (parent, args, context, info) => fn.rule(parent as any, args, context, info),
+      fields: fn.fields,
+    }
+  }
+
   return {
     __lock__: Lock,
     kind: RuleKind.EXECUTION,
@@ -148,22 +175,25 @@ export function execution<Parent, Arguments, Context>(
 /**
  * Validates input information using a zod schema.
  */
-export function input<Parent, Arguments, Context>(opts: {
-  schema: zod.Schema<Arguments>
-  fields: (keyof Arguments & string)[]
-}): Rule<Parent, Arguments, Context> {
+export function input<T extends keyof GraphQLShield.GlobalFieldsSchema = any, Context = any>(
+  schema: (context: Context) => zod.Schema<GraphQLShield.GlobalFieldsSchema[T]['args']>,
+): Rule<
+  zod.Schema<GraphQLShield.GlobalFieldsSchema[T]['parent']>,
+  zod.Schema<GraphQLShield.GlobalFieldsSchema[T]['args']>,
+  Context
+> {
   return {
     __lock__: Lock,
     kind: RuleKind.EXECUTION,
     uuid: uuid.v4(),
-    resolver: async (parent, args) => {
-      const result = await opts.schema.spa(args)
+    resolver: async (parent, args, context) => {
+      const result = await schema(context).spa(args)
       if (result.success) {
         return true
       }
       return error(result.error.message)
     },
-    fields: opts.fields,
+    fields: [],
   }
 }
 
@@ -171,9 +201,7 @@ export function input<Parent, Arguments, Context>(opts: {
  * A rule that we execute in the validation phase of a query
  * lifecycle (i.e. before we execute the query).
  */
-export function validation<Parent, Arguments, Context>(
-  fn: (ctx: Context) => boolean,
-): Rule<Parent, Arguments, Context> {
+export function validation<Context>(fn: (ctx: Context) => boolean): Rule<any, any, Context> {
   return {
     __lock__: Lock,
     kind: RuleKind.VALIDATION,
@@ -294,11 +322,7 @@ export function race<Parent, Arguments, Context>(
 /**
  * Always allows the execution.
  */
-export function allow<Parent, Arguments, Context>(): Rule<
-  Parent,
-  Arguments,
-  Context
-> {
+export function allow<Parent, Arguments, Context>(): Rule<Parent, Arguments, Context> {
   return {
     __lock__: Lock,
     kind: RuleKind.ALLOW,
@@ -308,11 +332,7 @@ export function allow<Parent, Arguments, Context>(): Rule<
 /**
  * Allways denies the execution.
  */
-export function deny<Parent, Arguments, Context>(): Rule<
-  Parent,
-  Arguments,
-  Context
-> {
+export function deny<Parent, Arguments, Context>(): Rule<Parent, Arguments, Context> {
   return {
     __lock__: Lock,
     kind: RuleKind.DENY,

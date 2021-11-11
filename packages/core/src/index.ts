@@ -1,8 +1,12 @@
 /*
 Welcome to GraphQL Shield!
  */
-export { getResolversWrapper } from './execution'
+export { getSchemaMapper } from './execution'
 export { getValidationRule } from './validation'
 export { allow, deny, chain, and, or, race, execution, input, validation } from './rules'
 export { error } from './error'
-export { SchemaType } from './types'
+
+// Import types into global context.
+import './types'
+export { Rule } from './rules'
+export { PartialDeep } from './utils'

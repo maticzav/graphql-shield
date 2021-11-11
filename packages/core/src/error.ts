@@ -16,4 +16,21 @@ export function error(message: string) {
 /**
  * Let's you safely return error reports.
  */
-export class ShieldAuthorizationError extends Error {}
+export class ShieldAuthorizationError extends Error {
+  constructor(message: string) {
+    super(message)
+  }
+}
+
+// export type ShieldOptions = {
+//   /**
+//    * Tells whether GraphQL Shield is running in a debug environment
+//    * and should make errors more elaborate.
+//    */
+//   debug: boolean
+//   /**
+//    * Tells whether GraphQL Shield should let thrown errors pass through
+//    * the checker and expose internal credentials.
+//    */
+//   allowExternalErrors: boolean
+// }

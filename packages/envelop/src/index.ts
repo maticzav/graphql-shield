@@ -21,8 +21,14 @@ export type ShieldOptions = {}
 /**
  * Envelop plugin for GraphQL Shield.
  */
-export function useShield(rules: any, options: ShieldOptions): Plugin {
+
+export function useShield<T extends shield.PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>, Context>(
+  rules: T,
+  options: ShieldOptions,
+): Plugin<Context> {
   let schemaTypeInfo: TypeInfo
+
+  const schemaMapper = shield.getSchemaMapper<T, Context>(rules)
 
   return {
     onSchemaChange({ schema, replaceSchema }) {
@@ -33,7 +39,7 @@ export function useShield(rules: any, options: ShieldOptions): Plugin {
         return
       }
 
-      const shieldedSchema = shield.getResolversWrapper(rules, schema)
+      const shieldedSchema = schemaMapper(schema)
       shieldedSchema[SHIELD_APPLIED_SYMBOL] = true
       replaceSchema(shieldedSchema)
     },
@@ -46,7 +52,13 @@ export function useShield(rules: any, options: ShieldOptions): Plugin {
         errors.push(e)
       })
 
-      const visitor = visitInParallel(rules.map((rule) => rule(validationContext, args)))
+      const validationRule = shield.getValidationRule<T, Context>({
+        rules,
+        context: args.contextValue,
+        schema: args.schema,
+      })
+
+      const visitor = visitInParallel([validationRule(validationContext)])
       visit(args.document, visitWithTypeInfo(typeInfo, visitor))
 
       if (errors.length > 0) {

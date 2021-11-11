@@ -1,99 +1,39 @@
-// codegen
-
-import { Rule } from '.'
-import { PartialDeep } from './utils'
+import { Rule } from './rules'
 
 /**
  * Object types contain information about all the objects our schema contains.
  */
 
-/**
- * SchemaTypes includes all the types that we need to make reusable rules.
- */
-export type SchemaType = {
-  [path: string]: {
-    parent: ObjectType
-    args: ArgumentsType
-  }
-}
-
-export type ObjectType = {
-  [field: string]: any
-}
-
-export type ArgumentsType = {
-  [arg: string]: any
-}
-
-/**
- * Rules schema lets us assign given rules to dedicated fields in the schema.
- */
-export type RulesSchemaType<Context> = {
-  [type: string]: {
-    [field: string]: Rule<any, any, Context>
-  }
-} & { '*': Rule<null, any, Context> }
-
-// MARK: - Experimenting
-
 declare global {
-  export interface Context {}
-}
+  export namespace GraphQLShield {
+    /**
+     * Rules schema lets us assign given rules to dedicated fields in the schema.
+     */
+    export interface GlobalRulesSchema<Context> {
+      [type: string]:
+        | {
+            [field: string]: Rule<any, any, Context>
+          }
+        | Rule<null, any, Context>
+    }
 
-declare global {
-  export interface GlobalSchema extends GeneratedSchema {}
-}
+    /**
+     * Outlines the fields and arguments of the schema.
+     */
+    export interface GlobalFieldsSchema {
+      [path: string]: {
+        parent: ObjectType
+        args: ArgumentsType
+        return: any
+      }
+    }
 
-// in shield:
-declare global {
-  export interface GlobalSchema {}
-}
+    type ObjectType = {
+      [field: string]: any
+    }
 
-// Objects
-
-type Query = {
-  basket: string[]
-}
-
-// Schema
-
-type GeneratedSchema = {
-  'Query.user': {
-    parent: Query
-    args: { id: string; name: string }
+    type ArgumentsType = {
+      [arg: string]: any
+    }
   }
-  'Query.group': {
-    parent: Query
-    args: { id: string }
-  }
-  'Query.me': {
-    parent: Query
-    args: {}
-  }
-  'Query.*': GeneratedSchema['Query.me'] | GeneratedSchema['Query.user'] | GeneratedSchema['Query.group']
-}
-
-// Permissions
-
-type GSch = {
-  '*': GSch['Query']['*']
-  Query: {
-    '*': GSch['Query']['me'] | GSch['Query']['user'] | GSch['Query']['group']
-    // All fields.
-    me: Rule<GeneratedSchema['Query.me']['parent'], GeneratedSchema['Query.me']['args'], Context>
-    user: Rule<GeneratedSchema['Query.user']['parent'], GeneratedSchema['Query.user']['args'], Context>
-    group: Rule<GeneratedSchema['Query.group']['parent'], GeneratedSchema['Query.group']['args'], Context>
-  }
-}
-
-function rule<T extends keyof GeneratedSchema>(
-  fn: (parent: GeneratedSchema[T]['parent'], args: GeneratedSchema[T]['args']) => void,
-) {}
-
-rule<'Query.user' | 'Query.group'>((parent, { id }) => {
-  parent.basket
-})
-
-const permissions: PartialDeep<GSch> = {
-  Query: {},
 }
