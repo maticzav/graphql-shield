@@ -4,7 +4,7 @@ import { GraphQLFieldResolver, GraphQLResolveInfo, GraphQLSchema } from 'graphql
 import { ShieldAuthorizationError } from './error'
 import { Rule, RuleKind } from './rules'
 import './types'
-import { ExhaustiveSwitchCheck, PartialDeep, Require } from './utils'
+import { ExhaustiveSwitchCheck, PartialDeep } from './utils'
 
 /*
 This file contains code that we use to wrap resolvers with execution rules.
@@ -16,7 +16,7 @@ actuall execute each of the requested resolvers.
 /**
  * Returns a wrapping function that lets us run execution permissions.
  */
-export function getSchemaMapper<T extends PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>, Context>(
+export function getSchemaMapper<Context, T extends PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>>(
   rules: T,
 ): (schema: GraphQLSchema) => GraphQLSchema {
   // Recursively executes the rules using given context and returns whether we allowed the execution or not.
@@ -161,23 +161,6 @@ export function getSchemaMapper<T extends PartialDeep<GraphQLShield.GlobalRulesS
     }
   }
 
-  /**
-   * Extends selection parameter so that subfields of a parent type that rely
-   * on certain fields
-   */
-  function composeWithSelectionExtender<Parent, Arguments, Result>(
-    resolve: GraphQLFieldResolver<Parent, Context, Arguments, Result>,
-    fields: string[],
-  ): GraphQLFieldResolver<Parent, Context, Arguments, Result> {
-    return (parent, args, context, info) => {
-      // const missingSelectionFields = info.
-      const extendedInfo = info
-      const result = resolve(parent, args, context, info)
-
-      return result
-    }
-  }
-
   return (schema: GraphQLSchema): GraphQLSchema => {
     return tools.mapSchema(schema, {
       [tools.MapperKind.FIELD]: (field, fieldName, typeName) => {
@@ -190,14 +173,8 @@ export function getSchemaMapper<T extends PartialDeep<GraphQLShield.GlobalRulesS
         const rule = rules[typeName]?.[fieldName] || rules[typeName]?.['*'] || rules['*']
         const hasRuleDefinition = rule === undefined || rule === null
 
-        const extendedSelectionFields: string[] = []
-        const needsExtendedSelection = extendedSelectionFields.length > 0
-
         // Compose resolver on regular fields.
         if (field.resolve) {
-          if (needsExtendedSelection) {
-            field.resolve = composeWithSelectionExtender(field.resolve, extendedSelectionFields)
-          }
           if (hasRuleDefinition) {
             field.resolve = composeWithRule(rule, field.resolve)
           }
@@ -209,26 +186,5 @@ export function getSchemaMapper<T extends PartialDeep<GraphQLShield.GlobalRulesS
         return field
       },
     })
-  }
-}
-
-/**
- * Returns required fields in a rule.
- */
-function getFields(rule: Rule): string[] {
-  switch (rule.kind) {
-    case RuleKind.EXECUTION:
-      return rule.fields
-    case RuleKind.AND:
-    case RuleKind.CHAIN:
-    case RuleKind.OR:
-    case RuleKind.RACE:
-      return rule.rules.reduce<string[]>((acc, r) => [...acc, ...getFields(r)], [])
-    case RuleKind.ALLOW:
-    case RuleKind.DENY:
-    case RuleKind.VALIDATION:
-      return []
-    default:
-      throw new ExhaustiveSwitchCheck(rule)
   }
 }

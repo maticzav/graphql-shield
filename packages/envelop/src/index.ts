@@ -9,8 +9,15 @@ Consult these two files to understand better why this works the way it does.
 
 import { Plugin } from '@envelop/types'
 import * as shield from '@shield/core'
-import { visitWithTypeInfo } from 'graphql'
-import { ExecutionResult, GraphQLError, TypeInfo, ValidationContext, visit, visitInParallel } from 'graphql'
+import {
+  GraphQLSchema,
+  ExecutionResult,
+  GraphQLError,
+  TypeInfo,
+  ValidationContext,
+  visit,
+  visitWithTypeInfo,
+} from 'graphql'
 
 const SHIELD_APPLIED_SYMBOL = Symbol('SCHEMA_WITH_SHIELD')
 
@@ -22,26 +29,38 @@ export type ShieldOptions = {}
  * Envelop plugin for GraphQL Shield.
  */
 
-export function useShield<T extends shield.PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>, Context>(
+export function useShield<Context, T extends shield.PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>>(
   rules: T,
   options: ShieldOptions,
 ): Plugin<Context> {
+  let schema: GraphQLSchema
   let schemaTypeInfo: TypeInfo
 
-  const schemaMapper = shield.getSchemaMapper<T, Context>(rules)
+  const schemaMapper = shield.getSchemaMapper<Context, T>(rules)
 
   return {
-    onSchemaChange({ schema, replaceSchema }) {
-      schemaTypeInfo = new TypeInfo(schema)
+    onSchemaChange(context) {
+      schema = context.schema
+      schemaTypeInfo = new TypeInfo(context.schema)
 
       // Make sure we only apply GraphQL Shield to schema once.
       if (schema[SHIELD_APPLIED_SYMBOL]) {
         return
       }
 
-      const shieldedSchema = schemaMapper(schema)
+      const shieldedSchema = schemaMapper(context.schema)
       shieldedSchema[SHIELD_APPLIED_SYMBOL] = true
-      replaceSchema(shieldedSchema)
+      context.replaceSchema(shieldedSchema)
+    },
+    onParse({ extendContext, parseFn, setParseFn }) {
+      // We extend the parsing function to include required fields.
+      const shieldPraseFn = shield.getParseFn<Context, T>({
+        rules,
+        schema,
+        parseFn,
+      })
+
+      setParseFn(shieldPraseFn)
     },
     onExecute({ args, setResultAndStopExecution }) {
       // We hook into the execution cycle before execution which is the same as running the
@@ -52,17 +71,17 @@ export function useShield<T extends shield.PartialDeep<GraphQLShield.GlobalRules
         errors.push(e)
       })
 
-      const validationRule = shield.getValidationRule<T, Context>({
+      const validationRule = shield.getValidationRule<Context, T>({
         rules,
         context: args.contextValue,
         schema: args.schema,
       })
 
-      const visitor = visitInParallel([validationRule(validationContext)])
+      const visitor = validationRule(validationContext)
       visit(args.document, visitWithTypeInfo(typeInfo, visitor))
 
       if (errors.length > 0) {
-        let result: ExecutionResult = {
+        const result: ExecutionResult = {
           data: null,
           errors,
         }

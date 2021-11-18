@@ -17,10 +17,6 @@
   ],
   "packageRules": [
     {
-      "packageNames": ["graphql-shield-rules"],
-      "automerge": false
-    },
-    {
       "groupName": "graphql-tools",
       "matchPackagePrefixes": "@graphql-tools"
     }

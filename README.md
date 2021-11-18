@@ -9,20 +9,31 @@
 
 > GraphQL Server permissions as another layer of abstraction!
 
+# :construction: TODO:
+
+- [ ] Write Tests
+- [ ] Envelop Plugin + Envelop Test
+- [ ] Examples
+- [ ] Docs
+
 ## Overview
 
 GraphQL Shield helps you create a permission layer for your application. Using an intuitive rule-API, you'll gain the power of the shield engine on every request and reduce the load time of every request with smart caching. This way you can make sure your application will remain quick, and no internal data will be exposed.
 
 ## Features
 
-- ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
-- 🤝 **Compatible:** Works with all GraphQL Servers.
-- 🚀 **Smart:** Intelligent V8 Shield engine caches all your requests to prevent any unnecessary load.
-- 🎯 **Per-Type or Per-Field:** Write permissions for your schema, types or specific fields (check the example below).
+- ️🧑🏻‍⚕️ **Type-Safe:** Generates rule types from your schema.
+- 🤝 **Compatible:** Implements default plugins for major GraphQL server frameworks.
+- 🕹 **Fast:** Optimised for speed ground up.
+- 🎯 **Per-Type or Per-Field:** Write permissions for your schema, types or specific fields.
 
 ## Documentation
 
-You can find extensive documentation at [https://graphql-shield.vercel.app](https://graphql-shield.vercel.app).
+You can find extensive documentation at [https://graphql-shield.vercel.app](https://graphql-shield.com).
+
+```ts
+
+```
 
 ## Contributors
 
@@ -49,10 +60,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/graphql-shield/sponsor/7/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/graphql-shield/sponsor/8/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/graphql-shield/sponsor/9/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/9/avatar.svg"></a>
-
-## Contributing
-
-We are always looking for people to help us grow `graphql-shield`! If you have an issue, feature request, or pull request, let us know!
 
 ## License
 

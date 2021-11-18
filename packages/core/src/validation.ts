@@ -24,8 +24,8 @@ const DEFAULT_INSUFFICIENT_PERMISSIONS_ERROR = `Insufficient permissions for sel
  * from having access to the context and don't trade any benefit of performing validation.
  */
 export function getValidationRule<
-  T extends PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>,
   Context,
+  T extends PartialDeep<GraphQLShield.GlobalRulesSchema<Context>>,
 >(params: { rules: T; context: Context; schema: GraphQLSchema }): ValidationRule {
   // We cache the execution of the functions that allowed access to prevent duplicated
   // execution on the same context.
@@ -93,11 +93,11 @@ export function getValidationRule<
   return (context) => {
     // Handles the validation of a single field.
     const handleField = (node: FieldNode, objectType: GraphQLObjectType) => {
-      const type = objectType.name
-      const field = node.name.value
+      const typeName = objectType.name
+      const fieldName = node.name.value
 
       // Execute the validation rule.
-      const rule = params.rules[type]?.[field] || params.rules[type]?.['*'] || params.rules['*']
+      const rule = params.rules[typeName]?.[fieldName] ?? params.rules[typeName]?.['*'] ?? params.rules['*']
 
       if (rule) {
         const evaluation = evaluate(node, rule)

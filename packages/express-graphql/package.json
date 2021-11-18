@@ -1,0 +1,55 @@
+{
+  "name": "@shield/express-graphql",
+  "version": "0.0.0",
+  "description": "Express GraphQL extension for GraphQL Shield",
+  "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
+  "files": [
+    "dist"
+  ],
+  "homepage": "graphql-shield.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maticzav/graphql-shield.git",
+    "directory": "packages/express-graphql"
+  },
+  "keywords": [
+    "graphql",
+    "shield",
+    "express",
+    "permissions",
+    "gql"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "@shield/core": "0.0.0"
+  },
+  "devDependencies": {
+    "graphql": "^16.0.1"
+  },
+  "peerDependencies": {
+    "graphql": "^14.0.0 || ^15.0.0 || ^16.0.0"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  },
+  "license": "MIT"
+}
