@@ -35,6 +35,9 @@ export default class MyDocument extends Document {
 
           {/* Crisp */}
           <script async src="https://the-guild.dev/static/crisp.js" />
+
+          {/* Splitbee */}
+          <script async src="https://cdn.splitbee.io/sb.js"></script>
         </head>
         <body>
           <ColorModeScript initialColorMode="light" />
