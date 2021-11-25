@@ -4915,7 +4915,7 @@ __metadata:
     "@types/fs-extra": 9.0.13
     "@types/mdx-js__react": 1.5.5
     "@types/node": 16.6.2
-    "@types/react": 17.0.33
+    "@types/react": 17.0.37
     "@types/react-dom": 17.0.9
     "@types/wait-on": 5.3.1
     concurrently: 6.2.1
@@ -5704,14 +5704,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.33":
-  version: 17.0.33
-  resolution: "@types/react@npm:17.0.33"
+"@types/react@npm:17.0.37":
+  version: 17.0.37
+  resolution: "@types/react@npm:17.0.37"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: ca343662dd2c1b323b5fa4f269334c786839a93b31a878d7a8a090be3a1ae65a7bd90992d0ebfb3aeb6e326d25c319cf4ae44fa7858dfbb8d953b099a91e59bd
+  checksum: 9edbfaf07cdfbb6cebdd30e972bca85e1f73dca082c83c0fdecd2b75a0f8af2159814748c55b80e64ab0a392a732340923fd1f0ca57789d17acba12ce3b22c99
   languageName: node
   linkType: hard
 
