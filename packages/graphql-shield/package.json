@@ -25,7 +25,7 @@
     "@types/request-promise-native": "1.0.18",
     "apollo-server": "2.25.3",
     "graphql": "15.6.0",
-    "graphql-middleware": "6.1.6",
+    "graphql-middleware": "6.1.13",
     "graphql-shield-rules": "0.0.1",
     "graphql-tools": "7.0.5"
   },
