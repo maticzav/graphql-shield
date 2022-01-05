@@ -21557,9 +21557,9 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"pretty-quick@npm:3.1.1":
-  version: 3.1.1
-  resolution: "pretty-quick@npm:3.1.1"
+"pretty-quick@npm:3.1.3":
+  version: 3.1.3
+  resolution: "pretty-quick@npm:3.1.3"
   dependencies:
     chalk: ^3.0.0
     execa: ^4.0.0
@@ -21571,7 +21571,7 @@ fsevents@^1.2.7:
     prettier: ">=2.0.0"
   bin:
     pretty-quick: bin/pretty-quick.js
-  checksum: 2e1f0ca8166e3930c1eb702ee9f3026e7448ca4e647470abcda1e23a8fae2e39e9708acbfc974727513861f4d33d8e9ee2a8811b6765a6124ca4d5f24675ac4f
+  checksum: 7ca4757f4d50b83dca01607d9ec7d2c28984a5bdabc2c7b946878d0d38eef4cad62da054d64ccf30dd593ebf6400c10e939c7533feba85c26369eea84cc8795e
   languageName: node
   linkType: hard
 
@@ -23536,7 +23536,7 @@ fsevents@^1.2.7:
     jest: 27.2.2
     lint-staged: 11.1.2
     prettier: 2.4.1
-    pretty-quick: 3.1.1
+    pretty-quick: 3.1.3
     rimraf: 3.0.2
     ts-jest: 27.0.5
     ts-node: 10.2.1
