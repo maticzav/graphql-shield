@@ -1,0 +1,29 @@
+---
+title: Apollo Federation
+---
+
+# Apollo Federation Integration
+
+If you are using graphql-shield with an Apollo Federation gateway, you may need to whitelist a few properties to avoid authentication errors during initial introspection & composition
+
+## Example
+
+```ts
+const permissions = shield(
+  {
+    Query: {
+      _service: allow,
+    },
+    _Service: {
+      sdl: allow,
+    },
+  },
+  {
+    fallbackRule: deny,
+  },
+)
+```
+
+Other properties which might need to be whitelisted include: "Query._entities", "Query._service", "_Entity.\*", "_Service.\*", "_Any.\*"
+
+Note: Consider implementing more rigid security rather than using "allow"
