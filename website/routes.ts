@@ -9,7 +9,7 @@ export function getRoutes(): IRoutes {
         _: {
           advanced: {
             $name: 'Advanced',
-            $routes: ['whitelisting', 'reference', 'troubleshooting', 'reference'],
+            $routes: ['whitelisting', 'reference', 'troubleshooting', 'reference', 'apollo-federation'],
           },
         },
       },
