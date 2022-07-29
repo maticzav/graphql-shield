@@ -1,3 +1,12 @@
+## ⚠️ `graphql-shield` is currently unmaintained
+
+That means that
+- you should consider tools like [envelop](https://www.envelop.dev/plugins/use-operation-field-permissions) and [authz](https://github.com/AstrumU/graphql-authz),
+- you can contribute to the project with a well written PR that fixes some of the problems in issues (PRs made by people will be checked, not unlike bot PRs that are currently "polluting" the repository)
+- you can co-maintain the repository (there's an [ongoing effort](https://github.com/maticzav/graphql-shield/pull/1359) to improve the library)
+
+---
+
 <p align="center"><img src="media/shield.jpg" width="300"/></p>
 
 # graphql-shield
