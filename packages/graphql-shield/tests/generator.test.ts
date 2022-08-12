@@ -1,4 +1,4 @@
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { applyMiddleware } from 'graphql-middleware'
 import { shield, rule } from '../src'
 import { graphql } from 'graphql'
@@ -46,7 +46,10 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+    })
 
     /* Tests */
 
@@ -105,7 +108,10 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+    })
 
     /* Tests */
 
@@ -164,7 +170,10 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+    })
 
     /* Tests */
 
@@ -238,7 +247,10 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+    })
 
     /* Tests */
 

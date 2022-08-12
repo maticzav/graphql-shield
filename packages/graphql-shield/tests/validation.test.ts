@@ -1,5 +1,5 @@
 import { applyMiddleware } from 'graphql-middleware'
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { validateRuleTree } from '../src/validation'
 import { shield, rule, allow } from '../src/'
 import { and } from '../src/constructors'
