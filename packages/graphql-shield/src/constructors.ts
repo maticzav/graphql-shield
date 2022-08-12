@@ -45,25 +45,27 @@ import {
  * })
  *
  */
-export const rule = (
-  name?: string | IRuleConstructorOptions,
-  options?: IRuleConstructorOptions,
-) => (func: IRuleFunction): Rule => {
-  if (typeof name === 'object') {
-    options = name
-    name = Math.random().toString()
-  } else if (typeof name === 'string') {
-    options = options || {}
-  } else {
-    name = Math.random().toString()
-    options = {}
-  }
+export const rule =
+  (
+    name?: string | IRuleConstructorOptions,
+    options?: IRuleConstructorOptions,
+  ) =>
+  (func: IRuleFunction): Rule => {
+    if (typeof name === 'object') {
+      options = name
+      name = Math.random().toString()
+    } else if (typeof name === 'string') {
+      options = options || {}
+    } else {
+      name = Math.random().toString()
+      options = {}
+    }
 
-  return new Rule(name, func, {
-    fragment: options.fragment,
-    cache: options.cache,
-  })
-}
+    return new Rule(name, func, {
+      fragment: options.fragment,
+      cache: options.cache,
+    })
+  }
 
 /**
  *
@@ -71,16 +73,18 @@ export const rule = (
  *
  * @param schema
  */
-export const inputRule = <T>(name?: string) => (
-  schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.Schema<T>,
-  options?: Yup.ValidateOptions,
-) => {
-  if (typeof name === 'string') {
-    return new InputRule(name, schema, options)
-  } else {
-    return new InputRule(Math.random().toString(), schema, options)
+export const inputRule =
+  <T>(name?: string) =>
+  (
+    schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.BaseSchema<T>,
+    options?: Parameters<Yup.BaseSchema<T>['validate']>[1],
+  ) => {
+    if (typeof name === 'string') {
+      return new InputRule(name, schema, options)
+    } else {
+      return new InputRule(Math.random().toString(), schema, options)
+    }
   }
-}
 
 /**
  *

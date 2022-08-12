@@ -1,6 +1,6 @@
 const { ApolloServer, gql } = require('apollo-server-lambda')
 const { applyMiddleware } = require('graphql-middleware')
-const { makeExecutableSchema } = require('graphql-tools')
+const { makeExecutableSchema } = require('@graphql-tools/schema')
 const { rule, shield } = require('graphql-shield')
 
 const isAuthenticated = rule()(async (parent, args, ctx, info) => {

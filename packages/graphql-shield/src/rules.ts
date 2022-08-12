@@ -210,8 +210,8 @@ export class Rule implements IRule {
 export class InputRule<T> extends Rule {
   constructor(
     name: string,
-    schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.Schema<T>,
-    options?: Yup.ValidateOptions,
+    schema: (yup: typeof Yup, ctx: IShieldContext) => Yup.BaseSchema<T>,
+    options?: Parameters<Yup.BaseSchema<T>['validate']>[1],
   ) {
     const validationFunction: IRuleFunction = (
       parent: object,

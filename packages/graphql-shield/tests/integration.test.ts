@@ -1,4 +1,4 @@
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { gql, ApolloServer } from 'apollo-server'
 import request from 'request-promise-native'
 import { applyMiddleware } from 'graphql-middleware'
@@ -33,7 +33,10 @@ describe('integration tests', () => {
     })
 
     const server = new ApolloServer({
-      schema: applyMiddleware(makeExecutableSchema({ typeDefs, resolvers }), permissions),
+      schema: applyMiddleware(
+        makeExecutableSchema({ typeDefs, resolvers }),
+        permissions,
+      ),
     })
 
     await server.listen({ port: 8008 })
