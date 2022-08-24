@@ -1,5 +1,6 @@
 {
   "name": "advanced",
+  "private": true,
   "scripts": {
     "start": "dotenv -- nodemon -e ts,graphql -x ts-node src/index.ts",
     "dev": "npm-run-all --parallel start playground",
@@ -9,7 +10,7 @@
   },
   "dependencies": {
     "bcryptjs": "2.4.3",
-    "graphql-shield": "^6.1.0",
+    "graphql-shield": "7.5.0",
     "graphql-yoga": "1.18.3",
     "jsonwebtoken": "8.5.1",
     "prisma-binding": "2.3.16"

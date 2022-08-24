@@ -1,7 +1,7 @@
 {
   "name": "graphql-shield",
   "description": "GraphQL Server permissions as another layer of abstraction!",
-  "version": "0.0.0-semantic-release",
+  "version": "7.5.0",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",

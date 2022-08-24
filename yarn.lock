@@ -3035,9 +3035,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/assemble-release-plan@npm:^5.2.0":
-  version: 5.2.0
-  resolution: "@changesets/assemble-release-plan@npm:5.2.0"
+"@changesets/assemble-release-plan@npm:^5.2.0, @changesets/assemble-release-plan@npm:^5.2.1":
+  version: 5.2.1
+  resolution: "@changesets/assemble-release-plan@npm:5.2.1"
   dependencies:
     "@babel/runtime": ^7.10.4
     "@changesets/errors": ^0.1.4
@@ -3045,7 +3045,7 @@ __metadata:
     "@changesets/types": ^5.1.0
     "@manypkg/get-packages": ^1.1.3
     semver: ^5.4.1
-  checksum: 1f26617c00656203e6324fcda135103e7b023427cdb92bbc8b7defb01820d74d62efe19dec6173cfefb68b6bc0898b91abdc8e96dd312eff3ddf9e58268f70a7
+  checksum: 34e00f9ac98163cd81338962ce5cf27e7a8ecbd60a5040e245976fba87336aa7efdd6c54cc2112db0cda2099fefc3ad37bd24d29307a30e49a515a3279022d74
   languageName: node
   linkType: hard
 
@@ -3139,17 +3139,17 @@ __metadata:
   linkType: hard
 
 "@changesets/get-release-plan@npm:^3.0.13":
-  version: 3.0.13
-  resolution: "@changesets/get-release-plan@npm:3.0.13"
+  version: 3.0.14
+  resolution: "@changesets/get-release-plan@npm:3.0.14"
   dependencies:
     "@babel/runtime": ^7.10.4
-    "@changesets/assemble-release-plan": ^5.2.0
+    "@changesets/assemble-release-plan": ^5.2.1
     "@changesets/config": ^2.1.1
     "@changesets/pre": ^1.0.12
     "@changesets/read": ^0.5.7
     "@changesets/types": ^5.1.0
     "@manypkg/get-packages": ^1.1.3
-  checksum: 0e07169f9f83aa3aec072e0b3f96ef60dbb6d878d496fbbf312cfb0fe953953887a2d69008cee991c22b9fea4a2feebc9c1d783c10829be32cf19fde05e85c9d
+  checksum: 32ea990b58b9c138ec0e335b0ee69e4c4e7ef802adcf28a5b843d25cb1155d68d7621063fbb18ea200bcc20112575df902722792b6428431b8ee30b8bb6b8b77
   languageName: node
   linkType: hard
 
@@ -6055,20 +6055,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/yup@npm:0.26.23":
-  version: 0.26.23
-  resolution: "@types/yup@npm:0.26.23"
-  checksum: 6c70893422f575a079103e86738089b7fb5f27007b6685b6ecb7e9ec8ee5257627c2cc56a41a44be9aacae5a9a3b0131051fd7959033c5b70b5c359215d72848
-  languageName: node
-  linkType: hard
-
-"@types/yup@npm:0.29.11":
-  version: 0.29.11
-  resolution: "@types/yup@npm:0.29.11"
-  checksum: 703fa2075231a831ee09087128c5ca3c45670a3854d9564d037c46e1f51247d3e00e468d73efb4b4e8ba3df880ddf8494c4cefcd96adddb8fcca06add70e192c
-  languageName: node
-  linkType: hard
-
 "@types/yup@npm:0.29.13":
   version: 0.29.13
   resolution: "@types/yup@npm:0.29.13"
@@ -6183,7 +6169,7 @@ __metadata:
     bcryptjs: 2.4.3
     dotenv-cli: 3.0.0
     graphql-cli: 3.0.14
-    graphql-shield: ^6.1.0
+    graphql-shield: 7.5.0
     graphql-yoga: 1.18.3
     jsonwebtoken: 8.5.1
     nodemon: 1.19.4
@@ -7783,7 +7769,7 @@ __metadata:
     "@babel/core": ^7.6.4
     "@babel/node": ^7.6.3
     "@babel/preset-env": ^7.6.3
-    graphql-shield: 6.1.0
+    graphql-shield: 7.5.0
     graphql-yoga: 1.18.3
   languageName: unknown
   linkType: soft
@@ -12258,7 +12244,7 @@ __metadata:
     apollo-server-lambda: ^2.14.2
     graphql: ^14.0.2
     graphql-middleware: ^4.0.1
-    graphql-shield: ^6.1.0
+    graphql-shield: 7.5.0
     graphql-tools: ^4.0.3
     prettier: ^1.15.3
     serverless: ^1.35.1
@@ -13034,13 +13020,6 @@ __metadata:
   bin:
     flow: cli.js
   checksum: 9e1026fce11de70903505846f27bf24b64ac0df6171b40d87ffa61f2c40dde82298e60b8bda3a27d3c8005455120a83d37970683d3741119ef5856ce9e89e5f6
-  languageName: node
-  linkType: hard
-
-"fn-name@npm:~2.0.1":
-  version: 2.0.1
-  resolution: "fn-name@npm:2.0.1"
-  checksum: ea06f4a99be824edf774f8314be9b1e7eeef62a9e462f243f452b1422c73f7b98a5dafe734256e57212239d1ac1204a7b79fdb8cc920af1ec414684a1b00ae66
   languageName: node
   linkType: hard
 
@@ -14254,36 +14233,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"graphql-shield@npm:6.1.0, graphql-shield@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "graphql-shield@npm:6.1.0"
-  dependencies:
-    "@types/yup": 0.26.23
-    lightercollective: ^0.3.0
-    object-hash: ^1.3.1
-    yup: ^0.27.0
-  peerDependencies:
-    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0
-    graphql-middleware: ^2.0.0 || ^3.0.0 || ^4.0.0
-  checksum: d6e6fbdff65401d94e367184367cc4c11b37f7d6630ff2de570c23b2b42ba4d884b885ed5e8fdd60a506fc13eb55cd5b6849c79b19ef0689b45f6365c1370651
-  languageName: node
-  linkType: hard
-
-"graphql-shield@npm:^7.0.1":
-  version: 7.5.0
-  resolution: "graphql-shield@npm:7.5.0"
-  dependencies:
-    "@types/yup": 0.29.11
-    object-hash: ^2.0.3
-    yup: ^0.31.0
-  peerDependencies:
-    graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-    graphql-middleware: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^6.0.0
-  checksum: a0eb1afa483b654da01ff41648b6c9d3b7eeff63a29f305112e51c904e0a74f88ce50e0993958d9381ba34fc308f85834031097f0f4b89f22704a871408d3d63
-  languageName: node
-  linkType: hard
-
-"graphql-shield@workspace:packages/graphql-shield":
+"graphql-shield@7.5.0, graphql-shield@^7.0.1, graphql-shield@workspace:packages/graphql-shield":
   version: 0.0.0-use.local
   resolution: "graphql-shield@workspace:packages/graphql-shield"
   dependencies:
@@ -14459,7 +14409,7 @@ fsevents@^1.2.7:
     express: ^4.17.1
     graphql: ^14.5.8
     graphql-middleware: ^4.0.1
-    graphql-shield: ^6.1.0
+    graphql-shield: 7.5.0
     jsonwebtoken: ^8.5.1
     nexus: ^0.11.7
     nexus-prisma: ^0.5.0
@@ -17487,15 +17437,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lightercollective@npm:^0.3.0":
-  version: 0.3.1
-  resolution: "lightercollective@npm:0.3.1"
-  bin:
-    lightercollective: index.js
-  checksum: 346a13a5b53ab64969b0fc936aec51f1da78ff4a5d10cfaefba4111156b7b2d9b517818090ac33f3db83579c50ef7b93732e717be1d8a9b3208f448b34058a97
-  languageName: node
-  linkType: hard
-
 "lilconfig@npm:2.0.5":
   version: 2.0.5
   resolution: "lilconfig@npm:2.0.5"
@@ -17675,7 +17616,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"lodash-es@npm:^4.17.11, lodash-es@npm:^4.17.15":
+"lodash-es@npm:^4.17.15":
   version: 4.17.21
   resolution: "lodash-es@npm:4.17.21"
   checksum: 05cbffad6e2adbb331a4e16fbd826e7faee403a1a04873b82b42c0f22090f280839f85b95393f487c1303c8a3d2a010048bf06151a6cbe03eee4d388fb0a12d2
@@ -20194,14 +20135,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"object-hash@npm:^1.3.1":
-  version: 1.3.1
-  resolution: "object-hash@npm:1.3.1"
-  checksum: fdcb957a2f15a9060e30655a9f683ba1fc25dfb8809a73d32e9634bec385a2f1d686c707ac1e5f69fb773bc12df03fb64c77ce3faeed83e35f4eb1946cb1989e
-  languageName: node
-  linkType: hard
-
-"object-hash@npm:^2.0.3, object-hash@npm:^2.1.1, object-hash@npm:^2.2.0":
+"object-hash@npm:^2.1.1, object-hash@npm:^2.2.0":
   version: 2.2.0
   resolution: "object-hash@npm:2.2.0"
   checksum: 55ba841e3adce9c4f1b9b46b41983eda40f854e0d01af2802d3ae18a7085a17168d6b81731d43fdf1d6bcbb3c9f9c56d22c8fea992203ad90a38d7d919bc28f1
@@ -22066,13 +22000,6 @@ fsevents@^1.2.7:
     object-assign: ^4.1.1
     react-is: ^16.8.1
   checksum: 5eef82fdda64252c7e75aa5c8cc28a24bbdece0f540adb60ce67c205cf978a5bd56b83e4f269f91c6e4dcfd80b36f2a2dec24d362e278913db2086ca9c6f9430
-  languageName: node
-  linkType: hard
-
-"property-expr@npm:^1.5.0":
-  version: 1.5.1
-  resolution: "property-expr@npm:1.5.1"
-  checksum: 8d5bd40224ed502fc09c20749f27bb680a2645a5d4ee51978eb534e241ea9dbb05813dee6a0471b7c00ffec37e8b202f7b4ead90ad80e52cea15431522707bfe
   languageName: node
   linkType: hard
 
@@ -25463,13 +25390,6 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"synchronous-promise@npm:^2.0.6":
-  version: 2.0.15
-  resolution: "synchronous-promise@npm:2.0.15"
-  checksum: 6079a6acd37d02eb76f250dc7ce09009151744901b320a8cfbba056b015c3d7cbf4e7467458f2d27c6393634f68521b241ea9e35fd9640f8fb59342740550472
-  languageName: node
-  linkType: hard
-
 "tabbable@npm:^5.2.1":
   version: 5.2.1
   resolution: "tabbable@npm:5.2.1"
@@ -27742,7 +27662,7 @@ typescript@4.3.5:
     graphql-cli: 3.0.14
     graphql-import: 0.7.1
     graphql-middleware-forward-binding: ^1.3.2
-    graphql-shield: ^6.1.0
+    graphql-shield: 7.5.0
     graphql-yoga: ^1.18.3
     npm-run-all: 4.1.5
     prisma: 1.34.10
@@ -28312,33 +28232,6 @@ typescript@4.3.5:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: f77b3d8d00310def622123df93d4ee654fc6a0096182af8bd60679ddcdfb3474c56c6c7190817c84a2785648cdee9d721c0154eb45698c62176c322fb46fc700
-  languageName: node
-  linkType: hard
-
-"yup@npm:^0.27.0":
-  version: 0.27.0
-  resolution: "yup@npm:0.27.0"
-  dependencies:
-    "@babel/runtime": ^7.0.0
-    fn-name: ~2.0.1
-    lodash: ^4.17.11
-    property-expr: ^1.5.0
-    synchronous-promise: ^2.0.6
-    toposort: ^2.0.2
-  checksum: a95be1512759145b068bc9c3171b0f71121cce128d96c8e33f6dbf43f4f7a6aa43bcd2b0d70e3699333e1dbb59dbcfb19a66eec70443138115bf6a3c10ebea90
-  languageName: node
-  linkType: hard
-
-"yup@npm:^0.31.0":
-  version: 0.31.1
-  resolution: "yup@npm:0.31.1"
-  dependencies:
-    "@babel/runtime": ^7.10.5
-    lodash: ^4.17.20
-    lodash-es: ^4.17.11
-    property-expr: ^2.0.4
-    toposort: ^2.0.2
-  checksum: 79bf28d6afa4cebcabe3322bb82eec93632289cad47dbe47a89ae067f4438b3a7de8ac2e30977539727510450a4f73ed9051c6d6aa2718d9f1ba6b345179cb7d
   languageName: node
   linkType: hard
 
