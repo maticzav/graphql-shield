@@ -1,6 +1,6 @@
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, inputRule } from '../src'
 
 describe('input rule', () => {
@@ -47,7 +47,10 @@ describe('input rule', () => {
         failure: login(email: "notemail")
       }
     `
-    const res = await graphql(schemaWithPermissions, query)
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+    })
 
     /* Tests */
 

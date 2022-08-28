@@ -1,5 +1,6 @@
 {
   "name": "example-shield-apollo-server-lambda",
+  "private": true,
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -18,7 +19,7 @@
     "apollo-server-lambda": "^2.14.2",
     "graphql": "^14.0.2",
     "graphql-middleware": "^4.0.1",
-    "graphql-shield": "^6.1.0",
+    "graphql-shield": "7.5.0",
     "graphql-tools": "^4.0.3"
   },
   "devDependencies": {

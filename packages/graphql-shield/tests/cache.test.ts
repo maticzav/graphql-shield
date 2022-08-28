@@ -1,6 +1,6 @@
 import { graphql } from 'graphql'
 import { applyMiddleware } from 'graphql-middleware'
-import { makeExecutableSchema } from 'graphql-tools'
+import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, rule } from '../src/index'
 import { IHashFunction } from '../src/types'
 
@@ -50,7 +50,11 @@ describe('caching:', () => {
         }
       }
     `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+      contextValue: {},
+    })
 
     expect(res).toEqual({
       data: {
@@ -109,7 +113,11 @@ describe('caching:', () => {
         f: c(arg: "foo")
       }
     `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+      contextValue: {},
+    })
 
     /* Tests */
 
@@ -183,7 +191,11 @@ describe('caching:', () => {
         e
       }
     `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+      contextValue: {},
+    })
 
     /* Tests */
 
@@ -249,7 +261,11 @@ describe('caching:', () => {
         e
       }
     `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+      contextValue: {},
+    })
 
     /* Tests */
 
@@ -309,7 +325,11 @@ describe('caching:', () => {
         a3: a(arg: "boo")
       }
     `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+      contextValue: {},
+    })
 
     /* Tests */
 
@@ -370,7 +390,11 @@ test('Customize hash function', async () => {
         b(arg: "bar")
       }
     `
-  const res = await graphql(schemaWithPermissions, query, undefined, {})
+  const res = await graphql({
+    schema: schemaWithPermissions,
+    source: query,
+    contextValue: {},
+  })
 
   /* Tests */
 
@@ -438,7 +462,11 @@ describe('legacy cache:', () => {
         }
       }
     `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+      contextValue: {},
+    })
 
     /* Tests */
 
@@ -497,7 +525,11 @@ describe('legacy cache:', () => {
         e
       }
     `
-    const res = await graphql(schemaWithPermissions, query, undefined, {})
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+      contextValue: {},
+    })
 
     expect(res).toEqual({
       data: {

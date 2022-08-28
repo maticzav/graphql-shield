@@ -1,5 +1,6 @@
 {
   "name": "basic",
+  "private": true,
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -7,7 +8,7 @@
     "start": "babel-node index.js"
   },
   "dependencies": {
-    "graphql-shield": "6.1.0",
+    "graphql-shield": "7.5.0",
     "graphql-yoga": "1.18.3"
   },
   "devDependencies": {
