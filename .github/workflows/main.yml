@@ -49,5 +49,3 @@ jobs:
         run: yarn test:ci --logHeapUsage
         env:
           CI: true
-      - name: Report Coverage
-        run: yarn coverage
