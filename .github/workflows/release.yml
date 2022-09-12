@@ -2,12 +2,12 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - master
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Main
+      - name: Checkout Master
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
