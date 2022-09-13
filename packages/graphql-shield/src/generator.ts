@@ -139,10 +139,10 @@ function applyRuleToType(
 
     /* Extract default type wildcard if any and remove it for validation */
     const defaultTypeRule = rules['*']
-    delete rules['*']
+    const { '*': _, ...rulesWithoutWildcard } = rules
     /* Validation */
 
-    const fieldErrors = Object.keys(rules)
+    const fieldErrors = Object.keys(rulesWithoutWildcard)
       .filter((type) => !Object.prototype.hasOwnProperty.call(fieldMap, type))
       .map((field) => `${type.name}.${field}`)
       .join(', ')
