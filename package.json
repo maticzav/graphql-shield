@@ -3,9 +3,7 @@
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "license": "MIT",
   "workspaces": [
-    "./website",
-    "./packages/*",
-    "./examples/*"
+    "./packages/*"
   ],
   "scripts": {
     "prepare": "husky install",
