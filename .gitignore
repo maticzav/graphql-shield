@@ -13,6 +13,7 @@ package-lock.json
 .yarn/cache
 .yarn/install-state.gz
 .yarn/build-state.yml 
+website/.yarn
 
 tsconfig.tsbuildinfo
 
