@@ -1,6 +1,6 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { gql, ApolloServer } from 'apollo-server'
-import request from 'request-promise-native'
+import fetch from 'node-fetch'
 import { applyMiddleware } from 'graphql-middleware'
 
 import { shield, allow, deny } from '../src'
@@ -33,10 +33,7 @@ describe('integration tests', () => {
     })
 
     const server = new ApolloServer({
-      schema: applyMiddleware(
-        makeExecutableSchema({ typeDefs, resolvers }),
-        permissions,
-      ),
+      schema: applyMiddleware(makeExecutableSchema({ typeDefs, resolvers }), permissions),
     })
 
     await server.listen({ port: 8008 })
@@ -51,12 +48,11 @@ describe('integration tests', () => {
       }
     `
 
-    const res = await request({
-      uri,
+    const res = await fetch(uri, {
       method: 'POST',
-      json: true,
-      body: { query },
-    }).promise()
+      body: JSON.stringify({ query }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json())
 
     expect(res.data).toEqual({
       allow: 'allow',
