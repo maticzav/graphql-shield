@@ -1,9 +1,16 @@
 {
-  "$schema": "https://unpkg.com/@changesets/config@1.5.0/schema.json",
-  "changelog": "@changesets/cli/changelog",
+  "$schema": "https://unpkg.com/@changesets/config@2.1.0/schema.json",
+  "changelog": [
+    "@changesets/changelog-github",
+    { "repo": "dimatill/graphql-shield" }
+  ],
   "commit": false,
   "linked": [],
   "access": "public",
   "baseBranch": "master",
-  "updateInternalDependencies": "patch"
+  "updateInternalDependencies": "patch",
+  "snapshot": {
+    "useCalculatedVersion": true,
+    "prereleaseTemplate": "{tag}-{datetime}-{commit}"
+  }
 }
