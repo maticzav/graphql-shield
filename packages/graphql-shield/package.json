@@ -2,16 +2,14 @@
   "name": "graphql-shield",
   "description": "GraphQL Server permissions as another layer of abstraction!",
   "version": "7.6.2",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
-  "files": [
-    "dist"
-  ],
   "homepage": "https://github.com/maticzav/graphql-shield",
   "repository": {
     "type": "git",
     "url": "https://github.com/maticzav/graphql-shield.git"
+  },
+  "scripts": {
+    "prepack": "bob prepack"
   },
   "dependencies": {
     "@types/yup": "0.29.13",
@@ -27,11 +25,41 @@
     "apollo-server": "3.10.0",
     "graphql": "16.5.0",
     "graphql-middleware": "6.1.32",
-    "graphql-shield-rules": "0.0.1"
+    "graphql-shield-rules": "0.0.1",
+    "node-fetch": "^3.2.10"
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
     "graphql-middleware": "^2.0.0 || ^3.0.0 || ^4.0.0 || ^6.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "exports": {
+    ".": {
+      "require": {
+        "types": "./dist/typings/index.d.cts",
+        "default": "./dist/cjs/index.js"
+      },
+      "import": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "default": {
+        "types": "./dist/typings/index.d.ts",
+        "default": "./dist/esm/index.js"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "typings": "dist/typings/index.d.ts",
+  "typescript": {
+    "definition": "dist/typings/index.d.ts"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
 }
