@@ -38,6 +38,3 @@ jobs:
 
       - name: Test ESM & CJS exports integrity
         run: pnpm bob check
-
-      - name: Prettier
-        run: yarn prettier:check
