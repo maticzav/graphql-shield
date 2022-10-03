@@ -16,3 +16,28 @@ jobs:
       script: 'pnpm build && pnpm test:ci --logHeapUsage'
       nodeVersions: '[14,16,18]'
       packageManager: pnpm
+
+  typecheck:
+    runs-on: ubuntu-latest  
+    name: Type Check and ESM/CJS integrity checks
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup env
+        uses: the-guild-org/shared-config/setup@main
+        with:
+          nodeVersion: 18
+          packageManager: pnpm
+
+      - name: Build Packages
+        run: pnpm build
+
+      - name: Typecheck
+        run: pnpm run check
+
+      - name: Test ESM & CJS exports integrity
+        run: pnpm bob check
+
+      - name: Prettier
+        run: yarn prettier:check

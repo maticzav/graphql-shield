@@ -54,12 +54,10 @@ describe('integration tests', () => {
       headers: { 'Content-Type': 'application/json' },
     }).then((res) => res.json())
 
-    // @ts-expect-error - TS doesn't know that the response is JSON
     expect(res.data).toEqual({
       allow: 'allow',
       deny: null,
     })
-    // @ts-expect-error - TS doesn't know that the response is JSON
     expect(res.errors.length).toBe(1)
 
     await server.stop()
