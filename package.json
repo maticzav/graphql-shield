@@ -15,7 +15,7 @@
     "release": "changeset publish",
     "release:canary": "(node scripts/canary-release.js && yarn build && yarn changeset publish --tag alpha) || echo Skipping Canary...",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\""
-  },
+  },  
   "devDependencies": {
     "@changesets/cli": "2.24.2",
     "@types/jest": "28.1.6",
