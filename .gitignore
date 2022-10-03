@@ -29,3 +29,6 @@ tsconfig.tsbuildinfo
 
 # Next.js build output
 .next
+
+# Bob the bundler
+.bob/
