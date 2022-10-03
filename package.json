@@ -10,6 +10,7 @@
     "prebuild": "rimraf packages/*/dist",
     "build": "bob build",
     "test": "jest",
+    "check": "pnpm -r run check",
     "test:ci": "jest --coverage",
     "prerelease": "yarn build",
     "release": "changeset publish",
