@@ -13,6 +13,6 @@ jobs:
     name: unit / nodejs v${{ matrix.node-version }}
     uses: the-guild-org/shared-config/.github/workflows/ci-node-matrix.yml@main
     with:
-      script: 'yarn build && yarn test:ci --logHeapUsage'
+      script: 'pnpm build && pnpm test:ci --logHeapUsage'
       nodeVersions: '[14,16,18]'
       packageManager: pnpm
