@@ -1,8 +1,6 @@
----
-title: What is GraphQL Shield?
----
+import { PackageCmd } from '@theguild/components'
 
-## What is Shield?
+# What is GraphQL Shield?
 
 Shield is a GraphQL library that helps you create a permission layer for your server.
 Its main focus is creating a meaningful, well-rounded and scalable API that will make you
@@ -22,7 +20,7 @@ that you can use across your permission system.
 
 Start by adding GraphQL Shield to your server:
 
-<PackageInstall packages="graphql-shield" />
+<PackageCmd packages={['graphql-shield']} />
 
 ## Example
 
@@ -42,7 +40,6 @@ const isEditor = rule({ cache: 'contextual' })(async (parent, args, ctx, info) =
 })
 
 // Permissions
-
 const permissions = shield({
   Query: {
     frontPage: not(isAuthenticated),
