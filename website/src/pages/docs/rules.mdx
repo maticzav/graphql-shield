@@ -1,6 +1,4 @@
----
-title: Rules
----
+import { Callout } from '@theguild/components'
 
 # Rules
 
@@ -10,7 +8,7 @@ For example, it's a good practice to have a rule that checks if someone is an ad
 
 ## Basic rules
 
-> `allow`, `deny` are GraphQL Shield predefined rules.
+> `allow` and `deny` are GraphQL Shield predefined rules.
 
 `allow` and `deny` rules do exactly what their names describe.
 
@@ -51,9 +49,7 @@ const isEmailEmail = inputRule()(
     yup.object({
       email: yup.string().email('It has to be an email!').required(),
     }),
-  {
-    abortEarly: false,
-  },
+  { abortEarly: false },
 )
 ```
 
@@ -61,16 +57,16 @@ const isEmailEmail = inputRule()(
 
 Logic rules let you combine multiple rules into a composition. This should be your glue for making more complex permission requirements out of simple rules.
 
-- `and` - allows access only if all sub rules used return `true`,
-- `chain` - rule allows you to chain the rules, meaning that rules won't be executed all at once, but one by one until one fails or all pass,
-- `or` - resolves to true if at least one rule passes,
-- `race` - rule allows you to chain the rules so that execution stops once one of them returns `true`.
+- `and` - allows access only if all subrules used return `true`
+- `chain` - rule allows you to chain the rules, meaning that rules won't be executed all at once, but one by one until one fails or all pass
+- `or` - resolves to true if at least one rule passes
+- `race` - rule allows you to chain the rules so that execution stops once one of them returns `true`
 
 Think of `race` and `chain` as lazy versions of `and` and `or`.
 
 - `not` works as usual not in code works.
 
-> You may also add a custom error message as the second parameter to `not(rule, error)`.
+<Callout>You may also add a custom error message as the second parameter to `not(rule, error)`.</Callout>
 
 Here's an example:
 
@@ -134,7 +130,7 @@ Due to design decisions of how GraphQL Shield works, there are some limitations 
 
 - All rules must have a distinct name. Usually, you won't have to care about this as all names are by default automatically generated to prevent such problems. In case your function needs additional variables from other parts of the code and is defined as a function, you'll set a specific name to your rule to avoid name generation.
 
-```jsx
+```ts
 // Normal
 const admin = rule({ cache: 'contextual' })(async (parent, args, ctx, info) => true)
 
@@ -144,4 +140,7 @@ const admin = (bool) => rule(`name-${bool}`, { cache: 'contextual' })(async (par
 
 - Cache is disabled by default. To enable `cache` generation, set cache option when generating a rule.
 
-> Backward compatibility: `{ cache: false }` converts to `no_cache`, and `{ cache: true }` converts to `strict`.
+<Callout>
+  Backward compatibility: `{ cache: false }` converts to `no_cache`, and `{ cache: true }` converts to
+  `strict`.
+</Callout>
