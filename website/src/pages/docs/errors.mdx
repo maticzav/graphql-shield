@@ -1,6 +1,4 @@
----
-title: Errors
----
+import { Callout } from '@theguild/components'
 
 # Errors
 
@@ -13,7 +11,7 @@ To return custom error messages to your client, you can return error instead of 
 You can return custom error from resolver or from rule itself. Rules that return error are treated as failing, therefore not processing any further resolvers.
 
 ```tsx
-const typeDefs = `
+const typeDefs = /* GraphQL */ `
   type Query {
     customErrorInResolver: String
     customErrorInRule: String
@@ -22,15 +20,15 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    customErrorInResolver: () => {
+    customErrorInResolver() {
       return new Error('Custom error message from resolver.')
     },
-    customErrorMessageInRule: () => {
+    customErrorMessageInRule() {
       // Querying is stopped because rule returns an error
       console.log("This won't be logged.")
       return "you won't see me!"
     },
-    customErrorInRule: () => {
+    customErrorInRule() {
       // Querying is stopped because rule returns an error
       console.log("This won't be logged.")
       return "you won't see me!"
@@ -59,10 +57,14 @@ const server = GraphQLServer({
   middlewares: [permissions],
 })
 ```
+<Callout>
+Errors thrown in resolvers can be tracked using `debug` option. This way Shield ensures your code is production ready at all times.
+</Callout>
 
-> Errors thrown in resolvers can be tracked using `debug` option. This way Shield ensures your code is production ready at all times.
+<Callout>
+If you wish to see errors thrown inside resolvers, you can set `allowExternalErrors` option to `true`. This way, Shield won't hide custom errors thrown during query resolving.
+</Callout>
 
-> If you wish to see errors thrown inside resolvers, you can set `allowExternalErrors` option to `true`. This way, Shield won't hide custom errors thrown during query resolving.
 
 ## Global Fallback Error
 
@@ -98,21 +100,21 @@ const permissions = shield(
     },
   },
   {
-    fallbackError: async (thrownThing, parent, args, context, info) => {
+    async fallbackError(thrownThing, parent, args, context, info) {
       if (thrownThing instanceof ApolloError) {
         // expected errors
         return thrownThing
-      } else if (thrownThing instanceof Error) {
+      }
+      if (thrownThing instanceof Error) {
         // unexpected errors
         console.error(thrownThing)
         await Sentry.report(thrownThing)
         return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
-      } else {
-        // what the hell got thrown
-        console.error('The resolver threw something that is not an error.')
-        console.error(thrownThing)
-        return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
       }
+      // what the hell got thrown
+      console.error('The resolver threw something that is not an error.')
+      console.error(thrownThing)
+      return new ApolloError('Internal server error', 'ERR_INTERNAL_SERVER')
     },
   },
 )
