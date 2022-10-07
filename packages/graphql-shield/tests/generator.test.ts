@@ -268,4 +268,89 @@ describe('generates correct middleware', () => {
     expect(defaultQueryMock).toBeCalledTimes(1)
     expect(defaultTypeMock).toBeCalledTimes(2)
   })
+
+  test('correctly allows multiple uses of the same wildcard rule', async () => {
+    /* Schema */
+
+    const typeDefs = `
+      type Query {
+        a: String
+        b: String
+        type: Type
+      }
+      type Type {
+        field1: String
+        field2: String
+      }
+    `
+
+    const resolvers = {
+      Query: {
+        a: () => 'a',
+        b: () => 'b',
+        type: () => ({
+          field1: 'field1',
+          field2: 'field2',
+        }),
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const allowMock = jest.fn().mockResolvedValue(true)
+    const defaultQueryMock = jest.fn().mockResolvedValue(true)
+    const defaultTypeMock = jest.fn().mockResolvedValue(true)
+
+    const permissions = shield({
+      Query: {
+        a: rule({ cache: 'no_cache' })(allowMock),
+        type: rule({ cache: 'no_cache' })(jest.fn().mockResolvedValue(true)),
+        '*': rule({ cache: 'no_cache' })(defaultQueryMock),
+      },
+      Type: {
+        '*': rule({ cache: 'no_cache' })(defaultTypeMock),
+      },
+    })
+
+    /* First usage */
+    applyMiddleware(schema, permissions)
+
+    /* Second usage */
+    const schemaWithPermissions = applyMiddleware(schema, permissions)
+
+    /* Execution */
+    const query = `
+      query {
+        a
+        b
+        type {
+          field1
+          field2
+        }
+      }
+    `
+
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+    })
+
+    /* Tests */
+
+    expect(res).toEqual({
+      data: {
+        a: 'a',
+        b: 'b',
+        type: {
+          field1: 'field1',
+          field2: 'field2',
+        },
+      },
+    })
+    expect(allowMock).toBeCalledTimes(1)
+    expect(defaultQueryMock).toBeCalledTimes(1)
+    expect(defaultTypeMock).toBeCalledTimes(2)
+  })
 })
