@@ -1,7 +1,3 @@
----
-title: Shield
----
-
 # Shield
 
 Shield generates GraphQL Middleware layer from your rules. You should generate permissions using `shield` when initialising a schema itself.
@@ -31,7 +27,7 @@ const permissions = shield({
 })
 ```
 
-### Per Type Wildcard Rule
+## Per Type Wildcard Rule
 
 There is an option to specify a rule that will be applied to all fields of a type (`Query`, `Mutation`, ...) that do not specify a rule.
 It is similar to the `options.fallbackRule` but allows you to specify a `fallbackRule` per type.
@@ -55,7 +51,7 @@ const permissions = shield({
 })
 ```
 
-#### `options`
+### `options`
 
 | Property            | Required | Default                                              | Description                                        |
 | ------------------- | -------- | ---------------------------------------------------- | -------------------------------------------------- |
@@ -65,4 +61,4 @@ const permissions = shield({
 | fallbackError       | false    | Error('Not Authorised!')                             | Error Permission system fallbacks to.              |
 | hashFunction        | false    | [object-hash](https://github.com/puleos/object-hash) | Hashing function to use for `strict` cache         |
 
-By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to true.
+By default `shield` ensures no internal data is exposed to client if it was not meant to be. Therefore, all thrown errors during execution resolve in `Not Authorised!` error message if not otherwise specified using `error` wrapper. This can be turned off by setting `allowExternalErrors` option to `true`.

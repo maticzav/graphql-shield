@@ -1,5 +1,5 @@
-node_modules
-dist
+node_modules/
+dist/
 coverage
 
 *.log*
@@ -12,8 +12,7 @@ package-lock.json
 
 .yarn/cache
 .yarn/install-state.gz
-.yarn/build-state.yml 
-website/.yarn
+.yarn/build-state.yml
 
 tsconfig.tsbuildinfo
 
@@ -28,7 +27,11 @@ tsconfig.tsbuildinfo
 .cache
 
 # Next.js build output
-.next
+.next/
+
+.idea/
+website/out/
+website/public/sitemap.xml
 
 # Bob the bundler
 .bob/

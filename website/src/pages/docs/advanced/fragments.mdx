@@ -1,7 +1,3 @@
----
-title: Fragments
----
-
 # Fragments
 
 If your GraphQL server connects to another GraphQL server, it might happen that your rules require additional data that user doesn't have to request by default. A common example of this is using an `id` field to perform authorization checks; an initial query might not request the `id` field, but your rule still needs it to check if the current user may access that data.

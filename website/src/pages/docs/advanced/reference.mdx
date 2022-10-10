@@ -1,38 +1,28 @@
----
-title: Reference
----
+# Reference
 
 These are all the types that GraphQL Shield exposes as an API.
 
 ## Types
 
 ```ts
-/* Rule */
-function rule(
-  name?: string,
-  options?: IRuleOptions,
-): (func: IRuleFunction) => Rule
+// Rule
+function rule(name?: string, options?: IRuleOptions): (func: IRuleFunction) => Rule
 
 type IFragment = string
 type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
 type IRuleResult = boolean | string | Error
 
-type IRuleFunction = (
-  parent?: any,
-  args?: any,
-  context?: any,
-  info?: GraphQLResolveInfo,
-) => IRuleResult | Promise<IRuleResult>
+type IRuleFunction = (parent?: any, args?: any, context?: any, info?: GraphQLResolveInfo) => IRuleResult | Promise<IRuleResult>
 
 interface IRuleOptions {
   cache?: ICacheOptions
   fragment?: IFragment
 }
 
-/* Input */
+// Input
 function inputRule(name?: string): (yup: Yup => Yup.Schema, context: any) => Rule
 
-/* Logic */
+// Logic
 function and(...rules: IRule[]): LogicRule
 function chain(...rules: IRule[]): LogicRule
 function or(...rules: IRule[]): LogicRule
@@ -45,7 +35,6 @@ import { GraphQLResolveInfo } from 'graphql'
 import { IMiddlewareGenerator } from 'graphql-middleware'
 
 // Rule
-
 export type IFragment = string
 export type ICache = 'strict' | 'contextual' | 'no_cache'
 export type IRuleResult = boolean | string | Error
@@ -57,7 +46,6 @@ export type IRuleFunction = (
 ) => IRuleResult | Promise<IRuleResult>
 
 // Rule Constructor Options
-
 type ICacheOptions = 'strict' | 'contextual' | 'no_cache' | boolean
 
 interface IRuleOptions {
@@ -66,7 +54,6 @@ interface IRuleOptions {
 }
 
 // Rules Definition Tree
-
 export type ShieldRule = IRule | ILogicRule
 
 interface IRuleFieldMap {
@@ -92,7 +79,6 @@ type IFallbackErrorMapperType = (
 export type IFallbackErrorType = Error | IFallbackErrorMapperType
 
 // Generator Options
-
 interface IOptions {
   debug?: boolean
   allowExternalErrors?: boolean
@@ -101,8 +87,5 @@ interface IOptions {
   hashFunction?: IHashFunction
 }
 
-declare function shield(
-  ruleTree: IRules,
-  options: IOptions,
-): IMiddlewareGenerator
+declare function shield(ruleTree: IRules, options: IOptions): IMiddlewareGenerator
 ```
