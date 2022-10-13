@@ -71,11 +71,10 @@ importers:
       graphql-shield-rules: 0.0.1_fde5rply7obbokhiljj3civ4s4
       node-fetch: 2.6.7
       tslib: 2.4.0
-    publishDirectory: dist
 
   website:
     specifiers:
-      '@theguild/algolia': 0.1.0
+      '@theguild/algolia': 1.0.1
       '@theguild/components': 4.2.0
       '@theguild/tailwind-config': 0.1.1
       '@types/node': 18.8.2
@@ -92,7 +91,7 @@ importers:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
-      '@theguild/algolia': 0.1.0
+      '@theguild/algolia': 1.0.1
       '@theguild/tailwind-config': 0.1.1
       '@types/node': 18.8.2
       '@types/react': 18.0.21
@@ -1983,10 +1982,12 @@ packages:
       tslib: 2.4.0
     dev: false
 
-  /@theguild/algolia/0.1.0:
-    resolution: {integrity: sha512-bIC4qBUj1U/EOkNx7ncFP9uX3cc8u+rRx3duNQv3eA3NUIAn4VmQsAwPx8kKJwSsUSQ0H2vJAh3RtaG5kSVvHA==}
+  /@theguild/algolia/1.0.1:
+    resolution: {integrity: sha512-9T57HvRGpylJAwFdLfIoEBDqfNTG7Z0u60j7RLQ1s5wyKcMpMpgnRmw96y7c+50pCeok/NmgsKZyDhUgsyzNDg==}
+    hasBin: true
     dependencies:
       algoliasearch: 4.14.2
+      commander: 9.4.1
       github-slugger: 1.4.0
       glob: 8.0.3
       gray-matter: 4.0.3
@@ -3237,6 +3238,11 @@ packages:
   /commander/7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
     engines: {node: '>= 10'}
+
+  /commander/9.4.1:
+    resolution: {integrity: sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==}
+    engines: {node: ^12.20.0 || >=14}
+    dev: true
 
   /commondir/1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
