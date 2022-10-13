@@ -20,6 +20,6 @@ jobs:
     with:
       domain: https://www.the-guild.dev/graphql/shield/
       source: 'Shield'
-      setupEnvWorkingDirectory: './website'
+      packageManager: pnpm
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
