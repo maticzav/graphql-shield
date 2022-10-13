@@ -71,6 +71,7 @@ importers:
       graphql-shield-rules: 0.0.1_fde5rply7obbokhiljj3civ4s4
       node-fetch: 2.6.7
       tslib: 2.4.0
+    publishDirectory: dist
 
   website:
     specifiers:
