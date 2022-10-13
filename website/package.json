@@ -9,7 +9,8 @@
     "build": "next build && next-sitemap --config next-sitemap.config.cjs",
     "dev": "next",
     "export": "next export",
-    "start": "next start"
+    "start": "next start",
+    "theguild-nextra-algolia": "theguild-nextra-algolia"
   },
   "dependencies": {
     "@theguild/components": "4.2.4",
