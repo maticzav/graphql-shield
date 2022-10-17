@@ -16,7 +16,6 @@ jobs:
       npmToken: ${{ secrets.NPM_TOKEN }}
 
   algolia:
-    continue-on-error: true # continue even if pushing commit fails (to be fixed: @charlypoly)
     uses: the-guild-org/shared-config/.github/workflows/algolia-publish.yml@main
     secrets:
       githubToken: ${{ secrets.GITHUB_TOKEN }}
@@ -27,3 +26,4 @@ jobs:
       domain: https://www.the-guild.dev/graphql/shield/
       source: 'Shield'
       packageManager: pnpm
+      continueOnError: true
