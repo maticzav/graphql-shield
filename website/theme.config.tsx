@@ -1,5 +1,6 @@
 /* eslint sort-keys: error */
-import { ShieldLogo, defineConfig } from '@theguild/components'
+import { defineConfig, Giscus, ShieldLogo, useTheme } from '@theguild/components';
+import { useRouter } from 'next/router';
 
 const SITE_NAME = 'GraphQL Shield'
 
@@ -39,6 +40,28 @@ export default defineConfig({
       <h1 className="md:text-md text-sm font-medium">{SITE_NAME}</h1>
     </>
   ),
+  main: {
+    extraContent() {
+      const { resolvedTheme } = useTheme();
+      const { route } = useRouter();
+
+      if (route === '/') {
+        return null;
+      }
+      return (
+        <Giscus
+          // ensure giscus is reloaded when client side route is changed
+          key={route}
+          repo="dimatill/graphql-shield"
+          repoId="MDEwOlJlcG9zaXRvcnkxMjExNDc1NTQ="
+          category="Docs Discussions"
+          categoryId="DIC_kwDOBziQos4CSDVt"
+          mapping="pathname"
+          theme={resolvedTheme}
+        />
+      );
+    },
+  },
   titleSuffix: ` – ${SITE_NAME}`,
 })
 
