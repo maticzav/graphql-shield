@@ -26,4 +26,4 @@ jobs:
       domain: https://www.the-guild.dev/graphql/shield/
       source: 'Shield'
       packageManager: pnpm
-      continueOnError: true
+      skipCommitLockFile: true
