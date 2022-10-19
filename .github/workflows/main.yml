@@ -18,7 +18,7 @@ jobs:
       packageManager: pnpm
 
   typecheck:
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
     name: Type Check and ESM/CJS integrity checks
     steps:
       - name: Checkout Repository
@@ -35,7 +35,7 @@ jobs:
 
       - name: Typecheck
         run: pnpm run check
-      
-      # this fails right now cause in `types.ts` there is no JS to export 
+
+      # this fails right now cause in `types.ts` there is no JS to export
       # - name: Test ESM & CJS exports integrity
       #   run: pnpm bob check
