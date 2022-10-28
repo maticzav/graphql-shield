@@ -1,7 +1,7 @@
 {
   "name": "graphql-shield",
   "description": "GraphQL Server permissions as another layer of abstraction!",
-  "version": "7.6.3",
+  "version": "7.6.4",
   "author": "Matic Zavadlal <matic.zavadlal@gmail.com>",
   "homepage": "https://github.com/maticzav/graphql-shield",
   "repository": {
