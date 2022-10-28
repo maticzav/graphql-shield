@@ -57,6 +57,7 @@ importers:
     dependencies:
       '@types/yup': 0.29.13
       object-hash: 3.0.0
+      tslib: 2.4.0
       yup: 0.32.11
     devDependencies:
       '@graphql-tools/schema': 8.5.1_graphql@16.5.0
@@ -70,7 +71,6 @@ importers:
       graphql-middleware: 6.1.32_graphql@16.5.0
       graphql-shield-rules: 0.0.1_fde5rply7obbokhiljj3civ4s4
       node-fetch: 2.6.7
-      tslib: 2.4.0
     publishDirectory: dist
 
   website:

@@ -14,6 +14,7 @@
   "dependencies": {
     "@types/yup": "0.29.13",
     "object-hash": "^3.0.0",
+    "tslib": "^2.4.0",
     "yup": "^0.32.0"
   },
   "devDependencies": {
@@ -27,8 +28,7 @@
     "graphql": "16.5.0",
     "graphql-middleware": "6.1.32",
     "graphql-shield-rules": "0.0.1",
-    "node-fetch": "^2.6.7",
-    "tslib": "^2.4.0"
+    "node-fetch": "^2.6.7"
   },
   "peerDependencies": {
     "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
