@@ -48,7 +48,7 @@ importers:
       '@types/yup': 0.29.13
       apollo-server: 3.10.0
       graphql: 16.5.0
-      graphql-middleware: 6.1.32
+      graphql-middleware: 6.1.33
       graphql-shield-rules: 0.0.1
       node-fetch: ^2.6.7
       object-hash: ^3.0.0
@@ -68,8 +68,8 @@ importers:
       '@types/request-promise-native': 1.0.18
       apollo-server: 3.10.0_graphql@16.5.0
       graphql: 16.5.0
-      graphql-middleware: 6.1.32_graphql@16.5.0
-      graphql-shield-rules: 0.0.1_fde5rply7obbokhiljj3civ4s4
+      graphql-middleware: 6.1.33_graphql@16.5.0
+      graphql-shield-rules: 0.0.1_y7hqwo2l2tcam2ze7ixbfwntsi
       node-fetch: 2.6.7
     publishDirectory: dist
 
@@ -5002,28 +5002,28 @@ packages:
       lodash: 4.17.21
     dev: false
 
-  /graphql-middleware/6.1.32_graphql@16.5.0:
-    resolution: {integrity: sha512-4vL+o9lljc1JavXNtMZg+gwDiZ9ORhgzAxf+7ef8r9/gn6D5sWxm2w8SdG6PLkKOsSM/tDunwSpfSJinn0XPCw==}
+  /graphql-middleware/6.1.33_graphql@16.5.0:
+    resolution: {integrity: sha512-5gJqTvsBlcuZEcYqWEqhF0eAHlmP3SWenX86djfdnr27UNOY74i7HR9LEUiIUnCyxdSjg1ukpwugI6CF0GX2Lw==}
     peerDependencies:
-      graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+      graphql: ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
     dependencies:
       '@graphql-tools/delegate': 8.8.1_graphql@16.5.0
       '@graphql-tools/schema': 8.5.1_graphql@16.5.0
       graphql: 16.5.0
     dev: true
 
-  /graphql-shield-rules/0.0.1_fde5rply7obbokhiljj3civ4s4:
+  /graphql-shield-rules/0.0.1_y7hqwo2l2tcam2ze7ixbfwntsi:
     resolution: {integrity: sha512-kquuAVuKc0xSVbCF9Qsx4cEfm/t5Q+iE4s1i+i9MVNgCi3T1Ss4MtDubPA2JTB/biSwAdtBINvFwz1Vty1toIg==}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0
       graphql-middleware: ^2.0.0 || ^3.0.0 || ^4.0.0
     dependencies:
       graphql: 16.5.0
-      graphql-middleware: 6.1.32_graphql@16.5.0
-      graphql-shield: 7.6.2_fde5rply7obbokhiljj3civ4s4
+      graphql-middleware: 6.1.33_graphql@16.5.0
+      graphql-shield: 7.6.2_y7hqwo2l2tcam2ze7ixbfwntsi
     dev: true
 
-  /graphql-shield/7.6.2_fde5rply7obbokhiljj3civ4s4:
+  /graphql-shield/7.6.2_y7hqwo2l2tcam2ze7ixbfwntsi:
     resolution: {integrity: sha512-WwAacxovmKPMb6FmoPsupEH21Td/Zow4ai2unl+RjLfKhO6r1EvXCNehzbxVFk7TBLRFGLd7we7JsK/rA8D3Dg==}
     peerDependencies:
       graphql: ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
@@ -5031,7 +5031,7 @@ packages:
     dependencies:
       '@types/yup': 0.29.13
       graphql: 16.5.0
-      graphql-middleware: 6.1.32_graphql@16.5.0
+      graphql-middleware: 6.1.33_graphql@16.5.0
       object-hash: 3.0.0
       yup: 0.32.11
     dev: true
