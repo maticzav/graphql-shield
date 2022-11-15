@@ -1,5 +1,5 @@
-export { IRules, IRule } from './types'
-export { shield } from './shield'
+export { IRules, IRule } from './types.js'
+export { shield } from './shield.js'
 export {
   rule,
   inputRule,
@@ -10,4 +10,4 @@ export {
   race,
   or,
   not,
-} from './constructors'
+} from './constructors.js'
