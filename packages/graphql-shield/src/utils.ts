@@ -1,5 +1,5 @@
-import { ShieldRule, ILogicRule, IRuleFieldMap, IRule } from './types'
-import { Rule, LogicRule } from './rules'
+import { ShieldRule, ILogicRule, IRuleFieldMap, IRule } from './types.js'
+import { Rule, LogicRule } from './rules.js'
 
 /**
  *

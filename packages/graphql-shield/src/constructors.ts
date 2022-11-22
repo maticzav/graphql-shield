@@ -4,7 +4,7 @@ import {
   IRuleConstructorOptions,
   ShieldRule,
   IShieldContext,
-} from './types'
+} from './types.js'
 import {
   Rule,
   RuleAnd,
@@ -15,7 +15,7 @@ import {
   InputRule,
   RuleChain,
   RuleRace,
-} from './rules'
+} from './rules.js'
 
 /**
  *

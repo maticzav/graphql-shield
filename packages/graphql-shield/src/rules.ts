@@ -12,8 +12,8 @@ import {
   IRuleResult,
   IOptions,
   IShieldContext,
-} from './types'
-import { isLogicRule } from './utils'
+} from './types.js'
+import { isLogicRule } from './utils.js'
 import { GraphQLResolveInfo } from 'graphql'
 import { isUndefined } from 'util'
 

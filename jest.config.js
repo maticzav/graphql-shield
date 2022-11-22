@@ -1,17 +1,25 @@
+const { resolve } = require('path')
 const { pathsToModuleNameMapper } = require('ts-jest')
-const { compilerOptions } = require('./tsconfig.json')
+const CI = !!process.env.CI
+
+const ROOT_DIR = __dirname
+const TSCONFIG = resolve(ROOT_DIR, 'tsconfig.json')
+const tsconfig = require(TSCONFIG)
 
 module.exports = {
-  preset: 'ts-jest',
   testEnvironment: 'node',
-  modulePathIgnorePatterns: ['/dist/'],
+  rootDir: ROOT_DIR,
+  restoreMocks: true,
+  reporters: ['default'],
+  modulePathIgnorePatterns: ['dist', 'test-assets', 'test-files', 'fixtures', '.bob'],
   testPathIgnorePatterns: ['/node_modules/', '/dist/', '.bob/'],
-  globals: {
-    'ts-jest': {
-      diagnostics: false,
-    },
+  moduleNameMapper: pathsToModuleNameMapper(tsconfig.compilerOptions.paths, { prefix: `${ROOT_DIR}/` }),
+  collectCoverage: false,
+  cacheDirectory: resolve(ROOT_DIR, `${CI ? '' : 'node_modules/'}.cache/jest`),
+  transform: {
+    '^.+\\.mjs?$': 'babel-jest',
+    '^.+\\.ts?$': 'babel-jest',
+    '^.+\\.js$': 'babel-jest',
   },
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
-    prefix: '<rootDir>/',
-  }),
+  resolver: 'bob-the-bundler/jest-resolver.js',
 }

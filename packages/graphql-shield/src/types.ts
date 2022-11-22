@@ -5,10 +5,8 @@ import { IMiddlewareGenerator } from 'graphql-middleware'
 
 export type ShieldRule = IRule | ILogicRule
 
-export declare class IRule {
+export interface IRule {
   readonly name: string
-
-  constructor(options: IRuleOptions)
 
   equals(rule: IRule): boolean
   extractFragment(): IFragment | undefined
@@ -20,9 +18,7 @@ export interface IRuleOptions {
   fragment?: IFragment
 }
 
-export declare class ILogicRule {
-  constructor(rules: ShieldRule[])
-
+export interface ILogicRule {
   getRules(): ShieldRule[]
   extractFragments(): IFragment[]
   evaluate(parent: object, args: object, ctx: IShieldContext, info: GraphQLResolveInfo, options: IOptions): Promise<IRuleResult[]>

@@ -16,15 +16,15 @@ import {
   ShieldRule,
   IRuleFieldMap,
   IShieldContext,
-} from './types'
+} from './types.js'
 import {
   isRuleFunction,
   isRuleFieldMap,
   isRule,
   isLogicRule,
   withDefault,
-} from './utils'
-import { ValidationError } from './validation'
+} from './utils.js'
+import { ValidationError } from './validation.js'
 import { IMiddlewareWithOptions } from 'graphql-middleware/dist/types'
 
 /**

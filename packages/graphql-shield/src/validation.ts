@@ -1,5 +1,5 @@
-import { IRules, ShieldRule, ILogicRule, IRule } from './types'
-import { isRuleFunction, flattenObjectOf, isLogicRule } from './utils'
+import { IRules, ShieldRule, ILogicRule, IRule } from './types.js'
+import { isRuleFunction, flattenObjectOf, isLogicRule } from './utils.js'
 
 /**
  *
