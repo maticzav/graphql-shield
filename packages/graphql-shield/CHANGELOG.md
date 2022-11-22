@@ -1,5 +1,11 @@
 # graphql-shield
 
+## 7.6.5
+
+### Patch Changes
+
+- [#1493](https://github.com/dimatill/graphql-shield/pull/1493) [`00d3c47`](https://github.com/dimatill/graphql-shield/commit/00d3c4764900e8835ae7c586ebe6a2e7f25fd688) Thanks [@dimatill](https://github.com/dimatill)! - ESM build fix
+
 ## 7.6.4
 
 ### Patch Changes
