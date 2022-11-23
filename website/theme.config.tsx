@@ -24,7 +24,6 @@ export default defineConfig({
       <link rel="manifest" href="/manifest.json" />
       <meta name="msapplication-TileColor" content="#fff" />
       <meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
-      <meta name="theme-color" content="#fff" />
       {/* Splitbee */}
       <script async src="https://cdn.splitbee.io/sb.js" />
     </>
