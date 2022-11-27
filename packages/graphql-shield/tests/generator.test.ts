@@ -1,5 +1,4 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { applyMiddleware } from 'graphql-middleware'
 import { shield, rule } from '../src'
 import { graphql } from 'graphql'
 
@@ -32,9 +31,9 @@ describe('generates correct middleware', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield(rule({ cache: 'no_cache' })(allowMock))
+    const schemaRule = rule({ cache: 'no_cache' })(allowMock)
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, schemaRule)
 
     /* Execution */
     const query = `
@@ -92,11 +91,11 @@ describe('generates correct middleware', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield({
+    const ruleTree = {
       Query: rule({ cache: 'no_cache' })(allowMock),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -154,11 +153,11 @@ describe('generates correct middleware', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield({
+    const ruleTree = {
       Query: { a: rule({ cache: 'no_cache' })(allowMock) },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -222,7 +221,7 @@ describe('generates correct middleware', () => {
     const defaultQueryMock = jest.fn().mockResolvedValue(true)
     const defaultTypeMock = jest.fn().mockResolvedValue(true)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         a: rule({ cache: 'no_cache' })(allowMock),
         type: rule({ cache: 'no_cache' })(jest.fn().mockResolvedValue(true)),
@@ -231,9 +230,9 @@ describe('generates correct middleware', () => {
       Type: {
         '*': rule({ cache: 'no_cache' })(defaultTypeMock),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -303,7 +302,7 @@ describe('generates correct middleware', () => {
     const defaultQueryMock = jest.fn().mockResolvedValue(true)
     const defaultTypeMock = jest.fn().mockResolvedValue(true)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         a: rule({ cache: 'no_cache' })(allowMock),
         type: rule({ cache: 'no_cache' })(jest.fn().mockResolvedValue(true)),
@@ -312,13 +311,13 @@ describe('generates correct middleware', () => {
       Type: {
         '*': rule({ cache: 'no_cache' })(defaultTypeMock),
       },
-    })
+    }
 
     /* First usage */
-    applyMiddleware(schema, permissions)
+    shield(schema, ruleTree)
 
     /* Second usage */
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `

@@ -1,5 +1,4 @@
-import { GraphQLResolveInfo } from 'graphql'
-import { IMiddlewareGenerator } from 'graphql-middleware'
+import { GraphQLFieldResolver, GraphQLResolveInfo } from 'graphql'
 
 // Rule
 
@@ -82,13 +81,30 @@ export interface IOptionsConstructor {
   hashFunction?: IHashFunction
 }
 
-export declare function shield<TSource = any, TContext = any, TArgs = any>(
-  ruleTree: IRules,
-  options: IOptions,
-): IMiddlewareGenerator<TSource, TContext, TArgs>
-
 export interface IShieldContext {
   _shield: {
     cache: { [key: string]: IRuleResult | Promise<IRuleResult> }
   }
+}
+
+export type IMiddlewareResolver<TSource = any, TContext = any, TArgs = any> = (
+  resolve: GraphQLFieldResolver<TSource, TContext, TArgs>,
+  parent: TSource,
+  args: TArgs,
+  context: TContext,
+  info: GraphQLResolveInfo,
+) => Promise<any>
+
+export interface IMiddlewareWithOptions<TSource = any, TContext = any, TArgs = any> {
+  fragment?: string
+  fragments?: string[]
+  resolve?: IMiddlewareResolver<TSource, TContext, TArgs>
+}
+export type IMiddlewareFunction<TSource = any, TContext = any, TArgs = any> = IMiddlewareWithOptions<TSource, TContext, TArgs>
+export interface IMiddlewareFieldMap<TSource = any, TContext = any, TArgs = any> {
+  [key: string]: IMiddlewareFunction<TSource, TContext, TArgs>
+}
+
+export interface IMiddlewareTypeMap<TSource = any, TContext = any, TArgs = any> {
+  [key: string]: IMiddlewareFieldMap<TSource, TContext, TArgs>
 }

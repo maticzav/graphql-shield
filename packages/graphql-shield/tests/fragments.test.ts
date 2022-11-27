@@ -1,7 +1,8 @@
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { shield, rule, and, not, or } from '../src/index'
+import { rule, and, not, or } from '../src/index'
 import { allow } from '../src/constructors'
+import { generateMiddlewareFromSchemaAndRuleTree } from '../src/generator'
+import { applyComposition, normalizeOptions } from '../src/shield'
 
 describe('Fragment extraction', () => {
   test('Extracts fragment from rule correctly.', async () => {
@@ -15,20 +16,11 @@ describe('Fragment extraction', () => {
     const ruleWithFragmentB = rule({ fragment: 'pass-B' })(() => true)
     const ruleWithFragmentC = rule({ fragment: 'pass-C' })(() => true)
 
-    const logicRuleAND = and(
-      ruleWithNoFragment,
-      ruleWithFragmentA,
-      ruleWithFragmentB,
-    )
+    const logicRuleAND = and(ruleWithNoFragment, ruleWithFragmentA, ruleWithFragmentB)
     const logicRuleNOT = not(logicRuleAND)
     const logicRuleOR = or(ruleWithFragmentB, ruleWithFragmentC, logicRuleNOT)
 
-    expect(logicRuleOR.extractFragments()).toEqual([
-      'pass-B',
-      'pass-C',
-      'pass-A',
-      'pass-B',
-    ])
+    expect(logicRuleOR.extractFragments()).toEqual(['pass-B', 'pass-C', 'pass-A', 'pass-B'])
   })
 })
 
@@ -73,18 +65,20 @@ describe('Fragment application', () => {
       return true
     })
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         user: allow,
         events: allow,
       },
       User: or(isUserSelf, isProfilePublic),
       Event: isEventPublished,
-    })
+    }
 
-    const { fragmentReplacements } = applyMiddleware(
-      makeExecutableSchema({ typeDefs, resolvers: {} }),
-      permissions,
+    const schema = makeExecutableSchema({ typeDefs, resolvers: {} })
+
+    const { fragmentReplacements } = applyComposition(
+      schema,
+      generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizeOptions({})),
     )
 
     expect(fragmentReplacements).toEqual([

@@ -12,6 +12,11 @@
     "check": "tsc --noEmit"
   },
   "dependencies": {
+    "@graphql-tools/delegate": "9.0.17",
+    "@graphql-tools/wrap": "9.2.16",
+    "@graphql-tools/resolvers-composition": "6.5.12",
+    "@graphql-tools/schema": "9.0.10",
+    "@graphql-tools/utils": "9.1.1",
     "@types/yup": "0.29.13",
     "object-hash": "^3.0.0",
     "tslib": "^2.4.0",
@@ -26,13 +31,10 @@
     "@types/request-promise-native": "1.0.18",
     "apollo-server": "3.10.0",
     "graphql": "16.5.0",
-    "graphql-middleware": "6.1.33",
-    "graphql-shield-rules": "0.0.1",
     "node-fetch": "^2.6.7"
   },
   "peerDependencies": {
-    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0",
-    "graphql-middleware": "^2.0.0 || ^3.0.0 || ^4.0.0 || ^6.0.0"
+    "graphql": "^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0"
   },
   "license": "MIT",
   "main": "dist/cjs/index.js",

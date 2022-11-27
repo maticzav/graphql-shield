@@ -1,7 +1,6 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { gql, ApolloServer } from 'apollo-server'
 import fetch from 'node-fetch'
-import { applyMiddleware } from 'graphql-middleware'
 
 import { shield, allow, deny } from '../src'
 
@@ -25,15 +24,15 @@ describe('integration tests', () => {
 
     /* Permissions */
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         allow: allow,
         deny: deny,
       },
-    })
+    }
 
     const server = new ApolloServer({
-      schema: applyMiddleware(makeExecutableSchema({ typeDefs, resolvers }), permissions),
+      schema: shield(makeExecutableSchema({ typeDefs, resolvers }), ruleTree),
     })
 
     await server.listen({ port: 8008 })

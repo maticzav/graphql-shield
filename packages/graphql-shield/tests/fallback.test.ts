@@ -1,5 +1,4 @@
 import { graphql } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, rule, allow } from '../src/index'
 
@@ -29,16 +28,13 @@ describe('fallbackError correctly handles errors', () => {
 
     const fallbackError = new Error('fallback')
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        fallbackError,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      fallbackError,
+    })
 
     /* Execution */
 
@@ -67,7 +63,10 @@ describe('fallbackError correctly handles errors', () => {
       }
     `
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {} })
+    const schema = makeExecutableSchema({
+      typeDefs,
+      resolvers: {},
+    })
 
     /* Permissions */
 
@@ -77,16 +76,13 @@ describe('fallbackError correctly handles errors', () => {
       throw new Error()
     })
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        fallbackError,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      fallbackError,
+    })
 
     /* Execution */
 
@@ -128,16 +124,13 @@ describe('fallbackError correctly handles errors', () => {
     /* Permissions */
 
     const fallbackMessage = Math.random().toString()
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        fallbackError: fallbackMessage,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      fallbackError: fallbackMessage,
+    })
 
     /* Execution */
     const query = `
@@ -175,16 +168,13 @@ describe('fallbackError correctly handles errors', () => {
       throw new Error()
     })
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        fallbackError,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      fallbackError,
+    })
 
     /* Execution */
 
@@ -229,16 +219,13 @@ describe('fallbackError correctly handles errors', () => {
 
     const fallbackError = () => new Error('fallback')
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        fallbackError,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      fallbackError,
+    })
 
     /* Execution */
 
@@ -281,16 +268,13 @@ describe('external errors can be controled correctly', () => {
 
     /* Permissions */
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        allowExternalErrors: true,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      allowExternalErrors: true,
+    })
 
     /* Execution */
 
@@ -326,16 +310,13 @@ describe('external errors can be controled correctly', () => {
       throw new Error('external')
     })
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        allowExternalErrors: true,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      allowExternalErrors: true,
+    })
 
     /* Execution */
 
@@ -373,16 +354,13 @@ describe('debug mode works as expected', () => {
       throw new Error('debug')
     })
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        debug: true,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      debug: true,
+    })
 
     /* Execution */
 
@@ -423,16 +401,13 @@ describe('debug mode works as expected', () => {
 
     /* Permissions */
 
-    const permissions = shield(
-      {
-        Query: allow,
-      },
-      {
-        debug: true,
-      },
-    )
+    const ruleTree = {
+      Query: allow,
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      debug: true,
+    })
 
     /* Execution */
 
@@ -468,13 +443,13 @@ describe('custom errors work as expected', () => {
     /* Permissions */
 
     const error = new Error(`${Math.random()}`)
-    const permissions = shield({
+    const ruleTree = {
       Query: rule()(() => {
         return error
       }),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -508,13 +483,13 @@ describe('custom errors work as expected', () => {
 
     const error = `${Math.random()}`
 
-    const permissions = shield({
+    const ruleTree = {
       Query: rule()(() => {
         return error
       }),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -570,19 +545,16 @@ describe('fallbackRule correctly applies fallback rule', () => {
     const fallbackRuleMock = jest.fn().mockResolvedValue(true)
     const fallbackRule = rule({ cache: 'no_cache' })(fallbackRuleMock)
 
-    const permissions = shield(
-      {
-        Query: {
-          a: allow,
-          type: allow,
-        },
+    const ruleTree = {
+      Query: {
+        a: allow,
+        type: allow,
       },
-      {
-        fallbackRule: fallbackRule,
-      },
-    )
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree, {
+      fallbackRule: fallbackRule,
+    })
 
     /* Execution */
 

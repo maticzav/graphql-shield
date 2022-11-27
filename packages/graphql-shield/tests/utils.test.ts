@@ -1,13 +1,5 @@
-import {
-  isRule,
-  isLogicRule,
-  isRuleFieldMap,
-  isRuleFunction,
-  withDefault,
-} from '../src/utils'
+import { isRule, isLogicRule, isRuleFieldMap, isRuleFunction, withDefault } from '../src/utils'
 import { rule, and } from '../src/constructors'
-
-import { testSimpleRule, testLogicRule } from 'graphql-shield-rules'
 
 describe('type identifiers', () => {
   test('isRuleFunction finds rule function.', async () => {
@@ -20,14 +12,20 @@ describe('type identifiers', () => {
     expect(isRule(rule()(() => true))).toBeTruthy()
     expect(isRule(and())).toBeFalsy()
     expect(isRule(false)).toBeFalsy()
-    expect(isRule(testSimpleRule)).toBeTruthy()
   })
 
   test('isLogicRule finds logic rule.', async () => {
     expect(isLogicRule(and())).toBeTruthy()
     expect(isLogicRule(rule()(() => true))).toBeFalsy()
     expect(isLogicRule(false)).toBeFalsy()
-    expect(isLogicRule(testLogicRule)).toBeTruthy()
+    expect(
+      isLogicRule(
+        and(
+          rule()(() => false),
+          rule()(() => false),
+        ),
+      ),
+    ).toBeTruthy()
   })
 
   test('isRuleFieldMap finds rule field map.', async () => {
