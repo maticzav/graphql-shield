@@ -64,7 +64,7 @@ describe('Fragment application', () => {
         ],
       },
       User: {
-        fullName: (parent) => parent.name,
+        fullName: (parent: any) => parent.name,
       },
     }
 
