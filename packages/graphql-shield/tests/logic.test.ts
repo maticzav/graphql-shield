@@ -464,6 +464,7 @@ describe('internal execution', () => {
       fallbackRule: allow,
       fallbackError: new Error(),
       hashFunction: () => `${Math.random()}`,
+      disableFragmentsAndPostExecRules: false,
     })
 
     expect(res).toBeFalsy()
