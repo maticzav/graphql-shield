@@ -71,6 +71,7 @@ export interface IOptions {
   fallbackRule: ShieldRule
   fallbackError?: IFallbackErrorType
   hashFunction: IHashFunction
+  disableFragmentsAndPostExecRules: boolean
 }
 
 export interface IOptionsConstructor {
@@ -79,6 +80,7 @@ export interface IOptionsConstructor {
   fallbackRule?: ShieldRule
   fallbackError?: string | IFallbackErrorType
   hashFunction?: IHashFunction
+  disableFragmentsAndPostExecRules?: boolean
 }
 
 export interface IShieldContext {

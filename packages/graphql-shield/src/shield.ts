@@ -42,6 +42,7 @@ export function normalizeOptions(options: IOptionsConstructor): IOptions {
     fallbackRule: withDefault<ShieldRule>(allow)(options.fallbackRule),
     fallbackError: withDefault<IFallbackErrorType>(new Error('Not Authorised!'))(options.fallbackError),
     hashFunction: withDefault<IHashFunction>(hash)(options.hashFunction),
+    disableFragmentsAndPostExecRules: withDefault<boolean>(false)(options.disableFragmentsAndPostExecRules),
   }
 }
 
@@ -111,14 +112,17 @@ export function shield(schema: GraphQLSchema, ruleTree: IRules, options: IOption
 
   if (ruleTreeValidity.status === 'ok') {
     const middleware = generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizedOptions)
+    if (normalizedOptions.disableFragmentsAndPostExecRules) {
+      return applyComposition(schema, middleware)
+    }
+
     const fragmentReplacements = getFragmentReplacements(middleware)
 
     const wrappedSchema = wrapSchema({
       schema,
       transforms: [new ReplaceFieldWithFragment(fragmentReplacements || [])],
     })
-    const authSchema = applyComposition(wrappedSchema, middleware)
-    return authSchema
+    return applyComposition(wrappedSchema, middleware)
   } else {
     throw new ValidationError(ruleTreeValidity.message)
   }
