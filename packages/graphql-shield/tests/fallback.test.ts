@@ -246,7 +246,7 @@ describe('fallbackError correctly handles errors', () => {
   })
 })
 
-describe('external errors can be controled correctly', () => {
+describe('external errors can be controlled correctly', () => {
   test('error in resolver with allowExternalErrors returns external error.', async () => {
     /* Schema */
 

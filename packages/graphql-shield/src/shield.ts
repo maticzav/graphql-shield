@@ -1,4 +1,4 @@
-import { GraphQLSchema } from 'graphql'
+import { GraphQLFieldResolver, GraphQLSchema } from 'graphql'
 import hash from 'object-hash'
 
 import { composeResolvers, ResolversComposition } from '@graphql-tools/resolvers-composition'
@@ -45,11 +45,6 @@ export function normalizeOptions(options: IOptionsConstructor): IOptions {
   }
 }
 
-type ApplyCompositionResult = {
-  schema: GraphQLSchema
-  fragmentReplacements: FragmentReplacement[]
-}
-
 function middlewareToCompositionResolver(middlewareWithOptions: IMiddlewareWithOptions): ResolversComposition {
   const { resolve } = middlewareWithOptions
   if (resolve) {
@@ -58,48 +53,47 @@ function middlewareToCompositionResolver(middlewareWithOptions: IMiddlewareWithO
   return (next) => (root, args, context, info) => next(root, args, context, info)
 }
 
-export function applyComposition(schema: GraphQLSchema, middleware: IMiddlewareTypeMap): ApplyCompositionResult {
-  const { mapping: compositionRules, fragmentReplacements } = Object.entries(middleware).reduce<{
-    mapping: {}
-    fragmentReplacements: { field: string; fragment: string }[]
-  }>(
-    (result, [objectName, objectFields]) => {
-      Object.entries(objectFields).forEach(([fieldName, middlewareFunction]) => {
-        const { fragment, fragments } = middlewareFunction
-        const compositionResolver = middlewareToCompositionResolver(middlewareFunction)
-        if (fragment) {
-          result.fragmentReplacements.push({
+export function getFragmentReplacements(middleware: IMiddlewareTypeMap): FragmentReplacement[] {
+  const fragmentReplacements = Object.entries(middleware).reduce<FragmentReplacement[]>((result, [objectName, objectFields]) => {
+    Object.entries(objectFields).forEach(([fieldName, middlewareFunction]) => {
+      const { fragment, fragments } = middlewareFunction
+      if (fragment) {
+        result.push({
+          field: fieldName,
+          fragment,
+        })
+      }
+      if (fragments) {
+        for (const fragment of fragments) {
+          result.push({
             field: fieldName,
-            fragment,
+            fragment: fragment,
           })
         }
-        if (fragments) {
-          for (const fragment of fragments) {
-            result.fragmentReplacements.push({
-              field: fieldName,
-              fragment: fragment,
-            })
-          }
-        }
+      }
+    })
+    return result
+  }, [])
 
-        result.mapping[`${objectName}.${fieldName}`] = [compositionResolver]
-      })
-      return result
-    },
-    {
-      mapping: {},
-      fragmentReplacements: [],
-    },
-  )
+  return prepareFragmentReplacements(fragmentReplacements)
+}
 
-  const originalResolvers = getResolversFromSchema(schema, false, true)
+function applyComposition(schema: GraphQLSchema, middleware: IMiddlewareTypeMap): GraphQLSchema {
+  const compositionRules = Object.entries(middleware).reduce<
+    Record<string, Array<ResolversComposition<GraphQLFieldResolver<any, any, any, unknown>>>>
+  >((result, [objectName, objectFields]) => {
+    Object.entries(objectFields).forEach(([fieldName, middlewareFunction]) => {
+      const compositionResolver = middlewareToCompositionResolver(middlewareFunction)
+      result[`${objectName}.${fieldName}`] = [compositionResolver]
+    })
+    return result
+  }, {})
+
+  const originalResolvers = getResolversFromSchema(schema, true, true)
 
   const resolvers = composeResolvers(originalResolvers, compositionRules)
 
-  return {
-    schema: addResolversToSchema({ schema, resolvers }),
-    fragmentReplacements: prepareFragmentReplacements(fragmentReplacements),
-  }
+  return addResolversToSchema({ schema, resolvers })
 }
 
 /**
@@ -117,11 +111,14 @@ export function shield(schema: GraphQLSchema, ruleTree: IRules, options: IOption
 
   if (ruleTreeValidity.status === 'ok') {
     const middleware = generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizedOptions)
-    const { schema: authSchema, fragmentReplacements } = applyComposition(schema, middleware)
-    return wrapSchema({
-      schema: authSchema,
+    const fragmentReplacements = getFragmentReplacements(middleware)
+
+    const wrappedSchema = wrapSchema({
+      schema,
       transforms: [new ReplaceFieldWithFragment(fragmentReplacements || [])],
     })
+    const authSchema = applyComposition(wrappedSchema, middleware)
+    return authSchema
   } else {
     throw new ValidationError(ruleTreeValidity.message)
   }

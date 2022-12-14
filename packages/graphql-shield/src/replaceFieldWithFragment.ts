@@ -174,7 +174,14 @@ function replaceFieldsWithFragments(
   return visit(
     document,
     visitWithTypeInfo(typeInfo, {
-      [Kind.SELECTION_SET](node: SelectionSetNode): SelectionSetNode | null | undefined {
+      [Kind.INLINE_FRAGMENT](node: InlineFragmentNode & { __isShieldInternalFragment?: boolean }): undefined | false {
+        // do not visit fragments added by this transform
+        if (node.__isShieldInternalFragment) {
+          return false
+        }
+        return undefined
+      },
+      [Kind.SELECTION_SET](node: SelectionSetNode): SelectionSetNode | null | undefined | false {
         const parentType = typeInfo.getParentType()
         if (parentType != null) {
           const parentTypeName = parentType.name
@@ -186,7 +193,10 @@ function replaceFieldsWithFragments(
                 const name = selection.name.value
                 const fragments = mapping[parentTypeName][name]
                 if (fragments != null && fragments.length > 0) {
-                  const fragment = concatInlineFragments(parentTypeName, fragments)
+                  const fragment = {
+                    ...concatInlineFragments(parentTypeName, fragments),
+                    __isShieldInternalFragment: true,
+                  }
                   selections = selections.concat(fragment)
                 }
               }

@@ -52,9 +52,12 @@ function generateFieldMiddlewareFromRule(
     // Execution
     try {
       const res = await rule.resolve(parent, args, ctx, info, options)
-
       if (res === true) {
-        return await resolve(parent, args, ctx, info)
+        const result = await resolve(parent, args, ctx, info)
+        if (result instanceof Error) {
+          throw result
+        }
+        return result
       } else if (res === false) {
         if (typeof options.fallbackError === 'function') {
           return await options.fallbackError(null, parent, args, ctx, info)
