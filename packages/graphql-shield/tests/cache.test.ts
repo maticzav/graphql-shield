@@ -1,5 +1,4 @@
 import { graphql } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, rule } from '../src/index'
 import { IHashFunction } from '../src/types'
@@ -19,11 +18,7 @@ describe('caching:', () => {
     `
     const resolvers = {
       Query: {
-        test: () => [
-          { value: 'pass-A' },
-          { value: 'pass-A' },
-          { value: 'pass-B' },
-        ],
+        test: () => [{ value: 'pass-A' }, { value: 'pass-A' }, { value: 'pass-B' }],
       },
     }
 
@@ -35,11 +30,11 @@ describe('caching:', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield({
+    const ruleTree = {
       Test: rule({ cache: 'strict' })(allowMock),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -95,11 +90,11 @@ describe('caching:', () => {
 
     const allowMock = jest.fn().mockResolvedValue(true)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: rule({ cache: 'strict' })(allowMock),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -169,7 +164,7 @@ describe('caching:', () => {
     const ruleTwoMock = jest.fn().mockResolvedValue(true)
     const ruleTwo = rule({ cache: 'contextual' })(ruleTwoMock)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         a: ruleOne,
         b: ruleOne,
@@ -177,9 +172,9 @@ describe('caching:', () => {
         d: ruleTwo,
         e: ruleTwo,
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     // Execution
     const query = `
@@ -244,11 +239,11 @@ describe('caching:', () => {
     const allowMock = jest.fn().mockResolvedValue(true)
     const allow = rule({ cache: 'no_cache' })(allowMock)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: allow,
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -305,15 +300,15 @@ describe('caching:', () => {
 
     const allowMock = jest.fn().mockResolvedValue(true)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: rule({
         cache: (parent, args, ctx, info) => {
           return JSON.stringify(args)
         },
       })(allowMock),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -371,16 +366,13 @@ test('Customize hash function', async () => {
 
   const hashFunction: IHashFunction = jest.fn((opts) => JSON.stringify(opts))
 
-  const permissions = shield(
-    {
-      Query: rule({ cache: 'strict' })(allowMock),
-    },
-    {
-      hashFunction,
-    },
-  )
+  const ruleTree = {
+    Query: rule({ cache: 'strict' })(allowMock),
+  }
 
-  const schemaWithPermissions = applyMiddleware(schema, permissions)
+  const schemaWithPermissions = shield(schema, ruleTree, {
+    hashFunction,
+  })
 
   /* Execution */
 
@@ -431,11 +423,7 @@ describe('legacy cache:', () => {
     `
     const resolvers = {
       Query: {
-        test: () => [
-          { value: 'pass-A' },
-          { value: 'pass-A' },
-          { value: 'pass-B' },
-        ],
+        test: () => [{ value: 'pass-A' }, { value: 'pass-A' }, { value: 'pass-B' }],
       },
     }
 
@@ -447,11 +435,11 @@ describe('legacy cache:', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield({
+    const ruleTree = {
       Test: rule({ cache: true })(allowMock),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -509,11 +497,11 @@ describe('legacy cache:', () => {
     const allowMock = jest.fn().mockResolvedValue(true)
     const allow = rule({ cache: false })(allowMock)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: allow,
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     // Execution
     const query = `

@@ -1,7 +1,9 @@
-import { applyMiddleware } from 'graphql-middleware'
+import { graphql } from 'graphql'
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { shield, rule, and, not, or } from '../src/index'
+import { rule, and, not, or } from '../src/index'
 import { allow } from '../src/constructors'
+import { generateMiddlewareFromSchemaAndRuleTree } from '../src/generator'
+import { getFragmentReplacements, normalizeOptions, shield } from '../src/shield'
 
 describe('Fragment extraction', () => {
   test('Extracts fragment from rule correctly.', async () => {
@@ -15,20 +17,11 @@ describe('Fragment extraction', () => {
     const ruleWithFragmentB = rule({ fragment: 'pass-B' })(() => true)
     const ruleWithFragmentC = rule({ fragment: 'pass-C' })(() => true)
 
-    const logicRuleAND = and(
-      ruleWithNoFragment,
-      ruleWithFragmentA,
-      ruleWithFragmentB,
-    )
+    const logicRuleAND = and(ruleWithNoFragment, ruleWithFragmentA, ruleWithFragmentB)
     const logicRuleNOT = not(logicRuleAND)
     const logicRuleOR = or(ruleWithFragmentB, ruleWithFragmentC, logicRuleNOT)
 
-    expect(logicRuleOR.extractFragments()).toEqual([
-      'pass-B',
-      'pass-C',
-      'pass-A',
-      'pass-B',
-    ])
+    expect(logicRuleOR.extractFragments()).toEqual(['pass-B', 'pass-C', 'pass-A', 'pass-B'])
   })
 })
 
@@ -44,6 +37,8 @@ describe('Fragment application', () => {
       type User {
         id: ID!
         name: String!
+        fullName: String!
+        public: Boolean!
       }
 
       type Event {
@@ -53,12 +48,34 @@ describe('Fragment application', () => {
       }
     `
 
+    const resolvers = {
+      Query: {
+        user: () => ({
+          id: '1',
+          name: 'John',
+          public: true,
+        }),
+        events: () => [
+          {
+            id: '1',
+            location: 'London',
+            published: true,
+          },
+        ],
+      },
+      User: {
+        fullName: (parent: any) => parent.name,
+      },
+    }
+
     /* Permissions */
 
+    const isUserSelfMock = jest.fn((parent, args, ctx, info) => true)
+
     const isUserSelf = rule({
-      fragment: 'fragment UserId on User { id }',
+      fragment: 'fragment UserIdFullName on User { id fullName }',
     })(async (parent, args, ctx, info) => {
-      return true
+      return isUserSelfMock(parent, args, ctx, info)
     })
 
     const isProfilePublic = rule({
@@ -73,32 +90,49 @@ describe('Fragment application', () => {
       return true
     })
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         user: allow,
         events: allow,
       },
       User: or(isUserSelf, isProfilePublic),
       Event: isEventPublished,
-    })
+    }
 
-    const { fragmentReplacements } = applyMiddleware(
-      makeExecutableSchema({ typeDefs, resolvers: {} }),
-      permissions,
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    const fragmentReplacements = getFragmentReplacements(
+      generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizeOptions({})),
     )
 
     expect(fragmentReplacements).toEqual([
+      {
+        field: 'id',
+        fragment: '... on User {\n  fullName\n}',
+      },
       {
         field: 'id',
         fragment: '... on User {\n  public\n}',
       },
       {
         field: 'name',
-        fragment: '... on User {\n  id\n}',
+        fragment: '... on User {\n  id\n  fullName\n}',
       },
       {
         field: 'name',
         fragment: '... on User {\n  public\n}',
+      },
+      {
+        field: 'fullName',
+        fragment: '... on User {\n  id\n}',
+      },
+      {
+        field: 'fullName',
+        fragment: '... on User {\n  public\n}',
+      },
+      {
+        field: 'public',
+        fragment: '... on User {\n  id\n  fullName\n}',
       },
       {
         field: 'id',
@@ -109,5 +143,45 @@ describe('Fragment application', () => {
         fragment: '... on Event {\n  published\n}',
       },
     ])
+
+    const schemaWithPermissions = shield(schema, ruleTree)
+
+    /* Execution */
+    const query = `
+      query {
+        user {
+          name
+        }
+        events {
+          id
+        }
+      }
+    `
+
+    const res = await graphql({
+      schema: schemaWithPermissions,
+      source: query,
+    })
+
+    expect(res).toEqual({
+      data: {
+        user: {
+          name: 'John',
+        },
+        events: [
+          {
+            id: '1',
+          },
+        ],
+      },
+    })
+
+    expect(isUserSelfMock).toBeCalledTimes(1)
+    expect(isUserSelfMock.mock.calls[0][0]).toEqual({
+      fullName: 'John',
+      id: '1',
+      name: 'John',
+      public: true,
+    })
   })
 })

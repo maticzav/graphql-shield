@@ -1,14 +1,10 @@
 import {
-  IMiddleware,
-  IMiddlewareFunction,
-  IMiddlewareGeneratorConstructor,
-} from 'graphql-middleware'
-import {
   GraphQLSchema,
   GraphQLObjectType,
   isObjectType,
   isIntrospectionType,
   GraphQLResolveInfo,
+  GraphQLFieldResolver,
 } from 'graphql'
 import {
   IRules,
@@ -16,16 +12,12 @@ import {
   ShieldRule,
   IRuleFieldMap,
   IShieldContext,
+  IMiddlewareWithOptions,
+  IMiddlewareTypeMap,
+  IMiddlewareFieldMap,
 } from './types.js'
-import {
-  isRuleFunction,
-  isRuleFieldMap,
-  isRule,
-  isLogicRule,
-  withDefault,
-} from './utils.js'
+import { isRuleFunction, isRuleFieldMap, isRule, isLogicRule, withDefault } from './utils.js'
 import { ValidationError } from './validation.js'
-import { IMiddlewareWithOptions } from 'graphql-middleware/dist/types'
 
 /**
  *
@@ -38,14 +30,9 @@ import { IMiddlewareWithOptions } from 'graphql-middleware/dist/types'
 function generateFieldMiddlewareFromRule(
   rule: ShieldRule,
   options: IOptions,
-): IMiddlewareFunction<object, object, IShieldContext> {
+): IMiddlewareWithOptions<object, IShieldContext, object> {
   async function middleware(
-    resolve: (
-      parent: object,
-      args: object,
-      ctx: IShieldContext,
-      info: GraphQLResolveInfo,
-    ) => Promise<any>,
+    resolve: GraphQLFieldResolver<object, IShieldContext, object>,
     parent: { [key: string]: any },
     args: { [key: string]: any },
     ctx: IShieldContext,
@@ -65,9 +52,12 @@ function generateFieldMiddlewareFromRule(
     // Execution
     try {
       const res = await rule.resolve(parent, args, ctx, info, options)
-
       if (res === true) {
-        return await resolve(parent, args, ctx, info)
+        const result = await resolve(parent, args, ctx, info)
+        if (result instanceof Error) {
+          throw result
+        }
+        return result
       } else if (res === false) {
         if (typeof options.fallbackError === 'function') {
           return await options.fallbackError(null, parent, args, ctx, info)
@@ -94,17 +84,19 @@ function generateFieldMiddlewareFromRule(
     return {
       fragment: rule.extractFragment(),
       resolve: middleware,
-    } as IMiddlewareWithOptions<object, object, IShieldContext>
+    }
   }
 
   if (isLogicRule(rule)) {
     return {
       fragments: rule.extractFragments(),
       resolve: middleware,
-    } as IMiddlewareWithOptions<object, object, IShieldContext>
+    }
   }
 
-  return middleware as IMiddlewareFunction<object, object, IShieldContext>
+  return {
+    resolve: middleware,
+  }
 }
 
 /**
@@ -116,16 +108,12 @@ function generateFieldMiddlewareFromRule(
  * Generates middleware from rule for a particular type.
  *
  */
-function applyRuleToType(
-  type: GraphQLObjectType,
-  rules: ShieldRule | IRuleFieldMap,
-  options: IOptions,
-): IMiddleware {
+function applyRuleToType(type: GraphQLObjectType, rules: ShieldRule | IRuleFieldMap, options: IOptions): IMiddlewareFieldMap {
   if (isRuleFunction(rules)) {
     /* Apply defined rule function to every field */
     const fieldMap = type.getFields()
 
-    const middleware = Object.keys(fieldMap).reduce((middleware, field) => {
+    const middleware = Object.keys(fieldMap).reduce<IMiddlewareFieldMap>((middleware, field) => {
       return {
         ...middleware,
         [field]: generateFieldMiddlewareFromRule(rules, options),
@@ -138,8 +126,7 @@ function applyRuleToType(
     const fieldMap = type.getFields()
 
     /* Extract default type wildcard if any and remove it for validation */
-    const defaultTypeRule = rules['*']
-    const {'*': _, ...rulesWithoutWildcard} = rules;
+    const { '*': defaultTypeRule, ...rulesWithoutWildcard } = rules
     /* Validation */
 
     const fieldErrors = Object.keys(rulesWithoutWildcard)
@@ -155,13 +142,10 @@ function applyRuleToType(
 
     /* Generation */
 
-    const middleware = Object.keys(fieldMap).reduce(
+    const middleware = Object.keys(fieldMap).reduce<IMiddlewareFieldMap>(
       (middleware, field) => ({
         ...middleware,
-        [field]: generateFieldMiddlewareFromRule(
-          withDefault(defaultTypeRule || options.fallbackRule)(rules[field]),
-          options,
-        ),
+        [field]: generateFieldMiddlewareFromRule(withDefault(defaultTypeRule || options.fallbackRule)(rules[field]), options),
       }),
       {},
     )
@@ -171,7 +155,7 @@ function applyRuleToType(
     /* Apply fallbackRule to type with no defined rule */
     const fieldMap = type.getFields()
 
-    const middleware = Object.keys(fieldMap).reduce(
+    const middleware = Object.keys(fieldMap).reduce<IMiddlewareFieldMap>(
       (middleware, field) => ({
         ...middleware,
         [field]: generateFieldMiddlewareFromRule(options.fallbackRule, options),
@@ -192,16 +176,12 @@ function applyRuleToType(
  * Applies the same rule over entire schema.
  *
  */
-function applyRuleToSchema(
-  schema: GraphQLSchema,
-  rule: ShieldRule,
-  options: IOptions,
-): IMiddleware {
+function applyRuleToSchema(schema: GraphQLSchema, rule: ShieldRule, options: IOptions): IMiddlewareTypeMap {
   const typeMap = schema.getTypeMap()
 
   const middleware = Object.keys(typeMap)
     .filter((type) => !isIntrospectionType(typeMap[type]))
-    .reduce((middleware, typeName) => {
+    .reduce<IMiddlewareTypeMap>((middleware, typeName) => {
       const type = typeMap[typeName]
 
       if (isObjectType(type)) {
@@ -225,11 +205,11 @@ function applyRuleToSchema(
  * Converts rule tree to middleware.
  *
  */
-function generateMiddlewareFromSchemaAndRuleTree(
+export function generateMiddlewareFromSchemaAndRuleTree(
   schema: GraphQLSchema,
   rules: IRules,
   options: IOptions,
-): IMiddleware {
+): IMiddlewareTypeMap {
   if (isRuleFunction(rules)) {
     /* Applies rule to entire schema. */
     return applyRuleToSchema(schema, rules, options)
@@ -256,7 +236,7 @@ function generateMiddlewareFromSchemaAndRuleTree(
 
     const middleware = Object.keys(typeMap)
       .filter((type) => !isIntrospectionType(typeMap[type]))
-      .reduce<IMiddleware>((middleware, typeName) => {
+      .reduce<IMiddlewareTypeMap>((middleware, typeName) => {
         const type = typeMap[typeName]
 
         if (isObjectType(type)) {
@@ -271,24 +251,4 @@ function generateMiddlewareFromSchemaAndRuleTree(
 
     return middleware
   }
-}
-
-/**
- *
- * @param ruleTree
- * @param options
- *
- * Generates middleware from given rules.
- *
- */
-export function generateMiddlewareGeneratorFromRuleTree<
-  TSource = any,
-  TContext = any,
-  TArgs = any
->(
-  ruleTree: IRules,
-  options: IOptions,
-): IMiddlewareGeneratorConstructor<TSource, TContext, TArgs> {
-  return (schema: GraphQLSchema) =>
-    generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, options)
 }

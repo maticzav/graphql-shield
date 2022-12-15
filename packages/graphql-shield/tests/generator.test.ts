@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
-import { applyMiddleware } from 'graphql-middleware'
+import { isAsyncIterable } from '@graphql-tools/utils'
+import { graphql, parse, subscribe } from 'graphql'
 import { shield, rule } from '../src'
-import { graphql } from 'graphql'
 
 describe('generates correct middleware', () => {
   test('correctly applies schema rule to schema', async () => {
@@ -32,9 +32,9 @@ describe('generates correct middleware', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield(rule({ cache: 'no_cache' })(allowMock))
+    const schemaRule = rule({ cache: 'no_cache' })(allowMock)
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, schemaRule)
 
     /* Execution */
     const query = `
@@ -92,11 +92,11 @@ describe('generates correct middleware', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield({
+    const ruleTree = {
       Query: rule({ cache: 'no_cache' })(allowMock),
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -154,11 +154,11 @@ describe('generates correct middleware', () => {
     /* Permissions */
 
     const allowMock = jest.fn().mockResolvedValue(true)
-    const permissions = shield({
+    const ruleTree = {
       Query: { a: rule({ cache: 'no_cache' })(allowMock) },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -186,6 +186,87 @@ describe('generates correct middleware', () => {
       },
     })
     expect(allowMock).toBeCalledTimes(1)
+  })
+
+  test.only('correctly applies subscription rule', async () => {
+    /* Schema */
+
+    const typeDefs = `
+      type Query {
+        q: String
+      }
+      type Subscription {
+        a: Int
+      }
+      type Type {
+        a: String
+      }
+    `
+
+    const resolvers = {
+      Subscription: {
+        a: {
+          subscribe: async function* () {
+            for (let counter = 1; counter <= 5; counter++) {
+              yield { a: counter }
+              await new Promise((res) => setTimeout(res, 1000))
+            }
+          },
+        },
+      },
+      Type: {
+        a: () => 'a',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const allowMock = jest.fn().mockResolvedValue(true)
+    const ruleTree = {
+      Subscription: {
+        a: rule({ cache: 'no_cache' })(allowMock),
+      },
+    }
+
+    const schemaWithPermissions = shield(schema, ruleTree)
+
+    /* Execution */
+    const query = `
+      subscription {
+        a
+      }
+    `
+
+    const subscription = await subscribe({
+      schema: schemaWithPermissions,
+      document: parse(query),
+    })
+
+    /* Tests */
+
+    expect(isAsyncIterable(subscription)).toBe(true)
+
+    expect(await ('next' in subscription && subscription.next())).toEqual({
+      done: false,
+      value: {
+        data: {
+          a: 1,
+        },
+      },
+    })
+
+    expect(await ('next' in subscription && subscription.next())).toEqual({
+      done: false,
+      value: {
+        data: {
+          a: 2,
+        },
+      },
+    })
+
+    expect(allowMock).toBeCalledTimes(3)
   })
 
   test('correctly applies wildcard rule to type', async () => {
@@ -222,7 +303,7 @@ describe('generates correct middleware', () => {
     const defaultQueryMock = jest.fn().mockResolvedValue(true)
     const defaultTypeMock = jest.fn().mockResolvedValue(true)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         a: rule({ cache: 'no_cache' })(allowMock),
         type: rule({ cache: 'no_cache' })(jest.fn().mockResolvedValue(true)),
@@ -231,9 +312,9 @@ describe('generates correct middleware', () => {
       Type: {
         '*': rule({ cache: 'no_cache' })(defaultTypeMock),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -303,7 +384,7 @@ describe('generates correct middleware', () => {
     const defaultQueryMock = jest.fn().mockResolvedValue(true)
     const defaultTypeMock = jest.fn().mockResolvedValue(true)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         a: rule({ cache: 'no_cache' })(allowMock),
         type: rule({ cache: 'no_cache' })(jest.fn().mockResolvedValue(true)),
@@ -312,13 +393,13 @@ describe('generates correct middleware', () => {
       Type: {
         '*': rule({ cache: 'no_cache' })(defaultTypeMock),
       },
-    })
+    }
 
     /* First usage */
-    applyMiddleware(schema, permissions)
+    shield(schema, ruleTree)
 
     /* Second usage */
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `

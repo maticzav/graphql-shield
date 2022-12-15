@@ -1,5 +1,4 @@
 import { graphql, GraphQLResolveInfo } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 
 import { shield, rule, allow, deny, and, or, not } from '../src'
@@ -7,7 +6,7 @@ import { LogicRule } from '../src/rules'
 import { chain, race } from '../src/constructors'
 
 describe('logic rules', () => {
-  test('allow, deny work as expeted', async () => {
+  test('allow, deny work as expected', async () => {
     const typeDefs = `
       type Query {
         allow: String
@@ -25,14 +24,14 @@ describe('logic rules', () => {
     const schema = makeExecutableSchema({ typeDefs, resolvers })
 
     // Permissions
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         allow: allow,
         deny: deny,
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -81,15 +80,15 @@ describe('logic rules', () => {
       throw new Error()
     })
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         allow: and(allow, allow),
         deny: and(allow, deny),
         ruleError: and(allow, ruleWithError),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -160,15 +159,15 @@ describe('logic rules', () => {
       throw new Error('error')
     })
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         allow: chain(allowRuleA, allowRuleB, allowRuleC),
         deny: chain(denyRule, denyRule, denyRule),
         ruleError: chain(ruleWithError, ruleWithError, ruleWithError),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -242,15 +241,15 @@ describe('logic rules', () => {
       throw new Error('error')
     })
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         allow: race(denyRuleA, allowRuleB, allowRuleC),
         deny: race(denyRule, denyRule, denyRule),
         ruleError: race(ruleWithError, ruleWithError, ruleWithError),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -298,14 +297,14 @@ describe('logic rules', () => {
 
     /* Permissions */
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         allow: or(allow, deny),
         deny: or(deny, deny),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -370,7 +369,7 @@ describe('logic rules', () => {
       return 'error_string_pass'
     })
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         allow: not(deny),
         deny: not(allow),
@@ -379,9 +378,9 @@ describe('logic rules', () => {
         customRuleError: not(ruleWithCustomError),
         customRuleErrorString: not(ruleWithCustomErrorString),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -408,10 +407,7 @@ describe('logic rules', () => {
       customRuleError: 'customRuleError',
       customRuleErrorString: 'customRuleErrorString',
     })
-    expect(res.errors?.map((err) => err.message)).toEqual([
-      'Not Authorised!',
-      'Not Authorised!',
-    ])
+    expect(res.errors?.map((err) => err.message)).toEqual(['Not Authorised!', 'Not Authorised!'])
   })
 
   test('not returns custom error', async () => {
@@ -431,13 +427,13 @@ describe('logic rules', () => {
 
     /* Permissions */
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         not: not(allow, 'This is a custom not message.'),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -454,9 +450,7 @@ describe('logic rules', () => {
     expect(res.data).toEqual({
       not: null,
     })
-    expect(res.errors?.map((err) => err.message)).toEqual([
-      'This is a custom not message.',
-    ])
+    expect(res.errors?.map((err) => err.message)).toEqual(['This is a custom not message.'])
   })
 })
 
@@ -464,19 +458,14 @@ describe('internal execution', () => {
   test('logic rule by default resolves to false', async () => {
     const rule = new LogicRule([])
 
-    const res = await rule.resolve(
-      {},
-      {},
-      { _shield: { cache: {} } },
-      {} as GraphQLResolveInfo,
-      {
-        allowExternalErrors: false,
-        debug: false,
-        fallbackRule: allow,
-        fallbackError: new Error(),
-        hashFunction: () => `${Math.random()}`,
-      },
-    )
+    const res = await rule.resolve({}, {}, { _shield: { cache: {} } }, {} as GraphQLResolveInfo, {
+      allowExternalErrors: false,
+      debug: false,
+      fallbackRule: allow,
+      fallbackError: new Error(),
+      hashFunction: () => `${Math.random()}`,
+      disableFragmentsAndPostExecRules: false,
+    })
 
     expect(res).toBeFalsy()
   })
@@ -500,13 +489,13 @@ describe('internal execution', () => {
 
     const ruleDeny = rule()(() => false)
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         deny: ruleDeny,
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 

@@ -1,5 +1,4 @@
 import { graphql } from 'graphql'
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, inputRule } from '../src'
 
@@ -27,7 +26,7 @@ describe('input rule', () => {
     const schema = makeExecutableSchema({ typeDefs, resolvers })
 
     // Permissions
-    const permissions = shield({
+    const ruleTree = {
       Mutation: {
         login: inputRule()((yup) =>
           yup.object({
@@ -35,9 +34,9 @@ describe('input rule', () => {
           }),
         ),
       },
-    })
+    }
 
-    const schemaWithPermissions = applyMiddleware(schema, permissions)
+    const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 

@@ -1,4 +1,3 @@
-import { applyMiddleware } from 'graphql-middleware'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { validateRuleTree } from '../src/validation'
 import { shield, rule, allow } from '../src/'
@@ -21,17 +20,15 @@ describe('correctly helps developer', () => {
 
     // Permissions
 
-    const permissions = shield({
+    const ruleTree = {
       Query: allow,
       Fail1: allow,
       Fail2: allow,
-    })
+    }
 
     expect(() => {
-      applyMiddleware(schema, permissions)
-    }).toThrow(
-      `It seems like you have applied rules to Fail1, Fail2 types but Shield cannot find them in your schema.`,
-    )
+      shield(schema, ruleTree)
+    }).toThrow(`It seems like you have applied rules to Fail1, Fail2 types but Shield cannot find them in your schema.`)
   })
 
   test('Finds the fields missing in schema and warns developer.', async () => {
@@ -49,19 +46,17 @@ describe('correctly helps developer', () => {
 
     // Permissions
 
-    const permissions = shield({
+    const ruleTree = {
       Query: {
         a: allow,
         b: allow,
         c: allow,
       },
-    })
+    }
 
     expect(() => {
-      applyMiddleware(schema, permissions)
-    }).toThrow(
-      'It seems like you have applied rules to Query.b, Query.c fields but Shield cannot find them in your schema.',
-    )
+      shield(schema, ruleTree)
+    }).toThrow('It seems like you have applied rules to Query.b, Query.c fields but Shield cannot find them in your schema.')
   })
 })
 
@@ -109,6 +104,18 @@ describe('rule tree validation', () => {
 
 describe('shield works as expected', () => {
   test('throws an error on invalid schema', async () => {
+    // Schema
+    const typeDefs = `
+     type Query {
+       a: String!
+     }
+   `
+
+    const schema = makeExecutableSchema({
+      typeDefs,
+      resolvers: {},
+    })
+
     /* Rules */
 
     const rule1 = rule('one')(() => true)
@@ -133,7 +140,7 @@ describe('shield works as expected', () => {
     /* Tests */
 
     expect(() => {
-      shield(incorrectRuleTree)
+      shield(schema, incorrectRuleTree)
     }).toThrow(`There seem to be multiple definitions of these rules: one, two`)
   })
 })
