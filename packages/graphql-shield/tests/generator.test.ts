@@ -1,6 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
+import { isAsyncIterable } from '@graphql-tools/utils'
+import { graphql, parse, subscribe } from 'graphql'
 import { shield, rule } from '../src'
-import { graphql } from 'graphql'
 
 describe('generates correct middleware', () => {
   test('correctly applies schema rule to schema', async () => {
@@ -185,6 +186,87 @@ describe('generates correct middleware', () => {
       },
     })
     expect(allowMock).toBeCalledTimes(1)
+  })
+
+  test.only('correctly applies subscription rule', async () => {
+    /* Schema */
+
+    const typeDefs = `
+      type Query {
+        q: String
+      }
+      type Subscription {
+        a: Int
+      }
+      type Type {
+        a: String
+      }
+    `
+
+    const resolvers = {
+      Subscription: {
+        a: {
+          subscribe: async function* () {
+            for (let counter = 1; counter <= 5; counter++) {
+              yield { a: counter }
+              await new Promise((res) => setTimeout(res, 1000))
+            }
+          },
+        },
+      },
+      Type: {
+        a: () => 'a',
+      },
+    }
+
+    const schema = makeExecutableSchema({ typeDefs, resolvers })
+
+    /* Permissions */
+
+    const allowMock = jest.fn().mockResolvedValue(true)
+    const ruleTree = {
+      Subscription: {
+        a: rule({ cache: 'no_cache' })(allowMock),
+      },
+    }
+
+    const schemaWithPermissions = shield(schema, ruleTree)
+
+    /* Execution */
+    const query = `
+      subscription {
+        a
+      }
+    `
+
+    const subscription = await subscribe({
+      schema: schemaWithPermissions,
+      document: parse(query),
+    })
+
+    /* Tests */
+
+    expect(isAsyncIterable(subscription)).toBe(true)
+
+    expect(await ('next' in subscription && subscription.next())).toEqual({
+      done: false,
+      value: {
+        data: {
+          a: 1,
+        },
+      },
+    })
+
+    expect(await ('next' in subscription && subscription.next())).toEqual({
+      done: false,
+      value: {
+        data: {
+          a: 2,
+        },
+      },
+    })
+
+    expect(allowMock).toBeCalledTimes(3)
   })
 
   test('correctly applies wildcard rule to type', async () => {
