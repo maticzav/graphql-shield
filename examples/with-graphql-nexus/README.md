@@ -8,7 +8,7 @@ This is an example of how to use `graphql-shield` with [GraphQL Nexus](https://n
 
 ## Dependencies
 
-- Your favourite package manager
+- Your favorite package manager
 
 - [Prisma CLI](https://github.com/prisma/prisma/tree/master/cli)
 

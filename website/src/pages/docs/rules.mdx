@@ -30,7 +30,7 @@ const isAdmin = rule()(async (parent, args, ctx, info) => {
 function inputRule(name?: string)((yup: Yup, ctx: any) => Yup.Schema, options?: Yup.ValidationOptions): Rule
 ```
 
-Input rule works exactly as any other rule would work. Instead of providing a complex validation rule you can simply provide a Yup validation schema which will be mached against provided arguments.
+Input rule works exactly as any other rule would work. Instead of providing a complex validation rule you can simply provide a Yup validation schema which will be matched against provided arguments.
 This can be especially useful when limiting optional fields such as `create` and `connect` with Prisma, for example.
 
 **Example:**

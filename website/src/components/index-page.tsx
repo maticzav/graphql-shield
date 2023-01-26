@@ -39,7 +39,7 @@ export function IndexPage(): ReactElement {
   return (
     <>
       <HeroGradient
-        title="GraphQL Permissions Framework for Complex Authorisation Systems"
+        title="GraphQL Permissions Framework for Complex Authorization Systems"
         description="Implement your server permissions in a clear and deterministic way and let it guard access to your schema."
         link={{
           href: '/docs',

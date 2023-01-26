@@ -33,10 +33,10 @@ export type IRuleFunction = (parent: any, args: any, ctx: any, info: GraphQLReso
 
 // Rule Constructor Options
 
-export type ICacheContructorOptions = ICache | boolean
+export type ICacheConstructorOptions = ICache | boolean
 
 export interface IRuleConstructorOptions {
-  cache?: ICacheContructorOptions
+  cache?: ICacheConstructorOptions
   fragment?: IFragment
 }
 

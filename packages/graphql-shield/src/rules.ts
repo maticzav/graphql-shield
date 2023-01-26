@@ -5,7 +5,7 @@ import {
   IRuleOptions,
   ICache,
   IFragment,
-  ICacheContructorOptions,
+  ICacheConstructorOptions,
   IRuleConstructorOptions,
   ILogicRule,
   ShieldRule,
@@ -121,7 +121,7 @@ export class Rule implements IRule {
    * This ensures backward capability of shield.
    *
    */
-  private normalizeCacheOption(cache: ICacheContructorOptions): ICache {
+  private normalizeCacheOption(cache: ICacheConstructorOptions): ICache {
     switch (cache) {
       case true: {
         return 'strict'
