@@ -1,6 +1,7 @@
-import { graphql } from 'graphql'
+import { execute, graphql, parse } from 'graphql'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, inputRule } from '../src'
+import { wrapExecuteFn } from '../src/shield'
 
 describe('input rule', () => {
   test('schema validation works as expected', async () => {
@@ -36,7 +37,7 @@ describe('input rule', () => {
       },
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -46,10 +47,12 @@ describe('input rule', () => {
         failure: login(email: "notemail")
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-    })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
+
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
 
     /* Tests */
 

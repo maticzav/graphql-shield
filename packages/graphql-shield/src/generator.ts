@@ -19,6 +19,24 @@ import {
 import { isRuleFunction, isRuleFieldMap, isRule, isLogicRule, withDefault } from './utils.js'
 import { ValidationError } from './validation.js'
 
+interface IInternalOptions {
+  excludeRulesWithFragments: boolean
+  excludeRulesWithoutFragments: boolean
+}
+
+function shouldApplyRule(rule: ShieldRule, internalOptions: IInternalOptions) {
+  const hasFragment = 'extractFragment' in rule ? !!rule.extractFragment() : !!rule.extractFragments().length
+
+  if (
+    (internalOptions.excludeRulesWithFragments && hasFragment) ||
+    (internalOptions.excludeRulesWithoutFragments && !hasFragment)
+  ) {
+    return false
+  }
+
+  return true
+}
+
 /**
  *
  * @param options
@@ -108,10 +126,19 @@ function generateFieldMiddlewareFromRule(
  * Generates middleware from rule for a particular type.
  *
  */
-function applyRuleToType(type: GraphQLObjectType, rules: ShieldRule | IRuleFieldMap, options: IOptions): IMiddlewareFieldMap {
+function applyRuleToType(
+  type: GraphQLObjectType,
+  rules: ShieldRule | IRuleFieldMap,
+  options: IOptions,
+  internalOptions: IInternalOptions,
+): IMiddlewareFieldMap {
   if (isRuleFunction(rules)) {
     /* Apply defined rule function to every field */
     const fieldMap = type.getFields()
+
+    if (!shouldApplyRule(rules, internalOptions)) {
+      return {}
+    }
 
     const middleware = Object.keys(fieldMap).reduce<IMiddlewareFieldMap>((middleware, field) => {
       return {
@@ -142,13 +169,15 @@ function applyRuleToType(type: GraphQLObjectType, rules: ShieldRule | IRuleField
 
     /* Generation */
 
-    const middleware = Object.keys(fieldMap).reduce<IMiddlewareFieldMap>(
-      (middleware, field) => ({
+    const middleware = Object.keys(fieldMap).reduce<IMiddlewareFieldMap>((middleware, field) => {
+      if (!shouldApplyRule(rules[field], internalOptions)) {
+        return middleware
+      }
+      return {
         ...middleware,
         [field]: generateFieldMiddlewareFromRule(withDefault(defaultTypeRule || options.fallbackRule)(rules[field]), options),
-      }),
-      {},
-    )
+      }
+    }, {})
 
     return middleware
   } else {
@@ -176,7 +205,12 @@ function applyRuleToType(type: GraphQLObjectType, rules: ShieldRule | IRuleField
  * Applies the same rule over entire schema.
  *
  */
-function applyRuleToSchema(schema: GraphQLSchema, rule: ShieldRule, options: IOptions): IMiddlewareTypeMap {
+function applyRuleToSchema(
+  schema: GraphQLSchema,
+  rule: ShieldRule,
+  options: IOptions,
+  internalOptions: IInternalOptions,
+): IMiddlewareTypeMap {
   const typeMap = schema.getTypeMap()
 
   const middleware = Object.keys(typeMap)
@@ -187,7 +221,7 @@ function applyRuleToSchema(schema: GraphQLSchema, rule: ShieldRule, options: IOp
       if (isObjectType(type)) {
         return {
           ...middleware,
-          [typeName]: applyRuleToType(type, rule, options),
+          [typeName]: applyRuleToType(type, rule, options, internalOptions),
         }
       } else {
         return middleware
@@ -209,10 +243,11 @@ export function generateMiddlewareFromSchemaAndRuleTree(
   schema: GraphQLSchema,
   rules: IRules,
   options: IOptions,
+  internalOptions: IInternalOptions,
 ): IMiddlewareTypeMap {
   if (isRuleFunction(rules)) {
     /* Applies rule to entire schema. */
-    return applyRuleToSchema(schema, rules, options)
+    return applyRuleToSchema(schema, rules, options, internalOptions)
   } else {
     /**
      * Checks type map and field map and applies rules
@@ -242,7 +277,7 @@ export function generateMiddlewareFromSchemaAndRuleTree(
         if (isObjectType(type)) {
           return {
             ...middleware,
-            [typeName]: applyRuleToType(type, rules[typeName], options),
+            [typeName]: applyRuleToType(type, rules[typeName], options, internalOptions),
           }
         } else {
           return middleware

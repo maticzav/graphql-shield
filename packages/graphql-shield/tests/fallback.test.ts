@@ -1,6 +1,7 @@
-import { graphql } from 'graphql'
+import { execute, graphql, parse } from 'graphql'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, rule, allow } from '../src/index'
+import { wrapExecuteFn } from '../src/shield'
 
 describe('fallbackError correctly handles errors', () => {
   test('error in resolver returns fallback error.', async () => {
@@ -32,9 +33,9 @@ describe('fallbackError correctly handles errors', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      fallbackError,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   fallbackError,
+    // })
 
     /* Execution */
 
@@ -43,10 +44,11 @@ describe('fallbackError correctly handles errors', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-    })
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { fallbackError } })({ schema, document: parse(query) })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -80,9 +82,9 @@ describe('fallbackError correctly handles errors', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      fallbackError,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   fallbackError,
+    // })
 
     /* Execution */
 
@@ -91,10 +93,11 @@ describe('fallbackError correctly handles errors', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-    })
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { fallbackError } })({ schema, document: parse(query) })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -128,9 +131,9 @@ describe('fallbackError correctly handles errors', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      fallbackError: fallbackMessage,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   fallbackError: fallbackMessage,
+    // })
 
     /* Execution */
     const query = `
@@ -138,10 +141,14 @@ describe('fallbackError correctly handles errors', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { fallbackError: fallbackMessage } })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -172,9 +179,9 @@ describe('fallbackError correctly handles errors', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      fallbackError,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   fallbackError,
+    // })
 
     /* Execution */
 
@@ -183,10 +190,11 @@ describe('fallbackError correctly handles errors', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-    })
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { fallbackError } })({ schema, document: parse(query) })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -223,9 +231,9 @@ describe('fallbackError correctly handles errors', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      fallbackError,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   fallbackError,
+    // })
 
     /* Execution */
 
@@ -234,10 +242,11 @@ describe('fallbackError correctly handles errors', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-    })
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { fallbackError } })({ schema, document: parse(query) })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -272,9 +281,9 @@ describe('external errors can be controlled correctly', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      allowExternalErrors: true,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   allowExternalErrors: true,
+    // })
 
     /* Execution */
 
@@ -283,10 +292,14 @@ describe('external errors can be controlled correctly', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { allowExternalErrors: true } })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -314,9 +327,9 @@ describe('external errors can be controlled correctly', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      allowExternalErrors: true,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   allowExternalErrors: true,
+    // })
 
     /* Execution */
 
@@ -325,10 +338,14 @@ describe('external errors can be controlled correctly', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { allowExternalErrors: true } })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -358,9 +375,9 @@ describe('debug mode works as expected', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      debug: true,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   debug: true,
+    // })
 
     /* Execution */
 
@@ -369,10 +386,14 @@ describe('debug mode works as expected', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { debug: true } })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -405,9 +426,9 @@ describe('debug mode works as expected', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      debug: true,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   debug: true,
+    // })
 
     /* Execution */
 
@@ -416,10 +437,14 @@ describe('debug mode works as expected', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { debug: true } })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -449,7 +474,7 @@ describe('custom errors work as expected', () => {
       }),
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -457,10 +482,14 @@ describe('custom errors work as expected', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -489,7 +518,7 @@ describe('custom errors work as expected', () => {
       }),
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -497,10 +526,14 @@ describe('custom errors work as expected', () => {
         test
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -552,9 +585,9 @@ describe('fallbackRule correctly applies fallback rule', () => {
       },
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree, {
-      fallbackRule: fallbackRule,
-    })
+    // const schemaWithPermissions = shield(schema, ruleTree, {
+    //   fallbackRule: fallbackRule,
+    // })
 
     /* Execution */
 
@@ -568,10 +601,14 @@ describe('fallbackRule correctly applies fallback rule', () => {
         }
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { fallbackRule: fallbackRule } })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 

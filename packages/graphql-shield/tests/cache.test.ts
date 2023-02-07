@@ -1,7 +1,8 @@
-import { graphql } from 'graphql'
+import { execute, graphql, parse } from 'graphql'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { shield, rule } from '../src/index'
 import { IHashFunction } from '../src/types'
+import { wrapExecuteFn } from '../src/shield'
 
 describe('caching:', () => {
   test('Strict cache - Rule is called multiple times, based on different parent.', async () => {
@@ -34,7 +35,7 @@ describe('caching:', () => {
       Test: rule({ cache: 'strict' })(allowMock),
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -45,11 +46,14 @@ describe('caching:', () => {
         }
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-      contextValue: {},
-    })
+
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    //   contextValue: {},
+    // })
 
     expect(res).toEqual({
       data: {
@@ -94,7 +98,7 @@ describe('caching:', () => {
       Query: rule({ cache: 'strict' })(allowMock),
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -108,11 +112,13 @@ describe('caching:', () => {
         f: c(arg: "foo")
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-      contextValue: {},
-    })
+
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    //   contextValue: {},
+    // })
 
     /* Tests */
 
@@ -174,7 +180,7 @@ describe('caching:', () => {
       },
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     // Execution
     const query = `
@@ -186,11 +192,13 @@ describe('caching:', () => {
         e
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-      contextValue: {},
-    })
+
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    //   contextValue: {},
+    // })
 
     /* Tests */
 
@@ -243,7 +251,7 @@ describe('caching:', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -256,11 +264,13 @@ describe('caching:', () => {
         e
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-      contextValue: {},
-    })
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    //   contextValue: {},
+    // })
 
     /* Tests */
 
@@ -308,7 +318,7 @@ describe('caching:', () => {
       })(allowMock),
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -320,11 +330,13 @@ describe('caching:', () => {
         a3: a(arg: "boo")
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-      contextValue: {},
-    })
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    //   contextValue: {},
+    // })
 
     /* Tests */
 
@@ -370,9 +382,9 @@ test('Customize hash function', async () => {
     Query: rule({ cache: 'strict' })(allowMock),
   }
 
-  const schemaWithPermissions = shield(schema, ruleTree, {
-    hashFunction,
-  })
+  // const schemaWithPermissions = shield(schema, ruleTree, {
+  //   hashFunction,
+  // })
 
   /* Execution */
 
@@ -382,11 +394,14 @@ test('Customize hash function', async () => {
         b(arg: "bar")
       }
     `
-  const res = await graphql({
-    schema: schemaWithPermissions,
-    source: query,
-    contextValue: {},
-  })
+
+  const res = await wrapExecuteFn(execute, { schema, ruleTree, options: { hashFunction } })({ schema, document: parse(query) })
+
+  // const res = await graphql({
+  //   schema: schemaWithPermissions,
+  //   source: query,
+  //   contextValue: {},
+  // })
 
   /* Tests */
 
@@ -439,7 +454,7 @@ describe('legacy cache:', () => {
       Test: rule({ cache: true })(allowMock),
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
 
@@ -450,11 +465,13 @@ describe('legacy cache:', () => {
         }
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-      contextValue: {},
-    })
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    //   contextValue: {},
+    // })
 
     /* Tests */
 
@@ -501,7 +518,7 @@ describe('legacy cache:', () => {
       Query: allow,
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     // Execution
     const query = `
@@ -513,11 +530,14 @@ describe('legacy cache:', () => {
         e
       }
     `
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
-      contextValue: {},
-    })
+
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({ schema, document: parse(query) })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    //   contextValue: {},
+    // })
 
     expect(res).toEqual({
       data: {
