@@ -1,7 +1,8 @@
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { isAsyncIterable } from '@graphql-tools/utils'
-import { graphql, parse, subscribe } from 'graphql'
+import { execute, graphql, parse, subscribe } from 'graphql'
 import { shield, rule } from '../src'
+import { wrapExecuteFn } from '../src/shield'
 
 describe('generates correct middleware', () => {
   test('correctly applies schema rule to schema', async () => {
@@ -34,7 +35,7 @@ describe('generates correct middleware', () => {
     const allowMock = jest.fn().mockResolvedValue(true)
     const schemaRule = rule({ cache: 'no_cache' })(allowMock)
 
-    const schemaWithPermissions = shield(schema, schemaRule)
+    // const schemaWithPermissions = shield(schema, schemaRule)
 
     /* Execution */
     const query = `
@@ -45,11 +46,14 @@ describe('generates correct middleware', () => {
         }
       }
     `
-
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree: schemaRule })({
+      schema,
+      document: parse(query),
     })
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -96,7 +100,7 @@ describe('generates correct middleware', () => {
       Query: rule({ cache: 'no_cache' })(allowMock),
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -108,10 +112,15 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
+      document: parse(query),
     })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -158,7 +167,7 @@ describe('generates correct middleware', () => {
       Query: { a: rule({ cache: 'no_cache' })(allowMock) },
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -170,10 +179,15 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
+      document: parse(query),
     })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -230,7 +244,7 @@ describe('generates correct middleware', () => {
       },
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -239,10 +253,15 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const subscription = await subscribe({
-      schema: schemaWithPermissions,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
       document: parse(query),
     })
+
+    // const subscription = await subscribe({
+    //   schema: schemaWithPermissions,
+    //   document: parse(query),
+    // })
 
     /* Tests */
 
@@ -314,7 +333,7 @@ describe('generates correct middleware', () => {
       },
     }
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -328,10 +347,15 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
+      document: parse(query),
     })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 
@@ -396,10 +420,10 @@ describe('generates correct middleware', () => {
     }
 
     /* First usage */
-    shield(schema, ruleTree)
+    // shield(schema, ruleTree)
 
     /* Second usage */
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -413,10 +437,15 @@ describe('generates correct middleware', () => {
       }
     `
 
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
+      document: parse(query),
     })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     /* Tests */
 

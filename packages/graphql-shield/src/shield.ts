@@ -1,9 +1,8 @@
-import { GraphQLFieldResolver, GraphQLSchema } from 'graphql'
+import { buildSchema, execute, ExecutionArgs, GraphQLFieldResolver, GraphQLSchema, printSchema } from 'graphql'
 import hash from 'object-hash'
 
 import { composeResolvers, ResolversComposition } from '@graphql-tools/resolvers-composition'
 import { addResolversToSchema } from '@graphql-tools/schema'
-import { wrapSchema } from '@graphql-tools/wrap'
 
 import {
   IOptions,
@@ -97,33 +96,54 @@ function applyComposition(schema: GraphQLSchema, middleware: IMiddlewareTypeMap)
   return addResolversToSchema({ schema, resolvers })
 }
 
-/**
- *
- * @param schema
- * @param ruleTree
- * @param options
- *
- * Validates rules and applies defined rule tree to the schema.
- *
- */
-export function shield(schema: GraphQLSchema, ruleTree: IRules, options: IOptionsConstructor = {}): GraphQLSchema {
+type ExecuteFn = typeof execute
+
+// TODO: process logical rules and fallback rule
+export function wrapExecuteFn(
+  executeFn: ExecuteFn,
+  config: { schema: GraphQLSchema; ruleTree: IRules; options?: IOptionsConstructor },
+): (executionArgs: ExecutionArgs) => ReturnType<ExecuteFn> {
+  const { schema, ruleTree, options = {} } = config
+
   const normalizedOptions = normalizeOptions(options)
   const ruleTreeValidity = validateRuleTree(ruleTree)
 
-  if (ruleTreeValidity.status === 'ok') {
-    const middleware = generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizedOptions)
-    if (normalizedOptions.disableFragmentsAndPostExecRules) {
-      return applyComposition(schema, middleware)
+  if (ruleTreeValidity.status !== 'ok') {
+    throw new ValidationError(ruleTreeValidity.message)
+  }
+
+  const middleware = generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizedOptions, {
+    excludeRulesWithFragments: true,
+    excludeRulesWithoutFragments: false,
+  })
+  const authSchema = applyComposition(schema, middleware)
+
+  const postExecSchema = buildSchema(printSchema(schema))
+  const postExecMiddleware = generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizedOptions, {
+    excludeRulesWithFragments: false,
+    excludeRulesWithoutFragments: true,
+  })
+  const postExecAuthSchema = applyComposition(postExecSchema, postExecMiddleware)
+
+  return async function executeWithAuth(executionArgs: ExecutionArgs) {
+    const result = await executeFn({ ...executionArgs, schema: authSchema })
+
+    const postExecResult = await executeFn({
+      ...executionArgs,
+      schema: postExecAuthSchema,
+      rootValue: result.data,
+    })
+
+    const errors = [...(result.errors ?? []), ...(postExecResult.errors ?? [])]
+    const extensions = {
+      ...result.extensions,
+      ...postExecResult.extensions,
     }
 
-    const fragmentReplacements = getFragmentReplacements(middleware)
-
-    const wrappedSchema = wrapSchema({
-      schema,
-      transforms: [new ReplaceFieldWithFragment(fragmentReplacements || [])],
-    })
-    return applyComposition(wrappedSchema, middleware)
-  } else {
-    throw new ValidationError(ruleTreeValidity.message)
+    return {
+      data: postExecResult.data,
+      ...(errors.length > 0 ? { errors } : {}),
+      ...(Object.keys(extensions).length > 0 ? { extensions } : {}),
+    }
   }
 }

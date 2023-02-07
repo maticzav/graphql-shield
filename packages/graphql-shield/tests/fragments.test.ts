@@ -1,9 +1,9 @@
-import { graphql } from 'graphql'
+import { execute, graphql, parse } from 'graphql'
 import { makeExecutableSchema } from '@graphql-tools/schema'
 import { rule, and, not, or } from '../src/index'
 import { allow } from '../src/constructors'
 import { generateMiddlewareFromSchemaAndRuleTree } from '../src/generator'
-import { getFragmentReplacements, normalizeOptions, shield } from '../src/shield'
+import { getFragmentReplacements, normalizeOptions, shield, wrapExecuteFn } from '../src/shield'
 
 describe('Fragment extraction', () => {
   test('Extracts fragment from rule correctly.', async () => {
@@ -102,7 +102,10 @@ describe('Fragment application', () => {
     const schema = makeExecutableSchema({ typeDefs, resolvers })
 
     const fragmentReplacements = getFragmentReplacements(
-      generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizeOptions({})),
+      generateMiddlewareFromSchemaAndRuleTree(schema, ruleTree, normalizeOptions({}), {
+        excludeRulesWithoutFragments: true,
+        excludeRulesWithFragments: false,
+      }),
     )
 
     expect(fragmentReplacements).toEqual([
@@ -144,7 +147,7 @@ describe('Fragment application', () => {
       },
     ])
 
-    const schemaWithPermissions = shield(schema, ruleTree)
+    // const schemaWithPermissions = shield(schema, ruleTree)
 
     /* Execution */
     const query = `
@@ -157,11 +160,15 @@ describe('Fragment application', () => {
         }
       }
     `
-
-    const res = await graphql({
-      schema: schemaWithPermissions,
-      source: query,
+    const res = await wrapExecuteFn(execute, { schema, ruleTree })({
+      schema,
+      document: parse(query),
     })
+
+    // const res = await graphql({
+    //   schema: schemaWithPermissions,
+    //   source: query,
+    // })
 
     expect(res).toEqual({
       data: {
