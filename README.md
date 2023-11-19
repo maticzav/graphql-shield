@@ -52,7 +52,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 ## Contributing
 
-We are always looking for people to help us grow `graphql-shield`! If you have an issue, feature request, or pull request, let us know!
+We are always looking for people to help us grow `graphql-shield`! If you have an issue, feature request, or pull request, let us know! For information about development setup and more, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
