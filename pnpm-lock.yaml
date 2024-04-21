@@ -17,7 +17,7 @@ importers:
       babel-jest: 29.3.1
       bob-the-bundler: ^4.0.0
       codecov: 3.8.3
-      husky: 8.0.1
+      husky: 8.0.3
       jest: 28.1.3
       prettier: 2.7.1
       pretty-quick: 3.1.3
@@ -36,7 +36,7 @@ importers:
       babel-jest: 29.3.1_@babel+core@7.19.6
       bob-the-bundler: 4.0.0_6oasmw356qmm23djlsjgkwvrtm
       codecov: 3.8.3
-      husky: 8.0.1
+      husky: 8.0.3
       jest: 28.1.3_6caleeh6c3yahw3yaj3duy3aa4
       prettier: 2.7.1
       pretty-quick: 3.1.3_prettier@2.7.1
@@ -6317,8 +6317,8 @@ packages:
     engines: {node: '>=10.17.0'}
     dev: true
 
-  /husky/8.0.1:
-    resolution: {integrity: sha512-xs7/chUH/CKdOCs7Zy0Aev9e/dKOMZf3K1Az1nar3tzlv0jfqnYtu235bstsWTmXOR0EfINrPa97yy4Lz6RiKw==}
+  /husky/8.0.3:
+    resolution: {integrity: sha512-+dQSyqPh4x1hlO1swXBiNb2HzTDN1I2IGLQx1GrBuiqFJfoMrnZWwVmatvSiO+Iz8fBUnf+lekwNo4c2LlXItg==}
     engines: {node: '>=14'}
     hasBin: true
     dev: true
