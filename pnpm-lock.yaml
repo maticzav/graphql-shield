@@ -89,14 +89,14 @@ importers:
       '@types/node': 18.8.5
       '@types/react': 18.0.21
       next: 13.0.6
-      next-sitemap: 3.1.24
+      next-sitemap: 3.1.55
       react: 18.2.0
       react-dom: 18.2.0
       typescript: 4.8.4
     dependencies:
       '@theguild/components': 4.4.3_6jx7hpii6hgsrmhxgqrmo3277u
       next: 13.0.6_biqbaboplfbrettd7655fr4n2y
-      next-sitemap: 3.1.24_next@13.0.6
+      next-sitemap: 3.1.55_next@13.0.6
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
     devDependencies:
@@ -8069,6 +8069,10 @@ packages:
   /minimist/1.2.6:
     resolution: {integrity: sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==}
 
+  /minimist/1.2.8:
+    resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
+    dev: false
+
   /mixme/0.5.4:
     resolution: {integrity: sha512-3KYa4m4Vlqx98GPdOHghxSdNtTvcP8E0kkaJ5Dlh+h2DRzF7zpuVVcA8B0QpKd11YJeP9QQ7ASkKzOeu195Wzw==}
     engines: {node: '>= 8.0.0'}
@@ -8152,8 +8156,8 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /next-sitemap/3.1.24_next@13.0.6:
-    resolution: {integrity: sha512-dEFOI6cnNffDcmxis/1IVNK2JI1wtxxGoj2ipP7L8xDVbxjyuuH2V8MEajHPPrIhybfGk6gyZ5HDpXgVcTv9QA==}
+  /next-sitemap/3.1.55_next@13.0.6:
+    resolution: {integrity: sha512-ZjkRfkqoSLbU+e8W9TWWe0zfOGNA47lpvm35kNcUCmj73gpLX2PIn51gwHT/B6bgGVAFYY0OXixJDrxIIwcEHw==}
     engines: {node: '>=14.18'}
     hasBin: true
     peerDependencies:
@@ -8161,7 +8165,7 @@ packages:
       next: '*'
     dependencies:
       '@corex/deepmerge': 4.0.29
-      minimist: 1.2.6
+      minimist: 1.2.8
       next: 13.0.6_biqbaboplfbrettd7655fr4n2y
     dev: false
 
