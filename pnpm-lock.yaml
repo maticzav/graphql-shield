@@ -52,7 +52,7 @@ importers:
       '@types/node': 18.6.3
       '@types/node-fetch': ^2.6.2
       '@types/object-hash': 2.2.1
-      '@types/request-promise-native': 1.0.18
+      '@types/request-promise-native': 1.0.21
       '@types/yup': 0.29.13
       apollo-server: 3.10.0
       graphql: 16.5.0
@@ -73,7 +73,7 @@ importers:
       '@types/node': 18.6.3
       '@types/node-fetch': 2.6.2
       '@types/object-hash': 2.2.1
-      '@types/request-promise-native': 1.0.18
+      '@types/request-promise-native': 1.0.21
       apollo-server: 3.10.0_graphql@16.5.0
       graphql: 16.5.0
       graphql-middleware: 6.1.33_graphql@16.5.0
@@ -3319,8 +3319,8 @@ packages:
       '@types/scheduler': 0.16.2
       csstype: 3.1.1
 
-  /@types/request-promise-native/1.0.18:
-    resolution: {integrity: sha512-tPnODeISFc/c1LjWyLuZUY+Z0uLB3+IMfNoQyDEi395+j6kTFTTRAqjENjoPJUid4vHRGEozoTrcTrfZM+AcbA==}
+  /@types/request-promise-native/1.0.21:
+    resolution: {integrity: sha512-NJ1M6iqWTEUT+qdP+OmXsRZ6tSdkoBdblHKatIWTVP1HdYpHU3IkfpLPf4MWb0+CC4Nl3TtLpYhDlhjZxytDIA==}
     dependencies:
       '@types/request': 2.48.8
     dev: true
