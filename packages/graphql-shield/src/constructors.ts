@@ -101,7 +101,7 @@ export const and = (...rules: ShieldRule[]): RuleAnd => {
  *
  * @param rules
  *
- * Logical operator and serves as a wrapper for and operation.
+ * Logical operator chain serves as a wrapper for chain operation.
  *
  */
 export const chain = (...rules: ShieldRule[]): RuleChain => {
@@ -112,7 +112,7 @@ export const chain = (...rules: ShieldRule[]): RuleChain => {
  *
  * @param rules
  *
- * Logical operator and serves as a wrapper for and operation.
+ * Logical operator race serves as a wrapper for race operation.
  *
  */
 export const race = (...rules: ShieldRule[]): RuleRace => {
