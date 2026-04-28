@@ -1,0 +1,38 @@
+{
+  "name": "@siteminder/overlord",
+  "version": "17.5.4",
+  "description": "",
+  "engines": {
+    "node": ">=18.14.0",
+    "npm": ">=9.5.0"
+  },
+  "bin": {
+    "playpen": "playpen.js",
+    "pen": "playpen.js"
+  },
+  "files": [
+    "playpen.js",
+    "shared/",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "scripts": {
+    "audit": "npm audit --omit=dev",
+    "clean": "../../bin/overlord/clean.sh",
+    "smpublish": "PUBLISH_FROM_MODULE=1 ../../bin/overlord/publish.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/siteminder-au/arch-packages.git"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/siteminder-au/arch-packages/issues"
+  },
+  "homepage": "https://github.com/siteminder-au/arch-packages#readme",
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "yargs": "^17.7.2"
+  }
+}

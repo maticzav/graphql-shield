@@ -1,59 +1,92 @@
-<p align="center"><img src="media/shield.jpg" width="300"/></p>
+# @siteminder/graphql-permissions
 
-# graphql-shield
+A drop-in replacement for [`graphql-shield`](https://github.com/maticzav/graphql-shield), built to unblock migration to Node 24.
 
-[![CircleCI](https://circleci.com/gh/maticzav/graphql-shield/tree/master.svg?style=shield)](https://circleci.com/gh/maticzav/graphql-shield/tree/master)
-[![codecov](https://codecov.io/gh/maticzav/graphql-shield/branch/master/graph/badge.svg)](https://codecov.io/gh/maticzav/graphql-shield)
-[![npm version](https://badge.fury.io/js/graphql-shield.svg)](https://badge.fury.io/js/graphql-shield)
-[![Backers on Open Collective](https://opencollective.com/graphql-shield/backers/badge.svg)](#backers)[![Sponsors on Open Collective](https://opencollective.com/graphql-shield/sponsors/badge.svg)](#sponsors)
+## Background
 
-> GraphQL Server permissions as another layer of abstraction!
+`graphql-shield@7.6.5` calls `util.isUndefined()`, which was removed in Node 24. This causes every GraphQL request to fail with:
 
-## Overview
+```
+(0 , util_1.isUndefined) is not a function
+```
 
-GraphQL Shield helps you create a permission layer for your application. Using an intuitive rule-API, you'll gain the power of the shield engine on every request and reduce the load time of every request with smart caching. This way you can make sure your application will remain quick, and no internal data will be exposed.
+The fix was merged upstream ([#1552](https://github.com/maticzav/graphql-shield/pull/1552)) but no new version has been published, and the repo appears largely unmaintained. Rather than waiting on an upstream release or patching a transitive dependency, this package reimplements the `graphql-shield` API on top of [`graphql-middleware`](https://github.com/nicholasgasior/graphql-middleware) with no dependency on the removed Node utility.
 
-## Features
+## Usage
 
-- ✂️ **Flexible:** Based on [GraphQL Middleware](https://github.com/prismagraphql/graphql-middleware).
-- 🤝 **Compatible:** Works with all GraphQL Servers.
-- 🚀 **Smart:** Intelligent V8 Shield engine caches all your requests to prevent any unnecessary load.
-- 🎯 **Per-Type or Per-Field:** Write permissions for your schema, types or specific fields (check the example below).
+```typescript
+import { shield, rule, allow, deny, and, or, not } from '@siteminder/graphql-permissions'
+import { applyMiddleware } from 'graphql-middleware'
 
-## Documentation
+const isAuthenticated = rule()(async (parent, args, ctx, info) => {
+  return ctx.user !== null
+})
 
-You can find extensive documentation at [https://the-guild.dev/graphql/shield](https://the-guild.dev/graphql/shield).
+const isAdmin = rule()(async (parent, args, ctx, info) => {
+  return ctx.user?.role === 'admin'
+})
 
-## Contributors
+const permissions = shield({
+  Query: {
+    me: isAuthenticated,
+    users: and(isAuthenticated, isAdmin),
+  },
+  Mutation: {
+    createUser: isAdmin,
+  },
+})
 
-This project exists thanks to all the people who contribute. [[Contribute](https://github.com/maticzav/graphql-shield/graphs/contributors)].
-<a href="https://github.com/maticzav/graphql-shield/graphs/contributors"><img src="https://opencollective.com/graphql-shield/contributors.svg?width=890&button=false" /></a>
+const schema = applyMiddleware(yourSchema, permissions)
+```
 
-## Backers
+## API
 
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/graphql-shield#backer)]
+### `shield(ruleTree, options?)`
 
-<a href="https://opencollective.com/graphql-shield#backers" target="_blank"><img src="https://opencollective.com/graphql-shield/backers.svg?width=890"></a>
+Generates a `graphql-middleware` instance from a rule tree.
 
-## Sponsors
+**Options:**
 
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/graphql-shield#sponsor)]
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `fallbackRule` | `ShieldRule` | `allow` | Rule applied to fields not covered by the rule tree |
+| `fallbackError` | `string \| Error \| IFallbackErrorMapperType` | `new Error('Not Authorised!')` | Error returned when a rule denies access |
+| `allowExternalErrors` | `boolean` | `false` | Pass rule errors through to the client |
+| `debug` | `boolean` | `false` | Throw rule errors instead of handling them |
+| `hashFunction` | `IHashFunction` | `JSON.stringify` | Custom hash function for strict cache mode |
 
-<a href="https://opencollective.com/graphql-shield/sponsor/0/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/1/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/2/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/3/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/4/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/5/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/6/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/7/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/8/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/graphql-shield/sponsor/9/website" target="_blank"><img src="https://opencollective.com/graphql-shield/sponsor/9/avatar.svg"></a>
+### `rule(name?, options?)(fn)`
 
-## Contributing
+Creates a rule from an async function. The function receives `(parent, args, ctx, info)` and should return `true` to allow, or `false`/`Error`/`string` to deny.
 
-We are always looking for people to help us grow `graphql-shield`! If you have an issue, feature request, or pull request, let us know! For information about development setup and more, see [CONTRIBUTING.md](CONTRIBUTING.md).
+**Cache modes** (via `options.cache`):
+- `'contextual'` (default) — cached per request context
+- `'strict'` — cached per unique `(parent, args)` combination
+- `'no_cache'` — never cached
 
-## License
+```typescript
+const isOwner = rule({ cache: 'strict' })(async (parent, args, ctx) => {
+  return parent.ownerId === ctx.user.id
+})
+```
 
-MIT @ Matic Zavadlal
+### Combinators
+
+| Combinator | Description |
+|------------|-------------|
+| `allow` | Always allows |
+| `deny` | Always denies |
+| `and(...rules)` | Allows if all rules pass — evaluates all rules **in parallel**, so all branches execute even if one fails |
+| `or(...rules)` | Allows if any rule passes — evaluates all rules in parallel |
+| `not(rule, error?)` | Inverts a rule |
+| `chain(...rules)` | Like `and`, but evaluates rules **sequentially** and stops on the first failure — use this when rules have dependencies or side effects |
+| `race(...rules)` | Like `or`, but evaluates rules **sequentially** and stops on the first success |
+
+## Migration from `graphql-shield`
+
+This package is API-compatible with `graphql-shield`. Replace the import:
+
+```diff
+- import { shield, rule, allow, deny } from 'graphql-shield'
++ import { shield, rule, allow, deny } from '@siteminder/graphql-permissions'
+```

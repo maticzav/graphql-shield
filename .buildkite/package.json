@@ -1,0 +1,6 @@
+{
+  "description": "Overlord Install Location",
+  "scripts": {
+    "install": "./install-overlord.sh"
+  }
+}

@@ -1,0 +1,31 @@
+steps:
+
+  - label: 'create git diff for calculating incremental build'
+    command: './.buildkite/overlord/shared/buildkite/create-git-diff.sh'
+    key: 'create-git-diff'
+
+  - wait
+
+  - label: generate steps
+    command: generate-pipeline.sh ./.buildkite/overlord .
+    env:
+      BUILDKITE_PLUGINS_ALWAYS_CLONE_FRESH: "true"
+    plugins:
+      - siteminder-au/pipeline-utilities#master:
+          include_audit: yes
+
+  - label: 'check for outdated images'
+    command: './.buildkite/overlord/shared/ci-scripts/check-for-outdated-images.sh'
+    soft_fail:
+      - exit_status: 3
+
+  - wait
+
+  - label: "define dev deployment steps"
+    command: './.buildkite/overlord/shared/buildkite/deployments.sh -r dev --config-branch master --app-infras-branch master --deploy-version branch-dynamic --exclude "(reservations-jobs)"'
+    if: build.tag == null
+
+  - wait
+
+  - label: 'save git sha for incremental build later'
+    command: './.buildkite/overlord/shared/buildkite/save-git-sha.sh'

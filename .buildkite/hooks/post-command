@@ -1,0 +1,15 @@
+#!/bin/bash
+
+echo "--- :checkered_flag: Running post-command"
+
+echo "cleaning up docker containers"
+docker ps -a
+
+docker ps -a -q | while read container_id
+do
+  echo "stopping container '$container_id'"
+  docker stop $container_id
+
+  echo "deleting container '$container_id'"
+  docker rm -vf $container_id
+done

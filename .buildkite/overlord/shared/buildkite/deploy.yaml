@@ -1,0 +1,15 @@
+      - label: 'Deploy __COMPONENT__ __VERSION__ to __REALM__.__ENV__ __REGION__'
+        trigger: 'infrastructure-deploy'
+        build:
+          branch: __DEPLOY_PIPELINE_BRANCH__
+          env:
+            SM_DEPLOY_REALM: __REALM__
+            SM_DEPLOY_ENVIRONMENT: __ENV__
+            SM_DEPLOY_SYSTEM: __SYSTEM__
+            SM_DEPLOY_COMPONENT: __COMPONENT__
+            SM_DEPLOY_COMPONENT_TYPE: __COMPONENT_TYPE__
+            SM_DEPLOY_INFRASTRUCTURE_BRANCH: __APP_INFRAS_BRANCH__
+            SM_DEPLOY_VERSION: __VERSION__
+            SM_DEPLOY_REGION: __REGION__
+            SM_DEPLOY_CONFIG_BRANCH: __CONFIG_BRANCH__
+            SM_DEPLOY_SKIP_CONFIG_CHECK: __SKIP_CONFIG_CHECK__

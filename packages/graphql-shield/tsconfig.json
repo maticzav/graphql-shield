@@ -1,10 +1,8 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": [
+    "@siteminder/base-typescript/tsconfig/lib.json"
+  ],
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "module": "commonjs",
-    "target": "es2017",
-  },
-  "exclude": ["tests", "dist"]
+    "isolatedModules": true
+  }
 }

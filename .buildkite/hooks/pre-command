@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+echo "--- :checkered_flag: Installing Overlord..."
+
+docker run --rm \
+  -v $PWD:/app \
+  -v $HOME/.npmrc:/root/.npmrc \
+  -w /app \
+  278521702583.dkr.ecr.us-west-2.amazonaws.com/arch/node-v20-builder:v2.1.0 \
+  bash -c 'npm run overlord:install'

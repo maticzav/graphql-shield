@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+
+  graphql-shield:
+    image: 278521702583.dkr.ecr.us-west-2.amazonaws.com/arch/node-v20-builder:stable
+    working_dir: /app/libs/$MODULE
+    volumes:
+      - $HOME/.npmrc:/root/.npmrc
+      - $PROJECT_ROOT:/app
+    environment:
+      - MODULE=$MODULE
