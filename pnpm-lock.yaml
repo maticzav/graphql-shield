@@ -48,7 +48,7 @@ importers:
   packages/graphql-shield:
     specifiers:
       '@graphql-tools/schema': 8.5.1
-      '@graphql-tools/utils': 8.9.0
+      '@graphql-tools/utils': 12.0.1
       '@types/node': 18.6.3
       '@types/node-fetch': ^2.6.2
       '@types/object-hash': 2.2.1
@@ -69,7 +69,7 @@ importers:
       yup: 0.32.11
     devDependencies:
       '@graphql-tools/schema': 8.5.1_graphql@16.5.0
-      '@graphql-tools/utils': 8.9.0_graphql@16.5.0
+      '@graphql-tools/utils': 12.0.1_graphql@16.5.0
       '@types/node': 18.6.3
       '@types/node-fetch': 2.6.2
       '@types/object-hash': 2.2.1
@@ -1975,6 +1975,19 @@ packages:
       value-or-promise: 1.0.11
     dev: true
 
+  /@graphql-tools/utils/12.0.1_graphql@16.5.0:
+    resolution: {integrity: sha512-8YC6jn4xYDS6YTY6xDAgQAs/nGgvzRaIGHS8GeSfVItQzNK7Ms24CQtE3EJY+amvR+tBnhRSX0N83aGj+V/RIg==}
+    engines: {node: '>=16.0.0'}
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      '@graphql-typed-document-node/core': 3.2.0_graphql@16.5.0
+      '@whatwg-node/promise-helpers': 1.3.2
+      cross-inspect: 1.0.1
+      graphql: 16.5.0
+      tslib: 2.4.0
+    dev: true
+
   /@graphql-tools/utils/8.12.0_graphql@16.5.0:
     resolution: {integrity: sha512-TeO+MJWGXjUTS52qfK4R8HiPoF/R7X+qmgtOYd8DTH0l6b+5Y/tlg5aGeUJefqImRq7nvi93Ms40k/Uz4D5CWw==}
     peerDependencies:
@@ -1991,6 +2004,14 @@ packages:
     dependencies:
       graphql: 16.5.0
       tslib: 2.4.0
+    dev: true
+
+  /@graphql-typed-document-node/core/3.2.0_graphql@16.5.0:
+    resolution: {integrity: sha512-mB9oAsNCm9aM3/SOv4YtBMqZbYj10R7dkq8byBqxGY/ncFwhf2oQzMV+LCRlWoDSEBJ3COiR1yeDvMtsoOsuFQ==}
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0 || ^17.0.0
+    dependencies:
+      graphql: 16.5.0
     dev: true
 
   /@headlessui/react/1.7.3_biqbaboplfbrettd7655fr4n2y:
@@ -3388,6 +3409,13 @@ packages:
     hasBin: true
     dev: true
 
+  /@whatwg-node/promise-helpers/1.3.2:
+    resolution: {integrity: sha512-Nst5JdK47VIl9UcGwtv2Rcgyn5lWtZ0/mhRQ4G8NN2isxpq2TO30iqHzmwoJycjWuyUfg3GFXqP/gFHXeV57IA==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      tslib: 2.8.1
+    dev: true
+
   /accepts/1.3.8:
     resolution: {integrity: sha512-PYAthTa2m2VKxuvSD3DPC/Gy+U+sOA1LAuT8mkmRuvw+NACSaeXEQ+NHcVF7rONl6qcaxV3Uuemwawk+7+SJLw==}
     engines: {node: '>= 0.6'}
@@ -4385,6 +4413,13 @@ packages:
 
   /create-require/1.1.1:
     resolution: {integrity: sha512-dcKFX3jn0MpIaXjisoRvexIJVEKzaq7z2rZKxf+MSr9TkdmHmsU4m2lcLojrj/FHl8mk5VxMmYA+ftRkP/3oKQ==}
+    dev: true
+
+  /cross-inspect/1.0.1:
+    resolution: {integrity: sha512-Pcw1JTvZLSJH83iiGWt6fRcT+BjZlCDRVwYLbUcHzv/CRpB7r0MlSrGbIyQvVSNyGnbt7G4AXuyCiDR3POvZ1A==}
+    engines: {node: '>=16.0.0'}
+    dependencies:
+      tslib: 2.4.0
     dev: true
 
   /cross-spawn/5.1.0:
@@ -10221,6 +10256,10 @@ packages:
 
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
+
+  /tslib/2.8.1:
+    resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
+    dev: true
 
   /tsup/5.12.9_6oasmw356qmm23djlsjgkwvrtm:
     resolution: {integrity: sha512-dUpuouWZYe40lLufo64qEhDpIDsWhRbr2expv5dHEMjwqeKJS2aXA/FPqs1dxO4T6mBojo7rvo3jP9NNzaKyDg==}
